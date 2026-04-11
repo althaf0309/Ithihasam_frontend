@@ -15,19 +15,19 @@ const WHATSAPP = "911234567890";
 
 export function ServiceCard({ title, description, icon: Icon, slug }: Props) {
   return (
-    <div className="group rounded-xl border bg-card p-6 shadow-[var(--card-shadow)] transition-shadow hover:shadow-[var(--card-shadow-hover)]">
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+    <div className="group rounded-xl border border-border/50 bg-card p-6 shadow-[var(--card-shadow)] transition-all hover:border-primary/30 hover:shadow-[var(--card-shadow-hover)]">
+      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20">
         <Icon size={24} className="text-primary" />
       </div>
       <h3 className="mb-2 text-lg font-bold text-foreground">{title}</h3>
       <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{description}</p>
       <div className="flex flex-wrap gap-2">
-        <Button asChild size="sm" variant="default">
+        <Button asChild size="sm" className="bg-gradient-to-r from-primary to-primary/80 hover:opacity-90">
           <Link to={`/services/${slug}`}>
             Book Now <ArrowRight size={14} className="ml-1" />
           </Link>
         </Button>
-        <Button size="sm" variant="outline" asChild className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+        <Button size="sm" variant="outline" asChild className="border-secondary/50 text-secondary hover:bg-secondary hover:text-secondary-foreground">
           <a href={`tel:${PHONE}`}><Phone size={14} /></a>
         </Button>
         <Button size="sm" asChild className="bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90">

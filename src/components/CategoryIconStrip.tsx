@@ -14,16 +14,16 @@ const categories = [
 
 export function CategoryIconStrip() {
   return (
-    <section className="bg-background py-6">
+    <section className="border-y border-border/50 bg-card/50 py-6">
       <div className="container">
         <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((cat) => (
             <Link
               key={cat.slug}
               to={`/services/${cat.slug}`}
-              className="group flex min-w-[100px] flex-col items-center gap-2 rounded-xl p-4 transition-all hover:bg-muted hover:shadow-[var(--card-shadow)]"
+              className="group flex min-w-[100px] flex-col items-center gap-2 rounded-xl p-4 transition-all hover:bg-muted"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10 transition-all group-hover:border-primary/40 group-hover:shadow-[var(--glow-primary)]">
                 <cat.icon size={24} className="text-primary" />
               </div>
               <span className="text-center text-xs font-medium text-muted-foreground group-hover:text-foreground">
