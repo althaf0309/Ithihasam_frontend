@@ -70,23 +70,25 @@ export function HeroSection() {
   return (
     <section ref={sectionRef} className="relative h-[520px] overflow-hidden md:h-[620px]">
       {/* Background carousel */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={current}
-          className="absolute inset-0"
-          style={{ y: imageY, scale: imageScale }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-        >
-          <img
-            src={slides[current].image}
-            alt={slides[current].title}
-            className="h-full w-full object-cover"
-          />
-        </motion.div>
-      </AnimatePresence>
+      <div className="absolute inset-0 overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current}
+            className="absolute inset-[-15%]"
+            style={{ y: imageY, scale: imageScale }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+          >
+            <img
+              src={slides[current].image}
+              alt={slides[current].title}
+              className="h-full w-full object-cover"
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
       {/* Overlay */}
       <motion.div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-transparent" style={{ opacity: overlayOpacity }} />
