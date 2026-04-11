@@ -57,7 +57,7 @@ export function HeroSection() {
   });
 
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  
   const overlayOpacity = useTransform(scrollYProgress, [0, 0.5], [0.3, 0.7]);
 
   const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), []);
