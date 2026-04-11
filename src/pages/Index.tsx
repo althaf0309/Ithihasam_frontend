@@ -91,9 +91,10 @@ const Index = () => {
       <section id="services" className="py-20">
         <div className="container">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="mb-12 text-center"
           >
             <span className="mb-3 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
@@ -106,10 +107,10 @@ const Index = () => {
             {services.map((s, i) => (
               <motion.div
                 key={s.slug}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" }}
               >
                 <ServiceCard {...s} />
               </motion.div>
@@ -124,9 +125,10 @@ const Index = () => {
         <div className="container relative">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
             >
               <span className="mb-3 inline-block rounded-full bg-secondary/10 px-4 py-1.5 text-xs font-semibold text-secondary">
                 ABOUT ITHIHASA
@@ -149,10 +151,10 @@ const Index = () => {
                 ].map((stat, i) => (
                   <motion.div
                     key={stat.label}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 + i * 0.1 }}
+                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ delay: 0.3 + i * 0.12, duration: 0.5, ease: "easeOut" }}
                     className="rounded-xl border border-border/50 bg-card p-4"
                   >
                     <stat.icon size={20} className="mb-2 text-primary" />
@@ -164,27 +166,52 @@ const Index = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
               className="relative"
             >
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
-                  <div className="overflow-hidden rounded-2xl">
-                    <img src={bannerElectrical} alt="Electrical work" className="h-48 w-full object-cover" loading="lazy" />
-                  </div>
-                  <div className="overflow-hidden rounded-2xl">
-                    <img src={bannerCleaning} alt="Cleaning service" className="h-32 w-full object-cover" loading="lazy" />
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4, duration: 0.5 }}
+                    className="overflow-hidden rounded-2xl"
+                  >
+                    <img src={bannerElectrical} alt="Electrical work" className="h-48 w-full object-cover transition-transform duration-700 hover:scale-110" loading="lazy" />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.5, duration: 0.5 }}
+                    className="overflow-hidden rounded-2xl"
+                  >
+                    <img src={bannerCleaning} alt="Cleaning service" className="h-32 w-full object-cover transition-transform duration-700 hover:scale-110" loading="lazy" />
+                  </motion.div>
                 </div>
                 <div className="space-y-4 pt-8">
-                  <div className="overflow-hidden rounded-2xl">
-                    <img src={bannerPainting} alt="Painting service" className="h-32 w-full object-cover" loading="lazy" />
-                  </div>
-                  <div className="overflow-hidden rounded-2xl">
-                    <img src={bannerCarpentry} alt="Carpentry work" className="h-48 w-full object-cover" loading="lazy" />
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.6, duration: 0.5 }}
+                    className="overflow-hidden rounded-2xl"
+                  >
+                    <img src={bannerPainting} alt="Painting service" className="h-32 w-full object-cover transition-transform duration-700 hover:scale-110" loading="lazy" />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.7, duration: 0.5 }}
+                    className="overflow-hidden rounded-2xl"
+                  >
+                    <img src={bannerCarpentry} alt="Carpentry work" className="h-48 w-full object-cover transition-transform duration-700 hover:scale-110" loading="lazy" />
+                  </motion.div>
                 </div>
               </div>
               <div className="absolute -bottom-4 -right-4 h-40 w-40 rounded-full bg-primary/5 blur-[60px]" />
@@ -197,9 +224,10 @@ const Index = () => {
       <section id="why-us" className="py-20">
         <div className="container">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="mb-12 text-center"
           >
             <span className="mb-3 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
@@ -212,10 +240,10 @@ const Index = () => {
             {whyUs.map((item, i) => (
               <motion.div
                 key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
                 className="group flex flex-col items-center rounded-2xl border border-border/50 bg-card p-6 text-center transition-all hover:border-primary/30 hover:shadow-[var(--card-shadow-hover)]"
               >
                 <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/15 to-secondary/15 transition-all group-hover:from-primary/25 group-hover:to-secondary/25">
@@ -234,9 +262,10 @@ const Index = () => {
         <div className="container">
           <div className="grid gap-12 lg:grid-cols-2">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
             >
               <span className="mb-3 inline-block rounded-full bg-secondary/10 px-4 py-1.5 text-xs font-semibold text-secondary">
                 FAQs
@@ -255,9 +284,10 @@ const Index = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
               className="flex flex-col justify-center"
             >
               <div className="sticky top-24">
@@ -273,9 +303,10 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/20 to-background" />
         <div className="container relative">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="mb-12 text-center"
           >
             <span className="mb-3 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
@@ -287,10 +318,10 @@ const Index = () => {
             {testimonials.map((item, i) => (
               <motion.div
                 key={item.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.15, duration: 0.5, ease: "easeOut" }}
               >
                 <TestimonialCard {...item} />
               </motion.div>
