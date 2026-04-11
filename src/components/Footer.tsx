@@ -10,7 +10,7 @@ export function Footer() {
 
   return (
     <footer id="contact" className="border-t border-border/50 bg-card">
-      <div className="container grid gap-8 py-12 md:grid-cols-4">
+      <div className="container grid gap-8 py-12 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
         <div>
           <div className="mb-3 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-secondary">
