@@ -9,13 +9,13 @@ interface Props {
 
 export function TestimonialCard({ name, location, text, rating }: Props) {
   return (
-    <div className="rounded-xl border bg-card p-6 shadow-[var(--card-shadow)]">
+    <div className="rounded-xl border border-border/50 bg-card p-6 shadow-[var(--card-shadow)] transition-all hover:border-primary/20">
       <div className="mb-3 flex gap-0.5">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}
             size={16}
-            className={i < rating ? "fill-secondary text-secondary" : "text-border"}
+            className={i < rating ? "fill-primary text-primary" : "text-muted"}
           />
         ))}
       </div>
