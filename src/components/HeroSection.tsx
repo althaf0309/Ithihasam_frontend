@@ -1,8 +1,8 @@
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useLang } from "@/contexts/LangContext";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 import bannerElectrical from "@/assets/banner-electrical.jpg";
 import bannerPainting from "@/assets/banner-painting.jpg";
@@ -49,6 +49,16 @@ const slides = [
 export function HeroSection() {
   const { t } = useLang();
   const [current, setCurrent] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const overlayOpacity = useTransform(scrollYProgress, [0, 0.5], [0.5, 0.85]);
 
   const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), []);
 
@@ -58,15 +68,16 @@ export function HeroSection() {
   }, [next]);
 
   return (
-    <section className="relative h-[520px] overflow-hidden md:h-[620px]">
+    <section ref={sectionRef} className="relative h-[520px] overflow-hidden md:h-[620px]">
       {/* Background carousel */}
       <AnimatePresence mode="wait">
         <motion.div
           key={current}
           className="absolute inset-0"
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.98, opacity: 0 }}
+          style={{ y: imageY, scale: imageScale }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
         >
           <img
@@ -78,7 +89,7 @@ export function HeroSection() {
       </AnimatePresence>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-transparent" />
+      <motion.div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-transparent" style={{ opacity: overlayOpacity }} />
       <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
 
       {/* Glows */}
