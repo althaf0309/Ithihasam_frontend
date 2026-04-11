@@ -1,35 +1,62 @@
-import { Zap, Paintbrush, Settings, Hammer, Factory, Sparkles, Bug, Cpu } from "lucide-react";
+import { Zap, Paintbrush, Wrench, Hammer, Factory, Sparkles, Bug, Cpu } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+
+import bannerElectrical from "@/assets/banner-electrical.jpg";
+import bannerPainting from "@/assets/banner-painting.jpg";
+import bannerAppliance from "@/assets/banner-appliance.jpg";
+import bannerCarpentry from "@/assets/banner-carpentry.jpg";
+import bannerFabrication from "@/assets/banner-fabrication.jpg";
+import bannerCleaning from "@/assets/banner-cleaning.jpg";
+import bannerPest from "@/assets/banner-pest.jpg";
+import bannerSmarthome from "@/assets/banner-smarthome.jpg";
 
 const categories = [
-  { name: "Electrical & Plumbing", icon: Zap, slug: "electrical-plumbing" },
-  { name: "Painting", icon: Paintbrush, slug: "painting" },
-  { name: "Appliance Repair", icon: Settings, slug: "appliance-servicing" },
-  { name: "Carpentry", icon: Hammer, slug: "carpentry" },
-  { name: "Roofing & Fabrication", icon: Factory, slug: "roofing-fabrication" },
-  { name: "Deep Cleaning", icon: Sparkles, slug: "deep-cleaning" },
-  { name: "Pest Control", icon: Bug, slug: "pest-control" },
-  { name: "Smart Home", icon: Cpu, slug: "smart-home" },
+  { name: "Electrical & Plumbing", icon: Zap, slug: "electrical-plumbing", image: bannerElectrical, color: "from-amber-500/20 to-blue-500/20" },
+  { name: "Painting", icon: Paintbrush, slug: "painting", image: bannerPainting, color: "from-sky-500/20 to-indigo-500/20" },
+  { name: "Appliance Repair", icon: Wrench, slug: "appliance-servicing", image: bannerAppliance, color: "from-emerald-500/20 to-teal-500/20" },
+  { name: "Carpentry", icon: Hammer, slug: "carpentry", image: bannerCarpentry, color: "from-orange-500/20 to-amber-500/20" },
+  { name: "Roofing & Fabrication", icon: Factory, slug: "roofing-fabrication", image: bannerFabrication, color: "from-red-500/20 to-orange-500/20" },
+  { name: "Deep Cleaning", icon: Sparkles, slug: "deep-cleaning", image: bannerCleaning, color: "from-cyan-500/20 to-blue-500/20" },
+  { name: "Pest Control", icon: Bug, slug: "pest-control", image: bannerPest, color: "from-lime-500/20 to-green-500/20" },
+  { name: "Smart Home", icon: Cpu, slug: "smart-home", image: bannerSmarthome, color: "from-violet-500/20 to-purple-500/20" },
 ];
 
 export function CategoryIconStrip() {
   return (
-    <section className="border-y border-border/50 bg-card/50 py-6">
+    <section className="border-y border-border/50 bg-card/50 py-8">
       <div className="container">
-        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-          {categories.map((cat) => (
-            <Link
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+          {categories.map((cat, i) => (
+            <motion.div
               key={cat.slug}
-              to={`/services/${cat.slug}`}
-              className="group flex min-w-[100px] flex-col items-center gap-2 rounded-xl p-4 transition-all hover:bg-muted"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10 transition-all group-hover:border-primary/40 group-hover:shadow-[var(--glow-primary)]">
-                <cat.icon size={24} className="text-primary" />
-              </div>
-              <span className="text-center text-xs font-medium text-muted-foreground group-hover:text-foreground">
-                {cat.name}
-              </span>
-            </Link>
+              <Link
+                to={`/services/${cat.slug}`}
+                className="group relative flex min-w-[120px] flex-col items-center gap-3 rounded-2xl border border-border/30 bg-card p-4 transition-all hover:border-primary/40 hover:shadow-[var(--card-shadow-hover)]"
+              >
+                {/* Thumbnail image */}
+                <div className="relative h-16 w-16 overflow-hidden rounded-xl">
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${cat.color} opacity-0 transition-opacity group-hover:opacity-100`} />
+                  <div className="absolute inset-0 flex items-center justify-center bg-background/30 backdrop-blur-[1px] transition-all group-hover:bg-background/10 group-hover:backdrop-blur-0">
+                    <cat.icon size={22} className="text-primary-foreground drop-shadow-md transition-transform group-hover:scale-110" />
+                  </div>
+                </div>
+                <span className="text-center text-xs font-semibold text-muted-foreground transition-colors group-hover:text-primary">
+                  {cat.name}
+                </span>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>
