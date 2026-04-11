@@ -74,9 +74,10 @@ export function HeroSection() {
         <motion.div
           key={current}
           className="absolute inset-0"
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.98, opacity: 0 }}
+          style={{ y: imageY, scale: imageScale }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
         >
           <img
