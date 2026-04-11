@@ -49,6 +49,16 @@ const slides = [
 export function HeroSection() {
   const { t } = useLang();
   const [current, setCurrent] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const overlayOpacity = useTransform(scrollYProgress, [0, 0.5], [0.5, 0.85]);
 
   const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), []);
 
@@ -58,7 +68,7 @@ export function HeroSection() {
   }, [next]);
 
   return (
-    <section className="relative h-[520px] overflow-hidden md:h-[620px]">
+    <section ref={sectionRef} className="relative h-[520px] overflow-hidden md:h-[620px]">
       {/* Background carousel */}
       <AnimatePresence mode="wait">
         <motion.div
