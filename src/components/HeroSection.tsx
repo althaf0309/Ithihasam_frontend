@@ -57,7 +57,7 @@ export function HeroSection() {
   });
 
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  
   const overlayOpacity = useTransform(scrollYProgress, [0, 0.5], [0.3, 0.7]);
 
   const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), []);
@@ -75,11 +75,14 @@ export function HeroSection() {
           <motion.div
             key={current}
             className="absolute inset-[-15%]"
-            style={{ y: imageY, scale: imageScale }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            style={{ y: imageY }}
+            initial={{ opacity: 0, scale: 1 }}
+            animate={{ opacity: 1, scale: 1.15 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{
+              opacity: { duration: 1.2, ease: "easeOut" },
+              scale: { duration: 8, ease: "linear" },
+            }}
           >
             <img
               src={slides[current].image}
