@@ -78,8 +78,8 @@ export function HeroSection() {
       </AnimatePresence>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/40" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/30" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
 
       {/* Glows */}
       <div className="absolute -left-40 top-20 h-80 w-80 rounded-full bg-primary/8 blur-[120px]" />
