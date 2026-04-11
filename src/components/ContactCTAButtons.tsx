@@ -1,0 +1,38 @@
+import { Phone, MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const PHONE = "+911234567890";
+const WHATSAPP = "911234567890";
+
+interface Props {
+  size?: "sm" | "default" | "lg";
+  showLabels?: boolean;
+}
+
+export function ContactCTAButtons({ size = "default", showLabels = false }: Props) {
+  return (
+    <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        size={size}
+        asChild
+        className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+      >
+        <a href={`tel:${PHONE}`}>
+          <Phone size={16} />
+          {showLabels && <span className="ml-1">Call Now</span>}
+        </a>
+      </Button>
+      <Button
+        size={size}
+        asChild
+        className="bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90"
+      >
+        <a href={`https://wa.me/${WHATSAPP}`} target="_blank" rel="noopener noreferrer">
+          <MessageCircle size={16} />
+          {showLabels && <span className="ml-1">WhatsApp</span>}
+        </a>
+      </Button>
+    </div>
+  );
+}
