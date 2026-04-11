@@ -91,8 +91,8 @@ export function HeroSection() {
       </div>
 
       {/* Overlay */}
-      <motion.div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-transparent" style={{ opacity: overlayOpacity }} />
-      <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+      <motion.div className="absolute inset-0 bg-gradient-to-r from-background/60 via-background/30 to-transparent" style={{ opacity: overlayOpacity }} />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
 
       {/* Glows */}
       <div className="absolute -left-40 top-20 h-80 w-80 rounded-full bg-primary/8 blur-[120px]" />
