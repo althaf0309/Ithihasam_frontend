@@ -59,7 +59,7 @@ const Index = () => {
         <div className="container">
           <div className="mb-10 text-center">
             <h2 className="mb-2 text-3xl font-bold text-foreground">Why Choose Us</h2>
-            <p className="text-muted-foreground">What makes HomeServ different</p>
+            <p className="text-muted-foreground">What makes Ithihasa different</p>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {whyUs.map((item) => (

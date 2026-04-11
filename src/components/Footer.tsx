@@ -11,9 +11,9 @@ export function Footer() {
         <div>
           <div className="mb-3 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <span className="text-xs font-bold text-primary-foreground">HS</span>
+              <span className="text-xs font-bold text-primary-foreground">IT</span>
             </div>
-            <span className="text-lg font-bold">HomeServ</span>
+            <span className="text-lg font-bold">Ithihasa</span>
           </div>
           <p className="text-sm opacity-70">
             Professional home services at your doorstep. Trusted by thousands.
@@ -25,8 +25,9 @@ export function Footer() {
           <ul className="space-y-2 text-sm opacity-70">
             <li><Link to="/" className="hover:opacity-100">Home</Link></li>
             <li><Link to="/#services" className="hover:opacity-100">Services</Link></li>
+            <li><Link to="/blog" className="hover:opacity-100">Blog</Link></li>
+            <li><Link to="/news" className="hover:opacity-100">News</Link></li>
             <li><Link to="/#why-us" className="hover:opacity-100">About Us</Link></li>
-            <li><Link to="/admin" className="hover:opacity-100">Admin</Link></li>
           </ul>
         </div>
 
@@ -61,7 +62,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-primary-foreground/10 py-4 text-center text-xs opacity-50">
-        © 2026 HomeServ. All rights reserved.
+        © 2026 Ithihasa. All rights reserved.
       </div>
     </footer>
   );
