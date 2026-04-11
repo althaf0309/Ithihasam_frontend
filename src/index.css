@@ -5,7 +5,15 @@
 @tailwind utilities;
 
 @layer base {
-  html, body {
+  html {
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
+  }
+  body {
     overflow-x: hidden;
   }
 
