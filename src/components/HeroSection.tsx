@@ -89,7 +89,7 @@ export function HeroSection() {
       </AnimatePresence>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-transparent" />
+      <motion.div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/50 to-transparent" style={{ opacity: overlayOpacity }} />
       <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
 
       {/* Glows */}
