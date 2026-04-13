@@ -1,13 +1,15 @@
-import { Phone, MessageCircle, Menu, X, Globe } from "lucide-react";
+import { Phone, MessageCircle, Menu, X, Globe, Sun, Moon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ContactCTAButtons } from "./ContactCTAButtons";
 import { useLang } from "@/contexts/LangContext";
+import { useTheme } from "@/hooks/use-theme";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { lang, setLang, t } = useLang();
+  const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
     { label: t("nav.home"), to: "/" },
@@ -42,6 +44,13 @@ export function Header() {
 
         <div className="hidden items-center gap-2 lg:flex">
           <button
+            onClick={toggleTheme}
+            className="flex items-center justify-center rounded-full border border-border/50 p-2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+          <button
             onClick={() => setLang(lang === "en" ? "hi" : "en")}
             className="flex items-center gap-1.5 rounded-full border border-border/50 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary"
           >
@@ -74,6 +83,13 @@ export function Header() {
             ))}
           </nav>
           <div className="mt-4 flex flex-col gap-2">
+            <button
+              onClick={toggleTheme}
+              className="flex items-center gap-1.5 rounded-full border border-border/50 px-3 py-1.5 text-xs font-medium text-muted-foreground"
+            >
+              {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
+              {theme === "dark" ? "Light Mode" : "Dark Mode"}
+            </button>
             <button
               onClick={() => setLang(lang === "en" ? "hi" : "en")}
               className="flex items-center gap-1.5 rounded-full border border-border/50 px-3 py-1.5 text-xs font-medium text-muted-foreground"

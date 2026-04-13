@@ -68,7 +68,7 @@ export function HeroSection() {
   }, [next]);
 
   return (
-    <section ref={sectionRef} className="relative h-[520px] overflow-hidden md:h-[620px]">
+    <section ref={sectionRef} className="relative h-[380px] overflow-hidden md:h-[460px]">
       {/* Background carousel */}
       <div className="absolute inset-0 overflow-hidden">
         <AnimatePresence mode="wait">
