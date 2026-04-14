@@ -9,14 +9,14 @@ export function Footer() {
   const { t } = useLang();
 
   return (
-    <footer id="contact" className="border-t border-border/50 bg-card">
+    <footer id="contact" className="footer-section border-t border-border/50">
       <div className="container grid gap-8 py-12 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
         <div>
           <div className="mb-3 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-secondary">
               <span className="text-xs font-bold text-primary-foreground">IT</span>
             </div>
-            <span className="text-lg font-bold text-foreground">Ithihasa</span>
+            <span className="text-lg font-bold text-white">Ithihasa</span>
           </div>
           <p className="text-sm text-muted-foreground">
             {t("footer.tagline")}
