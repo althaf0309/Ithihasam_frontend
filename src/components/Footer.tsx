@@ -16,7 +16,7 @@ export function Footer() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-secondary">
               <span className="text-xs font-bold text-primary-foreground">IT</span>
             </div>
-            <span className="text-lg font-bold text-foreground">Ithihasa</span>
+            <span className="text-lg font-bold text-white">Ithihasa</span>
           </div>
           <p className="text-sm text-muted-foreground">
             {t("footer.tagline")}
