@@ -93,9 +93,9 @@ export function HeroSection() {
         </AnimatePresence>
       </div>
 
-      {/* Overlay */}
-      <motion.div className="absolute inset-0 bg-gradient-to-r from-background/60 via-background/30 to-transparent" style={{ opacity: overlayOpacity }} />
-      <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
+      {/* Overlay - stronger on mobile for text readability */}
+      <motion.div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-background/30 md:from-background/60 md:via-background/30 md:to-transparent" style={{ opacity: overlayOpacity }} />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent md:from-background/50 md:via-transparent" />
 
       {/* Glows */}
       <div className="absolute -left-40 top-20 h-80 w-80 rounded-full bg-primary/8 blur-[120px]" />
