@@ -122,10 +122,10 @@ export function HeroSection() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="mb-3 text-4xl font-extrabold leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
+              <h1 className="mb-3 text-3xl font-extrabold leading-[1.1] tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl">
                 <span className="text-gradient">{slides[current].title}</span>
               </h1>
-              <p className="mb-6 text-lg text-muted-foreground md:text-xl">
+              <p className="mb-6 text-base text-muted-foreground drop-shadow-md md:text-xl">
                 {slides[current].subtitle}
               </p>
             </motion.div>
