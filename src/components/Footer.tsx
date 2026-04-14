@@ -9,7 +9,7 @@ export function Footer() {
   const { t } = useLang();
 
   return (
-    <footer id="contact" className="border-t border-border/50 bg-[hsl(222,22%,10%)] text-gray-300 dark:bg-card dark:text-inherit">
+    <footer id="contact" className="footer-section border-t border-border/50">
       <div className="container grid gap-8 py-12 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
         <div>
           <div className="mb-3 flex items-center gap-2">
