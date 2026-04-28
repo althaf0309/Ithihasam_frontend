@@ -1,33 +1,31 @@
-import { Phone, MessageCircle, Menu, X, Globe, Sun, Moon } from "lucide-react";
+import { Globe, Menu, Moon, Sun, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ContactCTAButtons } from "./ContactCTAButtons";
+import { BrandLogo } from "./BrandLogo";
 import { useLang } from "@/contexts/LangContext";
 import { useTheme } from "@/hooks/use-theme";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { lang, setLang, t } = useLang();
+  const { toggleLang, t } = useLang();
   const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
     { label: t("nav.home"), to: "/" },
-    { label: t("nav.services"), to: "/#services" },
+    { label: t("nav.services"), to: "/services" },
     { label: t("nav.blog"), to: "/blog" },
     { label: t("nav.news"), to: "/news" },
-    { label: t("nav.about"), to: "/#why-us" },
-    { label: t("nav.contact"), to: "/#contact" },
+    { label: t("nav.about"), to: "/about" },
+    { label: t("nav.contact"), to: "/contact" },
   ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-background/90 backdrop-blur-xl">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-secondary">
-            <span className="text-sm font-bold text-primary-foreground">IT</span>
-          </div>
-          <span className="text-xl font-bold text-foreground">Ithihasa</span>
+        <Link to="/" className="flex items-center gap-3" aria-label="Ithihasam home">
+          <BrandLogo />
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex">
@@ -51,11 +49,11 @@ export function Header() {
             {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
           </button>
           <button
-            onClick={() => setLang(lang === "en" ? "hi" : "en")}
+            onClick={toggleLang}
             className="flex items-center gap-1.5 rounded-full border border-border/50 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary hover:text-primary"
           >
             <Globe size={14} />
-            {lang === "en" ? "हिंदी" : "English"}
+            {t("header.language")}
           </button>
           <ContactCTAButtons size="sm" />
           <Button asChild size="sm" className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
@@ -88,18 +86,18 @@ export function Header() {
               className="flex items-center gap-1.5 rounded-full border border-border/50 px-3 py-1.5 text-xs font-medium text-muted-foreground"
             >
               {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
-              {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              {theme === "dark" ? t("header.lightMode") : t("header.darkMode")}
             </button>
             <button
-              onClick={() => setLang(lang === "en" ? "hi" : "en")}
+              onClick={toggleLang}
               className="flex items-center gap-1.5 rounded-full border border-border/50 px-3 py-1.5 text-xs font-medium text-muted-foreground"
             >
               <Globe size={14} />
-              {lang === "en" ? "हिंदी" : "English"}
+              {t("header.language")}
             </button>
             <ContactCTAButtons size="sm" />
             <Button asChild size="sm">
-              <Link to="/#booking">{t("nav.bookNow")}</Link>
+              <Link to="/#booking" onClick={() => setMobileOpen(false)}>{t("nav.bookNow")}</Link>
             </Button>
           </div>
         </div>

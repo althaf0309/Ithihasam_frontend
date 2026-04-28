@@ -1,8 +1,9 @@
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLang } from "@/contexts/LangContext";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { BUSINESS_WHATSAPP } from "@/lib/site";
 
 import bannerElectrical from "@/assets/banner-electrical.jpg";
 import bannerPainting from "@/assets/banner-painting.jpg";
@@ -11,39 +12,13 @@ import bannerCarpentry from "@/assets/banner-carpentry.jpg";
 import bannerCleaning from "@/assets/banner-cleaning.jpg";
 import bannerSmarthome from "@/assets/banner-smarthome.jpg";
 
-const WHATSAPP = "911234567890";
-
-const slides = [
-  {
-    image: bannerElectrical,
-    title: "Expert Electrical & Plumbing",
-    subtitle: "Certified professionals for all your home needs",
-  },
-  {
-    image: bannerPainting,
-    title: "Transform Your Space",
-    subtitle: "Premium painting services with flawless finishes",
-  },
-  {
-    image: bannerAppliance,
-    title: "Appliance Care Experts",
-    subtitle: "AC, washing machine & refrigerator servicing",
-  },
-  {
-    image: bannerCarpentry,
-    title: "Custom Carpentry & Woodwork",
-    subtitle: "Furniture, modular kitchens & expert repairs",
-  },
-  {
-    image: bannerCleaning,
-    title: "Deep Cleaning Services",
-    subtitle: "Make every corner of your home spotless",
-  },
-  {
-    image: bannerSmarthome,
-    title: "Smart Home Setup",
-    subtitle: "Automate your home with latest technology",
-  },
+const slideImages = [
+  bannerElectrical,
+  bannerPainting,
+  bannerAppliance,
+  bannerCarpentry,
+  bannerCleaning,
+  bannerSmarthome,
 ];
 
 export function HeroSection() {
@@ -51,16 +26,23 @@ export function HeroSection() {
   const [current, setCurrent] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
 
+  const slides = [
+    { image: slideImages[0], title: t("hero.slide1.title"), subtitle: t("hero.slide1.subtitle") },
+    { image: slideImages[1], title: t("hero.slide2.title"), subtitle: t("hero.slide2.subtitle") },
+    { image: slideImages[2], title: t("hero.slide3.title"), subtitle: t("hero.slide3.subtitle") },
+    { image: slideImages[3], title: t("hero.slide4.title"), subtitle: t("hero.slide4.subtitle") },
+    { image: slideImages[4], title: t("hero.slide5.title"), subtitle: t("hero.slide5.subtitle") },
+    { image: slideImages[5], title: t("hero.slide6.title"), subtitle: t("hero.slide6.subtitle") },
+  ];
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
   });
 
   const imageY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  
   const overlayOpacity = useTransform(scrollYProgress, [0, 0.5], [0.3, 0.7]);
-
-  const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), []);
+  const next = useCallback(() => setCurrent((value) => (value + 1) % slides.length), [slides.length]);
 
   useEffect(() => {
     const timer = setInterval(next, 5000);
@@ -69,7 +51,6 @@ export function HeroSection() {
 
   return (
     <section ref={sectionRef} className="relative h-[380px] overflow-hidden md:h-[460px]">
-      {/* Background carousel */}
       <div className="absolute inset-0 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -84,24 +65,20 @@ export function HeroSection() {
               scale: { duration: 8, ease: "linear" },
             }}
           >
-            <img
-              src={slides[current].image}
-              alt={slides[current].title}
-              className="h-full w-full object-cover"
-            />
+            <img src={slides[current].image} alt={slides[current].title} className="h-full w-full object-cover" />
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Overlay - stronger on mobile for text readability */}
-      <motion.div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-background/30 md:from-background/60 md:via-background/30 md:to-transparent" style={{ opacity: overlayOpacity }} />
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-background/30 md:from-background/60 md:via-background/30 md:to-transparent"
+        style={{ opacity: overlayOpacity }}
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent md:from-background/50 md:via-transparent" />
 
-      {/* Glows */}
       <div className="absolute -left-40 top-20 h-80 w-80 rounded-full bg-primary/8 blur-[120px]" />
       <div className="absolute -right-20 bottom-10 h-60 w-60 rounded-full bg-secondary/8 blur-[100px]" />
 
-      {/* Content */}
       <div className="container relative flex h-full items-center">
         <div className="max-w-2xl">
           <motion.span
@@ -148,14 +125,13 @@ export function HeroSection() {
               asChild
               className="border-whatsapp/50 bg-whatsapp/10 text-whatsapp backdrop-blur-sm hover:bg-whatsapp hover:text-whatsapp-foreground"
             >
-              <a href={`https://wa.me/${WHATSAPP}`} target="_blank" rel="noopener noreferrer">
+              <a href={`https://wa.me/${BUSINESS_WHATSAPP}`} target="_blank" rel="noopener noreferrer">
                 <MessageCircle size={18} className="mr-2" />
                 {t("hero.whatsapp")}
               </a>
             </Button>
           </motion.div>
 
-          {/* Stats */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -163,9 +139,9 @@ export function HeroSection() {
             className="mt-10 flex gap-8"
           >
             {[
-              { value: "10K+", label: "Happy Customers" },
-              { value: "500+", label: "Professionals" },
-              { value: "15+", label: "Cities" },
+              { value: "10K+", label: t("hero.stats.customers") },
+              { value: "500+", label: t("hero.stats.professionals") },
+              { value: "15+", label: t("hero.stats.cities") },
             ].map((stat) => (
               <div key={stat.label}>
                 <div className="text-2xl font-extrabold text-gradient">{stat.value}</div>
@@ -176,16 +152,13 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Slide indicators */}
       <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2">
-        {slides.map((_, i) => (
+        {slides.map((slide, index) => (
           <button
-            key={i}
-            onClick={() => setCurrent(i)}
+            key={slide.title}
+            onClick={() => setCurrent(index)}
             className={`h-2 rounded-full transition-all duration-500 ${
-              i === current
-                ? "w-10 bg-primary"
-                : "w-2 bg-foreground/30 hover:bg-foreground/50"
+              index === current ? "w-10 bg-primary" : "w-2 bg-foreground/30 hover:bg-foreground/50"
             }`}
           />
         ))}

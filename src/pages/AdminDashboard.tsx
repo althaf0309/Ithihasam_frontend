@@ -3,6 +3,7 @@ import { LayoutDashboard, MessageSquare, Wrench, Users, Settings, Menu, X } from
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { SeoMeta } from "@/components/SeoMeta";
 import { Link } from "react-router-dom";
 
 const sidebarItems = [
@@ -50,6 +51,12 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex min-h-screen bg-muted/30">
+      <SeoMeta
+        title="Admin Dashboard | Ithihasam"
+        description="Internal dashboard for managing Ithihasam service enquiries, bookings, and operations."
+        keywords={["Ithihasam admin", "booking dashboard", "service enquiries dashboard", "internal operations"]}
+        robots="noindex, nofollow"
+      />
       {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-40 w-60 transform bg-sidebar text-sidebar-foreground transition-transform md:static md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-4">
