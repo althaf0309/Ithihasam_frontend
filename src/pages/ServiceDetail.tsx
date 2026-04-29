@@ -8,8 +8,10 @@ import { CategoryIconStrip } from "@/components/CategoryIconStrip";
 import { QuickBookingForm } from "@/components/QuickBookingForm";
 import { ContactCTAButtons } from "@/components/ContactCTAButtons";
 import { SeoMeta } from "@/components/SeoMeta";
+import { ServiceAreaGrid } from "@/components/ServiceAreaGrid";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { getLocalizedText, serviceCatalogBySlug } from "@/lib/service-catalog";
+import { serviceAreaCoverageLine, serviceAreaNames, serviceAreas } from "@/lib/service-areas";
 import { servicePageContentBySlug } from "@/lib/service-page-content";
 import { serviceSeoBySlug } from "@/lib/service-seo";
 import { createKeywordSet } from "@/lib/seo";
@@ -145,6 +147,7 @@ export default function ServiceDetail() {
     "Ithihasam",
     "Kannur home services",
     "Thrissur home services",
+    serviceAreaNames.map((areaName) => `${service.title.en} in ${areaName}`),
   );
 
   return (
@@ -170,6 +173,16 @@ export default function ServiceDetail() {
         <div className="space-y-12 lg:col-span-2">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <p className="text-lg leading-relaxed text-muted-foreground">{detailDescription}</p>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <ServiceAreaGrid
+              title={`Areas We Cover for ${service.title.en}`}
+              description={`${title} bookings are supported across ${serviceAreaCoverageLine}. Use these location pages if you want area-focused information before booking this service.`}
+              areas={serviceAreas}
+              getCardTitle={(area) => `${service.title.en} in ${area.name}`}
+              getCardDescription={(area) => `Book ${service.title.en.toLowerCase()} support for homes, shops, offices, and apartment properties in ${area.name}.`}
+            />
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>

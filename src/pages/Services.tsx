@@ -5,9 +5,11 @@ import { SeoMeta } from "@/components/SeoMeta";
 import { CategoryIconStrip } from "@/components/CategoryIconStrip";
 import { ContactCTAButtons } from "@/components/ContactCTAButtons";
 import { QuickBookingForm } from "@/components/QuickBookingForm";
+import { ServiceAreaGrid } from "@/components/ServiceAreaGrid";
 import { ServiceCard } from "@/components/ServiceCard";
 import { useLang } from "@/contexts/LangContext";
 import { createKeywordSet } from "@/lib/seo";
+import { serviceAreaCoverageLine, serviceAreaNames, serviceAreas } from "@/lib/service-areas";
 import { getLocalizedText, serviceCatalog } from "@/lib/service-catalog";
 
 import bannerElectrical from "@/assets/banner-electrical.jpg";
@@ -21,6 +23,7 @@ export default function Services() {
     "home maintenance services Thrissur",
     "electrical plumbing painting appliance carpentry cleaning pest control smart home",
     "Ithihasam services",
+    serviceAreaNames.map((areaName) => `home services in ${areaName}`),
   );
 
   return (
@@ -45,7 +48,7 @@ export default function Services() {
               Home maintenance services for everyday residential needs
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
-              Browse every Ithihasam service in one place and choose the right support for repairs, upgrades, cleaning, fabrication, and smart home work.
+              Browse every Ithihasam service in one place and choose the right support for repairs, upgrades, cleaning, fabrication, and smart home work across {serviceAreaCoverageLine}.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <ContactCTAButtons size="lg" showLabels />
@@ -72,7 +75,7 @@ export default function Services() {
               },
               {
                 title: "Kannur and Thrissur focus",
-                description: "Our current service content and customer booking flow are strongly focused on practical demand from Kannur and Thrissur districts.",
+                description: `Our current service content and booking flow now also covers practical local demand across ${serviceAreaCoverageLine}.`,
               },
               {
                 title: "Fast booking support",
@@ -92,6 +95,17 @@ export default function Services() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="container">
+          <ServiceAreaGrid
+            title="Areas We Currently Cover"
+            description={`We now have dedicated location pages for ${serviceAreaCoverageLine}. Each page is focused on all core services available in that area, along with local booking-intent content for home maintenance searches.`}
+            areas={serviceAreas}
+            getCardDescription={(area) => `Explore electrical, plumbing, painting, AC service, cleaning, pest control, and smart home support in ${area.name}.`}
+          />
         </div>
       </section>
 
