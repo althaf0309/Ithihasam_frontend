@@ -21,6 +21,7 @@ export default function NewsDetail() {
           description="The requested Ithihasam news article could not be found."
           keywords={["Ithihasam news", "home services news", "news article not found"]}
           robots="noindex, nofollow"
+          canonicalPath={slug ? `/news/${slug}` : "/news"}
         />
         <Header />
         <div className="container py-20 text-center">
@@ -51,6 +52,7 @@ export default function NewsDetail() {
         image={article.image}
         type="article"
         publishedTime={article.date}
+        canonicalPath={`/news/${article.slug}`}
       />
       <Header />
 

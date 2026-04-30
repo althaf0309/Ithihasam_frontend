@@ -27,9 +27,13 @@ export default function BlogDetail() {
           title="Loading Blog Article | Ithihasam"
           description="Browse the latest Ithihasam blog articles on home maintenance and local home services."
           keywords={["Ithihasam blog", "home maintenance blog", "Kannur home services", "Thrissur home services"]}
+          canonicalPath={slug ? `/blog/${slug}` : "/blog"}
         />
         <Header />
-        <div className="container py-20 text-center text-muted-foreground">{t("blog.loading")}</div>
+        <div className="container py-20 text-center">
+          <h1 className="text-2xl font-bold text-foreground">Loading Ithihasam Blog Article</h1>
+          <p className="mt-3 text-muted-foreground">{t("blog.loading")}</p>
+        </div>
         <Footer />
       </div>
     );
@@ -43,6 +47,7 @@ export default function BlogDetail() {
           description="The requested blog article could not be found. Browse more home maintenance tips from Ithihasam."
           keywords={["blog article not found", "Ithihasam blog", "home maintenance tips"]}
           robots="noindex, nofollow"
+          canonicalPath={slug ? `/blog/${slug}` : "/blog"}
         />
         <Header />
         <div className="container py-20 text-center">
@@ -75,6 +80,7 @@ export default function BlogDetail() {
         image={coverImage}
         type="article"
         publishedTime={post.published_at}
+        canonicalPath={`/blog/${post.slug}`}
       />
       <Header />
 

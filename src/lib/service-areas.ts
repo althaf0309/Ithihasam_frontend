@@ -84,6 +84,16 @@ export const serviceAreas: ServiceAreaEntry[] = [
     nearbySlugs: ["mattannur", "kuthuparamba", "anjarakandy"],
   },
   {
+    slug: "chakkarakkal",
+    name: "Chakkarakkal",
+    district: "Kannur district",
+    localityFocus:
+      "electrical repairs, plumbing maintenance, appliance service, fabrication, roofing sheet work, and scheduled home upgrade support",
+    propertyMix:
+      "family homes, roadside shops, apartments, workshops, clinics, and compact commercial properties",
+    nearbySlugs: ["anjarakandy", "thalassery", "mattannur"],
+  },
+  {
     slug: "anjarakandy",
     name: "Anjarakandy",
     district: "Kannur district",
@@ -95,7 +105,7 @@ export const serviceAreas: ServiceAreaEntry[] = [
   },
   {
     slug: "chalod",
-    name: "Chalod",
+    name: "Chalode",
     district: "Kannur district",
     localityFocus:
       "fast maintenance requests, repainting, carpentry, plumbing, roof work, and home upgrade support for growing roadside communities",

@@ -17,7 +17,7 @@ const translations: Record<string, Record<Lang, string>> = {
   "header.lightMode": { en: "Light Mode", ml: "ലൈറ്റ് മോഡ്" },
   "header.darkMode": { en: "Dark Mode", ml: "ഡാർക്ക് മോഡ്" },
 
-  "hero.badge": { en: "Trusted by 10,000+ Homeowners", ml: "10,000+ വീടുടമകളുടെ വിശ്വാസം നേടിയ സേവനം" },
+  "hero.badge": { en: "Trusted by 2000+ Happy Customers", ml: "2000+ സന്തുഷ്ട ഉപഭോക്താക്കളുടെ വിശ്വാസം നേടിയ സേവനം" },
   "hero.whatsapp": { en: "WhatsApp Us", ml: "വാട്ട്സ്ആപ്പിൽ ബന്ധപ്പെടൂ" },
   "hero.slide1.title": { en: "Expert Electrical & Plumbing", ml: "വിദഗ്ധ ഇലക്ട്രിക്കൽ & പ്ലമ്പിംഗ്" },
   "hero.slide1.subtitle": { en: "Certified professionals for all your home needs", ml: "വീട്ടിലെ എല്ലാ ആവശ്യങ്ങൾക്കും സർട്ടിഫൈഡ് പ്രൊഫഷണലുകൾ" },
@@ -31,6 +31,8 @@ const translations: Record<string, Record<Lang, string>> = {
   "hero.slide5.subtitle": { en: "Make every corner of your home spotless", ml: "വീട്ടിലെ ഓരോ കോണും വൃത്തിയായി മാറ്റാം" },
   "hero.slide6.title": { en: "Smart Home Setup", ml: "സ്മാർട്ട് ഹോം സെറ്റപ്പ്" },
   "hero.slide6.subtitle": { en: "Automate your home with modern technology", ml: "ആധുനിക സാങ്കേതികവിദ്യയിലൂടെ വീട്ടിനെ സ്മാർട്ടാക്കൂ" },
+  "hero.slide7.title": { en: "Professional Fabrication & Roofing", ml: "പ്രൊഫഷണൽ ഫാബ്രിക്കേഷൻ & റൂഫിംഗ്" },
+  "hero.slide7.subtitle": { en: "Gates, grills, railings, roofing sheets, and welding support", ml: "ഗേറ്റുകൾ, ഗ്രില്ലുകൾ, റെയിലിംഗുകൾ, റൂഫിംഗ് ഷീറ്റുകൾ, വെൽഡിംഗ് സഹായം" },
   "hero.stats.customers": { en: "Happy Customers", ml: "സന്തുഷ്ട ഉപഭോക്താക്കൾ" },
   "hero.stats.professionals": { en: "Professionals", ml: "പ്രൊഫഷണലുകൾ" },
   "hero.stats.cities": { en: "Cities", ml: "നഗരങ്ങൾ" },

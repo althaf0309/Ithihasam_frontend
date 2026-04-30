@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CategoryIconStrip } from "@/components/CategoryIconStrip";
@@ -14,19 +14,25 @@ import { getLocalizedText, serviceCatalogBySlug } from "@/lib/service-catalog";
 import { serviceAreaCoverageLine, serviceAreaNames, serviceAreas } from "@/lib/service-areas";
 import { servicePageContentBySlug } from "@/lib/service-page-content";
 import { serviceSeoBySlug } from "@/lib/service-seo";
+import { localServiceLandingPages } from "@/lib/local-service-pages";
 import { createKeywordSet } from "@/lib/seo";
 import { useLang } from "@/contexts/LangContext";
 
 function BannerCarousel({ images, title }: { images: string[]; title: string }) {
   const [current, setCurrent] = useState(0);
+  const hasMultipleImages = images.length > 1;
 
   const next = useCallback(() => setCurrent((value) => (value + 1) % images.length), [images.length]);
   const prev = useCallback(() => setCurrent((value) => (value - 1 + images.length) % images.length), [images.length]);
 
   useEffect(() => {
+    if (!hasMultipleImages) {
+      return;
+    }
+
     const timer = setInterval(next, 4000);
     return () => clearInterval(timer);
-  }, [next]);
+  }, [hasMultipleImages, next]);
 
   return (
     <div className="relative h-[320px] w-full overflow-hidden md:h-[420px]">
@@ -53,21 +59,25 @@ function BannerCarousel({ images, title }: { images: string[]; title: string }) 
           {title}
         </motion.h1>
       </div>
-      <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/60 p-2 text-foreground backdrop-blur transition hover:bg-background/80">
-        <ChevronLeft size={24} />
-      </button>
-      <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/60 p-2 text-foreground backdrop-blur transition hover:bg-background/80">
-        <ChevronRight size={24} />
-      </button>
-      <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
-        {images.map((image, index) => (
-          <button
-            key={image}
-            onClick={() => setCurrent(index)}
-            className={`h-2.5 rounded-full transition-all ${index === current ? "w-8 bg-primary-foreground" : "w-2.5 bg-primary-foreground/50"}`}
-          />
-        ))}
-      </div>
+      {hasMultipleImages && (
+        <>
+          <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/60 p-2 text-foreground backdrop-blur transition hover:bg-background/80">
+            <ChevronLeft size={24} />
+          </button>
+          <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/60 p-2 text-foreground backdrop-blur transition hover:bg-background/80">
+            <ChevronRight size={24} />
+          </button>
+          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+            {images.map((image, index) => (
+              <button
+                key={image}
+                onClick={() => setCurrent(index)}
+                className={`h-2.5 rounded-full transition-all ${index === current ? "w-8 bg-primary-foreground" : "w-2.5 bg-primary-foreground/50"}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -116,6 +126,7 @@ export default function ServiceDetail() {
           description="The requested Ithihasam service page could not be found. Browse trusted home maintenance services in Kannur and Thrissur."
           keywords={["service not found", "Ithihasam services", "Kannur home services", "Thrissur home services"]}
           robots="noindex, nofollow"
+          canonicalPath={slug ? `/services/${slug}` : "/services"}
         />
         <Header />
         <div className="container py-20 text-center">
@@ -144,10 +155,25 @@ export default function ServiceDetail() {
   const pageKeywords = createKeywordSet(
     seo?.keywords || [],
     service.title.en,
+    service.supportedBrands?.map((brand) => `${brand} ${service.title.en}`) || [],
     "Ithihasam",
     "Kannur home services",
     "Thrissur home services",
     serviceAreaNames.map((areaName) => `${service.title.en} in ${areaName}`),
+  );
+  const localPagesForService = localServiceLandingPages.filter(
+    (page) => page.template.parentServiceSlug === service.slug,
+  );
+  const localPageGroups = Array.from(
+    new Map(
+      localPagesForService.map((page) => [
+        page.template.slugPrefix,
+        {
+          title: page.template.serviceName,
+          pages: localPagesForService.filter((item) => item.template.slugPrefix === page.template.slugPrefix),
+        },
+      ]),
+    ).values(),
   );
 
   return (
@@ -158,6 +184,7 @@ export default function ServiceDetail() {
         keywords={pageKeywords}
         image={service.bannerImages[0]}
         type="website"
+        canonicalPath={`/services/${service.slug}`}
       />
       <Header />
 
@@ -167,10 +194,14 @@ export default function ServiceDetail() {
         <ContactCTAButtons size="lg" showLabels />
       </div>
 
+      <div className="container mt-8 lg:hidden">
+        <QuickBookingForm compact preselectedService={service.title.en} />
+      </div>
+
       <CategoryIconStrip />
 
-      <div className="container grid gap-10 py-12 lg:grid-cols-3">
-        <div className="space-y-12 lg:col-span-2">
+      <div className="container grid gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_28rem]">
+        <div className="space-y-12">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <p className="text-lg leading-relaxed text-muted-foreground">{detailDescription}</p>
           </motion.div>
@@ -184,6 +215,45 @@ export default function ServiceDetail() {
               getCardDescription={(area) => `Book ${service.title.en.toLowerCase()} support for homes, shops, offices, and apartment properties in ${area.name}.`}
             />
           </motion.div>
+
+          {localPageGroups.length > 0 && (
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="rounded-3xl border border-border/50 bg-card p-6 shadow-[var(--card-shadow)] md:p-8"
+            >
+              <div className="max-w-3xl">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Local Service Pages</p>
+                <h2 className="mt-3 text-2xl font-bold text-foreground">
+                  {service.title.en} pages by location
+                </h2>
+                <p className="mt-3 text-base leading-7 text-muted-foreground">
+                  Open a dedicated page for the exact service and place you need. Each page has its own SEO title, H1, meta description, keywords, booking form, and local content.
+                </p>
+              </div>
+
+              <div className="mt-8 space-y-8">
+                {localPageGroups.map((group) => (
+                  <div key={group.title}>
+                    <h3 className="text-lg font-bold text-foreground">{group.title}</h3>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                      {group.pages.map((page) => (
+                        <Link
+                          key={page.slug}
+                          to={page.path}
+                          className="group flex min-h-16 items-center justify-between gap-3 rounded-xl border border-border/50 bg-background/70 p-4 text-sm font-semibold text-foreground transition-all hover:border-primary/30 hover:text-primary hover:shadow-[var(--card-shadow-hover)]"
+                        >
+                          <span>{page.title}</span>
+                          <ArrowRight size={16} className="shrink-0 transition-transform group-hover:translate-x-1" />
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.section>
+          )}
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="mb-4 text-2xl font-bold text-foreground">{t("service.included")}</h2>
@@ -203,6 +273,35 @@ export default function ServiceDetail() {
               ))}
             </div>
           </motion.div>
+
+          {service.supportedBrands?.length ? (
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="rounded-3xl border border-border/50 bg-card p-6 shadow-[var(--card-shadow)] md:p-8"
+            >
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+                Popular Brands
+              </p>
+              <h2 className="mt-3 text-2xl font-bold text-foreground">
+                Appliance brands we service
+              </h2>
+              <p className="mt-3 text-base leading-7 text-muted-foreground">
+                We support AC, fridge, washing machine, microwave, purifier, and chimney service requests for popular home appliance brands.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {service.supportedBrands.map((brand) => (
+                  <span
+                    key={brand}
+                    className="rounded-full border border-border/70 bg-background px-3 py-1.5 text-sm font-semibold text-foreground"
+                  >
+                    {brand}
+                  </span>
+                ))}
+              </div>
+            </motion.section>
+          ) : null}
 
           {faqItems.length > 0 && (
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -237,11 +336,33 @@ export default function ServiceDetail() {
           )}
         </div>
 
-        <div>
-          <div className="sticky top-20">
+        <aside className="sticky top-24 hidden self-start lg:block">
+          <div className="space-y-4">
             <QuickBookingForm compact preselectedService={service.title.en} />
+
+            <div className="rounded-xl border bg-card p-5 shadow-[var(--card-shadow)]">
+              <h3 className="text-lg font-bold text-foreground">Need help faster?</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Talk to Ithihasam directly for availability, pricing, and technician scheduling.
+              </p>
+              <div className="mt-4">
+                <ContactCTAButtons size="sm" showLabels />
+              </div>
+            </div>
+
+            <div className="rounded-xl border bg-card p-5 shadow-[var(--card-shadow)]">
+              <h3 className="text-lg font-bold text-foreground">Service Highlights</h3>
+              <div className="mt-4 space-y-3">
+                {service.includes.slice(0, 5).map((item) => (
+                  <div key={`${service.slug}-sidebar-${item.en}`} className="flex items-start gap-2">
+                    <CheckCircle2 size={17} className="mt-0.5 shrink-0 text-whatsapp" />
+                    <span className="text-sm leading-5 text-muted-foreground">{getLocalizedText(item, lang)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+        </aside>
       </div>
 
       <Footer />

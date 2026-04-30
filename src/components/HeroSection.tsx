@@ -9,6 +9,7 @@ import bannerElectrical from "@/assets/banner-electrical.jpg";
 import bannerPainting from "@/assets/banner-painting.jpg";
 import bannerAppliance from "@/assets/banner-appliance.jpg";
 import bannerCarpentry from "@/assets/banner-carpentry.jpg";
+import bannerFabrication from "@/assets/banner-fabrication.jpg";
 import bannerCleaning from "@/assets/banner-cleaning.jpg";
 import bannerSmarthome from "@/assets/banner-smarthome.jpg";
 
@@ -19,6 +20,7 @@ const slideImages = [
   bannerCarpentry,
   bannerCleaning,
   bannerSmarthome,
+  bannerFabrication,
 ];
 
 export function HeroSection() {
@@ -33,6 +35,7 @@ export function HeroSection() {
     { image: slideImages[3], title: t("hero.slide4.title"), subtitle: t("hero.slide4.subtitle") },
     { image: slideImages[4], title: t("hero.slide5.title"), subtitle: t("hero.slide5.subtitle") },
     { image: slideImages[5], title: t("hero.slide6.title"), subtitle: t("hero.slide6.subtitle") },
+    { image: slideImages[6], title: t("hero.slide7.title"), subtitle: t("hero.slide7.subtitle") },
   ];
 
   const { scrollYProgress } = useScroll({
@@ -100,8 +103,11 @@ export function HeroSection() {
               transition={{ duration: 0.6 }}
             >
               <h1 className="mb-3 text-3xl font-extrabold leading-[1.1] tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl">
-                <span className="text-gradient">{slides[current].title}</span>
+                <span className="text-gradient">Ithihasam Home Maintenance Services in Kannur & Thrissur</span>
               </h1>
+              <p className="mb-2 text-lg font-semibold text-foreground drop-shadow-md md:text-2xl">
+                {slides[current].title}
+              </p>
               <p className="mb-6 text-base text-muted-foreground drop-shadow-md md:text-xl">
                 {slides[current].subtitle}
               </p>
@@ -139,9 +145,8 @@ export function HeroSection() {
             className="mt-10 flex gap-8"
           >
             {[
-              { value: "10K+", label: t("hero.stats.customers") },
-              { value: "500+", label: t("hero.stats.professionals") },
-              { value: "15+", label: t("hero.stats.cities") },
+              { value: "2000+", label: t("hero.stats.customers") },
+              { value: "50+", label: t("hero.stats.professionals") },
             ].map((stat) => (
               <div key={stat.label}>
                 <div className="text-2xl font-extrabold text-gradient">{stat.value}</div>

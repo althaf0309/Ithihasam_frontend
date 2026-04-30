@@ -34,6 +34,7 @@ export default function Blog() {
         description="Read Ithihasam blog articles on home maintenance, electrical work, plumbing, painting, appliance repair, cleaning, pest control, and smart home services in Kannur and Thrissur."
         keywords={pageKeywords}
         image={posts?.[0] ? resolveContentImage(posts[0].cover_image) : undefined}
+        canonicalPath="/blog"
       />
       <Header />
 
@@ -44,7 +45,7 @@ export default function Blog() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-2 text-3xl font-bold text-primary-foreground md:text-4xl"
           >
-            {t("blog.title")}
+            Home Maintenance Blog for Kannur & Thrissur
           </motion.h1>
           <p className="text-primary-foreground/80">{t("blog.subtitle")}</p>
         </div>

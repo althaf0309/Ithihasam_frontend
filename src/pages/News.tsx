@@ -175,6 +175,7 @@ export default function News() {
         description="Read the latest Ithihasam news, service expansion updates, community initiatives, and training stories connected to home maintenance services in Kerala."
         keywords={newsKeywords}
         image={newsArticles[0]?.image}
+        canonicalPath="/news"
       />
       <Header />
 
@@ -185,7 +186,7 @@ export default function News() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-2 text-3xl font-bold text-primary-foreground md:text-4xl"
           >
-            {t("news.title")}
+            Ithihasam News and Home Service Updates
           </motion.h1>
           <p className="text-primary-foreground/80">{t("news.subtitle")}</p>
         </div>

@@ -79,24 +79,24 @@ export default function Index() {
 
   const testimonials = [
     {
-      name: "Priya Sharma",
-      location: "Mumbai",
+      name: "Anjana Nair",
+      location: "Thalassery",
       text: lang === "ml"
         ? "ഇലക്ട്രീഷ്യനെ ബുക്ക് ചെയ്തു, ഒരു മണിക്കൂറിനകം എത്തി. വളരെ പ്രൊഫഷണൽ സേവനവും ന്യായമായ നിരക്കുമായിരുന്നു."
         : "Booked an electrician and he arrived within an hour. Very professional and the pricing was fair. Highly recommend!",
       rating: 5,
     },
     {
-      name: "Rajesh Kumar",
-      location: "Pune",
+      name: "Shaji Menon",
+      location: "Taliparamba",
       text: lang === "ml"
         ? "വീട്ടിന്റെ മുഴുവൻ പെയിന്റിംഗ് ഇത്തിഹാസ വഴി നടത്തി. ജോലിയുടെ നിലവാരം വളരെ നല്ലതായിരുന്നു, സമയത്ത് പൂർത്തിയാക്കി."
         : "Got my entire house painted through Ithihasam. The quality of work was excellent and they finished on time.",
       rating: 5,
     },
     {
-      name: "Anita Desai",
-      location: "Bangalore",
+      name: "Sreeja Krishnan",
+      location: "Payyannur",
       text: lang === "ml"
         ? "ഡീപ് ക്ലീനിംഗ് വളരെ സമഗ്രമായി ചെയ്തു. കിച്ചനും ബാത്ത്റൂമും പുതിയതുപോലെ ആയി."
         : "The deep cleaning service was thorough. My kitchen and bathrooms look brand new. Will definitely book again.",

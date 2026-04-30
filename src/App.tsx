@@ -18,6 +18,7 @@ import About from "./pages/About.tsx";
 import Contact from "./pages/Contact.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 import TermsConditions from "./pages/TermsConditions.tsx";
+import LocalServiceLanding from "./pages/LocalServiceLanding.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-and-conditions" element={<TermsConditions />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/:landingSlug" element={<LocalServiceLanding />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

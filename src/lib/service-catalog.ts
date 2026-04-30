@@ -37,6 +37,7 @@ export interface ServiceCatalogEntry {
   shortDescription: LocalizedText;
   detailDescription: LocalizedText;
   includes: LocalizedText[];
+  supportedBrands?: string[];
   faqs: LocalizedFaq[];
   reviews: LocalizedReview[];
 }
@@ -46,7 +47,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     slug: "electrical-plumbing",
     icon: Zap,
     cardImage: bannerElectrical,
-    bannerImages: [bannerElectrical, bannerAppliance, bannerSmarthome],
+    bannerImages: [bannerElectrical],
     title: {
       en: "Electrical & Plumbing",
       ml: "ഇലക്ട്രിക്കൽ & പ്ലമ്പിംഗ്",
@@ -89,8 +90,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Rahul Mehta",
-        location: "Mumbai",
+        name: "Ramesh Nair",
+        location: "Thalassery",
         text: {
           en: "Fixed my entire home wiring in just one day. Very professional team from Ithihasam!",
           ml: "ഒരു ദിവസത്തിനകം മുഴുവൻ വീട്ടിലെ വയറിംഗ് ശരിയാക്കി. ഇത്തിഹാസ ടീം വളരെ പ്രൊഫഷണലായിരുന്നു.",
@@ -98,8 +99,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Sunita Patil",
-        location: "Pune",
+        name: "Fathima Rahman",
+        location: "Panoor",
         text: {
           en: "Quick response for a plumbing emergency at midnight. Lifesavers!",
           ml: "അർദ്ധരാത്രിയിലെ പ്ലമ്പിംഗ് എമർജൻസിക്ക് വളരെ വേഗത്തിൽ എത്തിയിരുന്നു. രക്ഷകരായിരുന്നു!",
@@ -107,8 +108,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Vikram Singh",
-        location: "Delhi",
+        name: "Pradeep Kumar",
+        location: "Kuthuparamba",
         text: {
           en: "Fair pricing and excellent workmanship. Will definitely use again.",
           ml: "ന്യായമായ വിലയും മികച്ച ജോലിയും. വീണ്ടും ഉപയോഗിക്കും.",
@@ -121,7 +122,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     slug: "painting",
     icon: Paintbrush,
     cardImage: bannerPainting,
-    bannerImages: [bannerPainting, bannerCarpentry, bannerCleaning],
+    bannerImages: [bannerPainting],
     title: {
       en: "Painting Services",
       ml: "പെയിന്റിംഗ് സേവനങ്ങൾ",
@@ -162,8 +163,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Neha Sharma",
-        location: "Bangalore",
+        name: "Anu Mohan",
+        location: "Taliparamba",
         text: {
           en: "Beautiful texture painting done on our living room walls. The team was very neat.",
           ml: "ലിവിംഗ് റൂമിലെ ടെക്സ്ചർ പെയിന്റിംഗ് അതിമനോഹരമായി ചെയ്തു. ടീം വളരെ വൃത്തിയായി ജോലിചെയ്തു.",
@@ -171,8 +172,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Amit Joshi",
-        location: "Hyderabad",
+        name: "Nikhil Das",
+        location: "Mattannur",
         text: {
           en: "Excellent color consultation. The house looks brand new!",
           ml: "മികച്ച കലർ കൺസൾട്ടേഷൻ. വീട് പുത്തൻ പോലെ തോന്നുന്നു.",
@@ -185,26 +186,63 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     slug: "appliance-servicing",
     icon: Settings,
     cardImage: bannerAppliance,
-    bannerImages: [bannerAppliance, bannerElectrical, bannerSmarthome],
+    bannerImages: [bannerAppliance],
     title: {
       en: "Appliance Servicing",
       ml: "അപ്ലയൻസ് സർവിസിംഗ്",
     },
     shortDescription: {
-      en: "AC, washing machine, refrigerator, microwave, and purifier servicing by trained technicians.",
+      en: "AC, fridge, washing machine, microwave, and purifier servicing by trained technicians.",
       ml: "എസി, വാഷിംഗ് മെഷീൻ, ഫ്രിഡ്ജ്, മൈക്രോവേവ്, പ്യൂരിഫയർ എന്നിവയ്ക്ക് പരിശീലനം ലഭിച്ച ടെക്നീഷ്യൻ സേവനം.",
     },
     detailDescription: {
-      en: "Expert repair and maintenance for all major home appliances including ACs, washing machines, refrigerators, microwaves, and water purifiers.",
+      en: "Expert repair and maintenance for all major home appliances including ACs, fridges and refrigerators, washing machines, microwaves, and water purifiers.",
       ml: "എസി, വാഷിംഗ് മെഷീൻ, ഫ്രിഡ്ജ്, മൈക്രോവേവ്, വാട്ടർ പ്യൂരിഫയർ തുടങ്ങി പ്രധാന ഗൃഹോപകരണങ്ങൾക്കുള്ള വിദഗ്ധ സർവീസും റിപ്പയറും.",
     },
     includes: [
       { en: "AC Service & Repair", ml: "എസി സർവീസ് & റിപെയർ" },
+      { en: "Fridge / Refrigerator Repair", ml: "റഫ്രിജറേറ്റർ റിപെയർ" },
       { en: "Washing Machine Repair", ml: "വാഷിംഗ് മെഷീൻ റിപെയർ" },
-      { en: "Refrigerator Repair", ml: "റഫ്രിജറേറ്റർ റിപെയർ" },
       { en: "Microwave Repair", ml: "മൈക്രോവേവ് റിപെയർ" },
       { en: "Water Purifier Service", ml: "വാട്ടർ പ്യൂരിഫയർ സർവീസ്" },
       { en: "Chimney Cleaning", ml: "ചിമ്നി ക്ലീനിംഗ്" },
+    ],
+    supportedBrands: [
+      "LG",
+      "Samsung",
+      "Whirlpool",
+      "Bosch",
+      "IFB",
+      "Godrej",
+      "Haier",
+      "Panasonic",
+      "Sony",
+      "Onida",
+      "Voltas",
+      "Blue Star",
+      "Daikin",
+      "Hitachi",
+      "Carrier",
+      "Lloyd",
+      "O General",
+      "Mitsubishi",
+      "Electrolux",
+      "Kelvinator",
+      "Videocon",
+      "BPL",
+      "Philips",
+      "Bajaj",
+      "Havells",
+      "V-Guard",
+      "Kent",
+      "Eureka Forbes",
+      "Faber",
+      "Elica",
+      "Kaff",
+      "Prestige",
+      "Butterfly",
+      "Usha",
+      "Crompton",
     ],
     faqs: [
       {
@@ -226,8 +264,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Priya Reddy",
-        location: "Chennai",
+        name: "Deepa Nair",
+        location: "Iritty",
         text: {
           en: "AC was cooling perfectly after the service. Very knowledgeable technician.",
           ml: "സർവീസിന് ശേഷം എസി വളരെ നന്നായി പ്രവർത്തിച്ചു. ടെക്നീഷ്യൻ വളരെ പരിചയസമ്പന്നനായിരുന്നു.",
@@ -235,8 +273,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Karan Malhotra",
-        location: "Gurgaon",
+        name: "Jithin Raj",
+        location: "Payyannur",
         text: {
           en: "Fixed my washing machine on the spot. Great service!",
           ml: "വാഷിംഗ് മെഷീൻ ഉടനെ തന്നെ ശരിയാക്കി. മികച്ച സേവനം!",
@@ -249,7 +287,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     slug: "carpentry",
     icon: Hammer,
     cardImage: bannerCarpentry,
-    bannerImages: [bannerCarpentry, bannerPainting, bannerFabrication],
+    bannerImages: [bannerCarpentry],
     title: {
       en: "Carpentry & Woodwork",
       ml: "കാർപെൻട്രി & മരപ്പണി",
@@ -290,8 +328,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Deepak Verma",
-        location: "Noida",
+        name: "Manoj Menon",
+        location: "Anjarakandy",
         text: {
           en: "Beautiful custom wardrobe built exactly as designed. Top quality wood.",
           ml: "ഡിസൈൻ ചെയ്തതുപോലെ തന്നെ മനോഹരമായ വാർഡ്രോബ് നിർമ്മിച്ചു. മികച്ച ഗുണമേന്മയുള്ള ജോലി.",
@@ -299,8 +337,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Ananya Iyer",
-        location: "Mumbai",
+        name: "Lakshmi Krishnan",
+        location: "Thazhe Chovva",
         text: {
           en: "Modular kitchen turned out amazing. Highly recommend Ithihasam carpentry.",
           ml: "മോഡുലാർ കിച്ചൻ അതിമനോഹരമായി ആയി. ഇത്തിഹാസ കാർപെൻട്രി നിർബന്ധമായും ശുപാർശ ചെയ്യും.",
@@ -313,7 +351,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     slug: "roofing-fabrication",
     icon: Factory,
     cardImage: bannerFabrication,
-    bannerImages: [bannerFabrication, bannerCarpentry, bannerElectrical],
+    bannerImages: [bannerFabrication],
     title: {
       en: "Metal Fabrication & Roofing",
       ml: "മെറ്റൽ ഫാബ്രിക്കേഷൻ & റൂഫിംഗ്",
@@ -354,8 +392,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Suresh Nair",
-        location: "Kochi",
+        name: "Suresh Babu",
+        location: "Chalode",
         text: {
           en: "Installed a beautiful SS gate for our home. Excellent finish and sturdy construction.",
           ml: "വീട്ടിന് മനോഹരമായ എസ്‌എസ് ഗേറ്റ് ഇൻസ്റ്റാൾ ചെയ്തു. മികച്ച ഫിനിഷും ഉറപ്പുള്ള നിർമാണവുമായിരുന്നു.",
@@ -363,8 +401,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Manish Gupta",
-        location: "Ahmedabad",
+        name: "Riyas Mohammed",
+        location: "Mattannur",
         text: {
           en: "Roofing sheet installation was done within a day. Very professional.",
           ml: "റൂഫിംഗ് ഷീറ്റ് ഇൻസ്റ്റലേഷൻ ഒരു ദിവസത്തിനകം പൂർത്തിയാക്കി. വളരെ പ്രൊഫഷണൽ സേവനം.",
@@ -377,7 +415,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     slug: "deep-cleaning",
     icon: Sparkles,
     cardImage: bannerCleaning,
-    bannerImages: [bannerCleaning, bannerPainting, bannerAppliance],
+    bannerImages: [bannerCleaning],
     title: {
       en: "Deep Cleaning Services",
       ml: "ഡീപ് ക്ലീനിംഗ് സേവനങ്ങൾ",
@@ -418,8 +456,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Kavitha Menon",
-        location: "Bangalore",
+        name: "Kavitha Nair",
+        location: "Payyannur",
         text: {
           en: "My bathroom tiles are gleaming white again! Incredible deep cleaning team.",
           ml: "ബാത്ത്റൂം ടൈലുകൾ വീണ്ടും പുതിയത് പോലെ തിളങ്ങുന്നു. അത്ഭുതകരമായ ക്ലീനിംഗ് ടീം.",
@@ -427,8 +465,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Ravi Teja",
-        location: "Hyderabad",
+        name: "Vishnu Prasad",
+        location: "Iritty",
         text: {
           en: "Post-construction cleaning was thorough. Saved us so much time.",
           ml: "പോസ്റ്റ്-കൺസ്ട്രക്ഷൻ ക്ലീനിംഗ് വളരെ നന്നായി ചെയ്തു. ഞങ്ങളുടെ സമയം വളരെ ലാഭമായി.",
@@ -436,8 +474,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Simran Kaur",
-        location: "Chandigarh",
+        name: "Sajitha Rahman",
+        location: "Panoor",
         text: {
           en: "Sofa looks brand new after their cleaning. Amazing results.",
           ml: "ക്ലീനിംഗിന് ശേഷം സോഫ പുത്തൻ പോലെ ആയി. അത്ഭുതകരമായ ഫലം.",
@@ -450,7 +488,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     slug: "pest-control",
     icon: Bug,
     cardImage: bannerPest,
-    bannerImages: [bannerPest, bannerCleaning, bannerElectrical],
+    bannerImages: [bannerPest],
     title: {
       en: "Pest Control",
       ml: "പെസ്റ്റ് കൺട്രോൾ",
@@ -491,8 +529,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Aditya Rao",
-        location: "Pune",
+        name: "Arun Kumar",
+        location: "Kuthuparamba",
         text: {
           en: "No more cockroaches since the treatment 3 months ago. Excellent service!",
           ml: "3 മാസം മുൻപ് ചെയ്ത ട്രീറ്റ്മെന്റിന് ശേഷം കോകരോച്ചുകൾ ഒന്നുമില്ല. മികച്ച സേവനം!",
@@ -500,8 +538,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Meena Kumari",
-        location: "Jaipur",
+        name: "Bindu Menon",
+        location: "Taliparamba",
         text: {
           en: "Termite treatment saved our wooden furniture. Very effective.",
           ml: "തേൾ ട്രീറ്റ്മെന്റ് ഞങ്ങളുടെ മരഫർണിച്ചർ രക്ഷപ്പെടുത്തി. വളരെ ഫലപ്രദമായ സേവനം.",
@@ -514,7 +552,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     slug: "smart-home",
     icon: Cpu,
     cardImage: bannerSmarthome,
-    bannerImages: [bannerSmarthome, bannerElectrical, bannerAppliance],
+    bannerImages: [bannerSmarthome],
     title: {
       en: "Smart Home Setup",
       ml: "സ്മാർട്ട് ഹോം സജ്ജീകരണം",
@@ -555,8 +593,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Arjun Kapoor",
-        location: "Delhi",
+        name: "Ajay Nambiar",
+        location: "Thalassery",
         text: {
           en: "Love controlling everything from my phone now. Professional installation.",
           ml: "ഇപ്പോൾ മൊബൈലിൽ നിന്ന് എല്ലാം നിയന്ത്രിക്കാൻ കഴിയുന്നത് വളരെ ഇഷ്ടമായി. വളരെ പ്രൊഫഷണൽ ഇൻസ്റ്റലേഷൻ.",
@@ -564,8 +602,8 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Divya Nair",
-        location: "Kochi",
+        name: "Divya Suresh",
+        location: "Payyannur",
         text: {
           en: "CCTV and smart lock installation was seamless. Feel much safer now.",
           ml: "സിസിടിവിയും സ്മാർട്ട് ലോക്കും വളരെ സ്മൂത്തിൽ ഇൻസ്റ്റാൾ ചെയ്തു. ഇപ്പോൾ കൂടുതൽ സുരക്ഷിതമായി തോന്നുന്നു.",
