@@ -79,7 +79,7 @@ export default function Index() {
 
   const testimonials = [
     {
-      name: "Anjana Nair",
+      name: "Anjana K.",
       location: "Thalassery",
       text: lang === "ml"
         ? "ഇലക്ട്രീഷ്യനെ ബുക്ക് ചെയ്തു, ഒരു മണിക്കൂറിനകം എത്തി. വളരെ പ്രൊഫഷണൽ സേവനവും ന്യായമായ നിരക്കുമായിരുന്നു."
@@ -87,7 +87,7 @@ export default function Index() {
       rating: 5,
     },
     {
-      name: "Shaji Menon",
+      name: "Shaji M.",
       location: "Taliparamba",
       text: lang === "ml"
         ? "വീട്ടിന്റെ മുഴുവൻ പെയിന്റിംഗ് ഇത്തിഹാസ വഴി നടത്തി. ജോലിയുടെ നിലവാരം വളരെ നല്ലതായിരുന്നു, സമയത്ത് പൂർത്തിയാക്കി."
@@ -95,7 +95,7 @@ export default function Index() {
       rating: 5,
     },
     {
-      name: "Sreeja Krishnan",
+      name: "Sreeja K.",
       location: "Payyannur",
       text: lang === "ml"
         ? "ഡീപ് ക്ലീനിംഗ് വളരെ സമഗ്രമായി ചെയ്തു. കിച്ചനും ബാത്ത്റൂമും പുതിയതുപോലെ ആയി."

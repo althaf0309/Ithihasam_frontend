@@ -90,7 +90,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Ramesh Nair",
+        name: "Ramesh K.",
         location: "Thalassery",
         text: {
           en: "Fixed my entire home wiring in just one day. Very professional team from Ithihasam!",
@@ -99,7 +99,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Fathima Rahman",
+        name: "Fathima R.",
         location: "Panoor",
         text: {
           en: "Quick response for a plumbing emergency at midnight. Lifesavers!",
@@ -108,7 +108,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Pradeep Kumar",
+        name: "Pradeep K.",
         location: "Kuthuparamba",
         text: {
           en: "Fair pricing and excellent workmanship. Will definitely use again.",
@@ -163,7 +163,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Anu Mohan",
+        name: "Anu M.",
         location: "Taliparamba",
         text: {
           en: "Beautiful texture painting done on our living room walls. The team was very neat.",
@@ -172,7 +172,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Nikhil Das",
+        name: "Nikhil D.",
         location: "Mattannur",
         text: {
           en: "Excellent color consultation. The house looks brand new!",
@@ -264,7 +264,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Deepa Nair",
+        name: "Deepa P.",
         location: "Iritty",
         text: {
           en: "AC was cooling perfectly after the service. Very knowledgeable technician.",
@@ -273,7 +273,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Jithin Raj",
+        name: "Jithin R.",
         location: "Payyannur",
         text: {
           en: "Fixed my washing machine on the spot. Great service!",
@@ -328,7 +328,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Manoj Menon",
+        name: "Manoj M.",
         location: "Anjarakandy",
         text: {
           en: "Beautiful custom wardrobe built exactly as designed. Top quality wood.",
@@ -337,7 +337,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Lakshmi Krishnan",
+        name: "Lakshmi K.",
         location: "Thazhe Chovva",
         text: {
           en: "Modular kitchen turned out amazing. Highly recommend Ithihasam carpentry.",
@@ -392,7 +392,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Suresh Babu",
+        name: "Suresh B.",
         location: "Chalode",
         text: {
           en: "Installed a beautiful SS gate for our home. Excellent finish and sturdy construction.",
@@ -401,7 +401,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Riyas Mohammed",
+        name: "Riyas M.",
         location: "Mattannur",
         text: {
           en: "Roofing sheet installation was done within a day. Very professional.",
@@ -456,7 +456,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Kavitha Nair",
+        name: "Kavitha P.",
         location: "Payyannur",
         text: {
           en: "My bathroom tiles are gleaming white again! Incredible deep cleaning team.",
@@ -465,7 +465,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Vishnu Prasad",
+        name: "Vishnu P.",
         location: "Iritty",
         text: {
           en: "Post-construction cleaning was thorough. Saved us so much time.",
@@ -474,7 +474,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Sajitha Rahman",
+        name: "Sajitha R.",
         location: "Panoor",
         text: {
           en: "Sofa looks brand new after their cleaning. Amazing results.",
@@ -529,7 +529,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Arun Kumar",
+        name: "Arun K.",
         location: "Kuthuparamba",
         text: {
           en: "No more cockroaches since the treatment 3 months ago. Excellent service!",
@@ -538,7 +538,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Bindu Menon",
+        name: "Bindu M.",
         location: "Taliparamba",
         text: {
           en: "Termite treatment saved our wooden furniture. Very effective.",
@@ -593,7 +593,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
     ],
     reviews: [
       {
-        name: "Ajay Nambiar",
+        name: "Ajay A.",
         location: "Thalassery",
         text: {
           en: "Love controlling everything from my phone now. Professional installation.",
@@ -602,7 +602,7 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
         rating: 5,
       },
       {
-        name: "Divya Suresh",
+        name: "Divya S.",
         location: "Payyannur",
         text: {
           en: "CCTV and smart lock installation was seamless. Feel much safer now.",

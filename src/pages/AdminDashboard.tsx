@@ -34,7 +34,7 @@ const enquiries = [
   { id: "ENQ-1284", name: "Vikram Singh", service: "Electrical", city: "Mumbai", date: "2026-04-11", status: "New" },
   { id: "ENQ-1283", name: "Sneha Patil", service: "Painting", city: "Pune", date: "2026-04-11", status: "Contacted" },
   { id: "ENQ-1282", name: "Amit Joshi", service: "Deep Cleaning", city: "Bangalore", date: "2026-04-10", status: "In Progress" },
-  { id: "ENQ-1281", name: "Priya Nair", service: "Carpentry", city: "Chennai", date: "2026-04-10", status: "Closed" },
+  { id: "ENQ-1281", name: "Priya P.", service: "Carpentry", city: "Chennai", date: "2026-04-10", status: "Closed" },
   { id: "ENQ-1280", name: "Rahul Mehta", service: "Appliance", city: "Mumbai", date: "2026-04-09", status: "New" },
   { id: "ENQ-1279", name: "Kavita Rao", service: "Roofing", city: "Hyderabad", date: "2026-04-09", status: "Contacted" },
 ];
