@@ -19,6 +19,10 @@ export interface LocalServiceTemplate {
   intent: string;
   commonJobs: string[];
   searchTerms: string[];
+  commonProblems?: string[];
+  serviceItems?: string[];
+  brands?: string[];
+  faqs?: Array<{ question: string; answer: string }>;
 }
 
 export interface LocalServiceLandingPage {
@@ -53,6 +57,30 @@ export const localServiceTemplates: LocalServiceTemplate[] = [
     intent: "AC repair, AC service, cooling issue diagnosis, gas filling, installation, and seasonal maintenance",
     commonJobs: ["AC cooling issue check", "AC gas filling", "split AC service", "AC installation", "AC water leakage repair"],
     searchTerms: ["AC repair", "AC service", "AC technician", "AC gas filling", "split AC service"],
+    commonProblems: ["AC not cooling properly", "AC water leakage", "AC making unusual noise", "AC not turning on", "remote not working", "gas leakage check"],
+    serviceItems: ["AC general service and cleaning", "gas refilling coordination", "compressor issue check", "PCB board fault check", "AC installation and uninstallation", "split AC and window AC service"],
+    brands: ["Samsung", "LG", "Daikin", "Voltas", "Carrier", "Hitachi", "Blue Star", "Whirlpool", "Panasonic"],
+    faqs: [
+      { question: "How often should I service my AC?", answer: "Most homes benefit from AC service every 3 to 6 months, depending on usage, dust, and cooling performance." },
+      { question: "Do you support all AC brands?", answer: "We coordinate service requests for major AC brands including Samsung, LG, Daikin, Voltas, Carrier, Hitachi, and Blue Star." },
+      { question: "Can I book AC installation also?", answer: "Yes. Customers can request AC installation, uninstallation, cleaning, gas checks, and repair support through the same booking flow." },
+    ],
+  },
+  {
+    slugPrefix: "tv-repair",
+    serviceName: "TV Repair Service",
+    parentServiceSlug: "appliance-servicing",
+    intent: "LED TV, LCD TV, smart TV, display, sound, power, remote, and wall-mount support",
+    commonJobs: ["TV display issue", "TV no sound", "smart TV setup", "TV not turning on", "wall-mount fitting"],
+    searchTerms: ["TV repair", "LED TV repair", "smart TV service", "TV technician", "TV service"],
+    commonProblems: ["TV screen not working", "no sound from TV", "TV not powering on", "remote or sensor issue", "smart TV app issue", "wall-mount support needed"],
+    serviceItems: ["LED and LCD TV issue check", "smart TV setup support", "display and sound fault check", "power board issue check", "remote and sensor support", "TV wall-mount fitting"],
+    brands: ["Samsung", "LG", "Sony", "Panasonic", "Mi", "OnePlus", "TCL", "VU", "Onida", "BPL"],
+    faqs: [
+      { question: "Do you handle smart TV issues?", answer: "Yes. Customers can request help for smart TV setup, app issues, display problems, sound faults, and power issues." },
+      { question: "Can I book TV wall mounting?", answer: "Yes. TV wall-mount fitting and basic setup support can be requested through this page." },
+      { question: "Which TV brands do you support?", answer: "We coordinate requests for popular brands including Samsung, LG, Sony, Panasonic, Mi, OnePlus, TCL, VU, Onida, and BPL." },
+    ],
   },
   {
     slugPrefix: "washing-machine-repair",
@@ -61,6 +89,9 @@ export const localServiceTemplates: LocalServiceTemplate[] = [
     intent: "front-load and top-load washing machine repair, drainage faults, spinning issues, and noise checks",
     commonJobs: ["washing machine not spinning", "water drainage issue", "front-load service", "top-load service", "washing machine installation"],
     searchTerms: ["washing machine repair", "washing machine service", "front-load washing machine repair", "top-load washing machine repair"],
+    commonProblems: ["washing machine not spinning", "water not draining", "machine making noise", "washing machine not starting", "water inlet issue", "door lock issue"],
+    serviceItems: ["front-load washing machine support", "top-load washing machine support", "drainage fault check", "spin issue diagnosis", "installation support", "noise and vibration checks"],
+    brands: ["LG", "Samsung", "Whirlpool", "IFB", "Bosch", "Godrej", "Haier", "Panasonic"],
   },
   {
     slugPrefix: "refrigerator-repair",
@@ -69,6 +100,9 @@ export const localServiceTemplates: LocalServiceTemplate[] = [
     intent: "fridge cooling problems, compressor checks, water leakage, unusual noise, and door gasket issues",
     commonJobs: ["fridge cooling issue", "compressor check", "single-door fridge repair", "double-door fridge repair", "fridge noise issue"],
     searchTerms: ["refrigerator repair", "fridge repair", "fridge service", "refrigerator technician"],
+    commonProblems: ["fridge not cooling", "freezer ice build-up", "water leakage", "compressor noise", "door gasket issue", "fridge not turning on"],
+    serviceItems: ["single-door fridge support", "double-door fridge support", "cooling issue diagnosis", "compressor issue check", "thermostat and gasket checks", "water leakage support"],
+    brands: ["LG", "Samsung", "Whirlpool", "Godrej", "Haier", "Panasonic", "Bosch", "Electrolux"],
   },
   {
     slugPrefix: "fridge-repair",
@@ -93,6 +127,20 @@ export const localServiceTemplates: LocalServiceTemplate[] = [
     intent: "home electrician visits for wiring, switchboard faults, MCB tripping, lighting, and urgent electrical repairs",
     commonJobs: ["switchboard repair", "MCB tripping issue", "house wiring", "fan installation", "light fitting work"],
     searchTerms: ["electrician", "electrician near me", "electrical repair", "wiring work", "switchboard repair"],
+    commonProblems: ["MCB tripping", "switchboard fault", "fan not working", "light fitting issue", "socket damage", "wiring repair needed"],
+    serviceItems: ["switchboard repair", "house wiring support", "fan installation", "light fitting work", "MCB and DB checks", "socket and plug-point work"],
+    brands: ["Havells", "V-Guard", "Anchor", "Legrand", "Schneider Electric", "Finolex", "Polycab", "Crompton"],
+  },
+  {
+    slugPrefix: "electrical-work",
+    serviceName: "Electrical Work",
+    parentServiceSlug: "electrical-plumbing",
+    intent: "electrical repair, wiring, switchboard work, MCB checks, lighting, fan, and socket support",
+    commonJobs: ["switchboard repair", "MCB tripping issue", "house wiring", "fan installation", "light fitting work"],
+    searchTerms: ["electrical work", "electrical repair", "electrician", "wiring work", "switchboard repair"],
+    commonProblems: ["power fluctuation", "MCB tripping", "switchboard fault", "wiring issue", "fan or light fitting problem", "socket repair needed"],
+    serviceItems: ["wiring repair", "switchboard work", "MCB and DB checks", "fan installation", "light fitting", "socket and plug-point work"],
+    brands: ["Havells", "V-Guard", "Anchor", "Legrand", "Schneider Electric", "Finolex", "Polycab", "Crompton"],
   },
   {
     slugPrefix: "plumber",
@@ -101,6 +149,20 @@ export const localServiceTemplates: LocalServiceTemplate[] = [
     intent: "plumbing repair for pipe leaks, tap replacement, bathroom fittings, drainage, and motor connection issues",
     commonJobs: ["pipe leakage repair", "tap replacement", "bathroom fitting work", "drainage issue", "water motor connection"],
     searchTerms: ["plumber", "plumber near me", "plumbing services", "pipe leakage repair", "tap repair"],
+    commonProblems: ["pipe leakage", "tap not working", "blocked drainage", "bathroom fitting issue", "flush tank problem", "water motor connection issue"],
+    serviceItems: ["pipe leakage repair", "tap replacement", "bathroom fitting work", "drainage support", "flush tank repair", "water motor connection support"],
+    brands: ["Jaquar", "Parryware", "Hindware", "Cera", "Kohler", "Astral", "Supreme", "Ashirvad"],
+  },
+  {
+    slugPrefix: "plumbing",
+    serviceName: "Plumbing Services",
+    parentServiceSlug: "electrical-plumbing",
+    intent: "pipe leak repair, tap replacement, bathroom fittings, drainage support, flush tank work, and water-line maintenance",
+    commonJobs: ["pipe leakage repair", "tap replacement", "bathroom fitting work", "drainage issue", "flush tank repair"],
+    searchTerms: ["plumbing", "plumbing services", "plumber", "pipe leakage repair", "tap repair"],
+    commonProblems: ["pipe leakage", "blocked drainage", "low water flow", "tap or shower issue", "bathroom fitting issue", "flush tank problem"],
+    serviceItems: ["pipe leakage repair", "tap and shower replacement", "bathroom fitting work", "drainage support", "flush tank repair", "water-line support"],
+    brands: ["Jaquar", "Parryware", "Hindware", "Cera", "Kohler", "Astral", "Supreme", "Ashirvad"],
   },
   {
     slugPrefix: "electrical-plumbing",
@@ -125,6 +187,9 @@ export const localServiceTemplates: LocalServiceTemplate[] = [
     intent: "interior painting, exterior painting, repainting, wall putty work, waterproof coating, and neat finishing",
     commonJobs: ["interior painting", "exterior painting", "wall putty work", "waterproof coating", "full home repainting"],
     searchTerms: ["house painting", "painting services", "interior painting", "exterior painting", "home painting"],
+    commonProblems: ["faded wall paint", "wall cracks before repainting", "damp patches", "peeling paint", "rental repainting needed", "exterior weather damage"],
+    serviceItems: ["interior painting", "exterior painting", "wall putty work", "primer application", "waterproof coating", "full home repainting"],
+    brands: ["Asian Paints", "Berger", "Nippon Paint", "Dulux", "Indigo Paints", "JSW Paints", "Birla Opus", "Nerolac"],
   },
   {
     slugPrefix: "interior-painting",
@@ -149,6 +214,9 @@ export const localServiceTemplates: LocalServiceTemplate[] = [
     intent: "door repair, furniture repair, wardrobe work, modular kitchen support, shelf fitting, and custom woodwork",
     commonJobs: ["door repair", "furniture repair", "wardrobe work", "modular kitchen support", "shelf fitting"],
     searchTerms: ["carpentry services", "carpenter", "woodwork", "furniture repair", "home carpenter"],
+    commonProblems: ["door not closing properly", "furniture repair needed", "wardrobe repair", "kitchen cabinet issue", "window frame repair", "wood polish requirement"],
+    serviceItems: ["door and window repair", "custom furniture work", "modular kitchen support", "wardrobe and almirah work", "shelf fitting", "wood polish and finishing"],
+    brands: ["Greenply", "CenturyPly", "Kitply", "Merino Laminates", "Greenlam", "Hettich", "Ebco", "Godrej Locks"],
   },
   {
     slugPrefix: "carpenter",
@@ -181,6 +249,20 @@ export const localServiceTemplates: LocalServiceTemplate[] = [
     intent: "roofing sheet work, truss work, aluminium fabrication, steel fabrication, gate work, grill work, and welding support",
     commonJobs: ["roofing sheet work", "truss work", "aluminium fabrication", "steel fabrication", "gate fabrication"],
     searchTerms: ["roofing and fabrication", "fabrication work", "roofing sheet work", "welding work", "gate fabrication"],
+    commonProblems: ["new gate needed", "window grill work required", "staircase railing repair", "MS door fabrication", "shed or shelter needed", "metal shelving requirement"],
+    serviceItems: ["MS gate fabrication", "window and door grill work", "staircase railing work", "roofing sheet and shed work", "steel shelves and frames", "aluminium partition work"],
+    brands: ["TATA Steel", "SAIL", "Jindal", "Hindalco", "JSW Steel", "APL Apollo", "Asian Paints", "Berger"],
+  },
+  {
+    slugPrefix: "fabrication",
+    serviceName: "Fabrication Works",
+    parentServiceSlug: "roofing-fabrication",
+    intent: "MS gate fabrication, window grills, railing work, shed work, steel shelves, aluminium partitions, and welding support",
+    commonJobs: ["MS gate fabrication", "window grill work", "staircase railing", "roofing sheet work", "aluminium partition"],
+    searchTerms: ["fabrication", "fabrication works", "gate fabrication", "grill work", "welding work"],
+    commonProblems: ["new gate needed", "window grill work required", "staircase railing repair", "MS door fabrication", "shed or shelter needed", "metal shelving requirement"],
+    serviceItems: ["MS gate fabrication and installation", "window and door grill work", "staircase railing work", "roofing sheet and shed work", "steel shelves and frames", "aluminium partition and sliding door work"],
+    brands: ["TATA Steel", "SAIL", "Jindal", "Hindalco", "JSW Steel", "APL Apollo", "Asian Paints", "Berger"],
   },
   {
     slugPrefix: "aluminium-fabrication",
@@ -221,6 +303,9 @@ export const localServiceTemplates: LocalServiceTemplate[] = [
     intent: "full home deep cleaning, kitchen cleaning, bathroom cleaning, sofa cleaning, and post-construction cleaning",
     commonJobs: ["full home deep cleaning", "kitchen deep cleaning", "bathroom cleaning", "sofa cleaning", "post-construction cleaning"],
     searchTerms: ["deep cleaning", "deep cleaning services", "home cleaning", "house cleaning", "cleaning service"],
+    commonProblems: ["kitchen grease build-up", "bathroom stains", "dust after renovation", "sofa stains", "move-in cleaning needed", "floor and tile dirt"],
+    serviceItems: ["full home deep cleaning", "kitchen deep cleaning", "bathroom cleaning", "sofa cleaning", "post-construction cleaning", "move-in and move-out cleaning"],
+    brands: ["Taski", "Diversey", "Scotch-Brite", "Lizol", "Harpic", "Bosch", "Karcher", "Roots"],
   },
   {
     slugPrefix: "home-cleaning",
@@ -314,6 +399,7 @@ function buildLandingPage(template: LocalServiceTemplate, area: ServiceAreaEntry
     keywords: createKeywordSet(
       template.searchTerms.map((term) => `${term} in ${area.name}`),
       template.searchTerms.map((term) => `${term} ${area.name}`),
+      template.brands?.map((brand) => `${brand} ${template.serviceName} ${area.name}`) || [],
       title,
       area.name,
       area.district,

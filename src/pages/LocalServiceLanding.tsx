@@ -38,8 +38,22 @@ export default function LocalServiceLanding() {
   const parentService = serviceCatalogBySlug[page.template.parentServiceSlug];
   const nearbyAreas = getNearbyServiceAreas(page.area);
   const relatedPages = getRelatedPages(page.slug);
-  const faqItems = parentService.faqs.slice(0, 4);
+  const faqItems = page.template.faqs?.length
+    ? page.template.faqs
+    : parentService.faqs.slice(0, 4).map((faq) => ({
+        question: getLocalizedText(faq.q, lang),
+        answer: getLocalizedText(faq.a, lang),
+      }));
   const reviewItems = parentService.reviews.slice(0, 3);
+  const problemItems = page.template.commonProblems ?? page.template.commonJobs;
+  const serviceItems = page.template.serviceItems ?? page.template.commonJobs;
+  const whyChooseItems = [
+    `Doorstep coordination for ${page.area.name} and nearby localities`,
+    "Skilled professionals matched to the requested service type",
+    "Clear job scope and pricing discussion before work starts",
+    "Support for homes, apartments, shops, offices, and rental properties",
+    "Call and WhatsApp booking support for faster scheduling",
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -96,10 +110,10 @@ export default function LocalServiceLanding() {
               </h2>
               <div className="mt-5 space-y-4 text-base leading-8 text-muted-foreground">
                 <p>
-                  Ithihasam handles {page.template.intent} for {page.area.propertyMix}. This page is built for customers searching specifically for {page.title.toLowerCase()} and nearby doorstep support in {page.area.district}.
+                  Customers searching for {page.template.searchTerms.slice(0, 3).join(", ")} in {page.area.name} can use Ithihasam to request practical doorstep support for {page.template.intent}.
                 </p>
                 <p>
-                  Share your issue, property location, preferred date, and any photos or notes through the booking form. The team can then coordinate the right professional for {page.area.name} and surrounding service pockets.
+                  Share the issue, exact property location, preferred date, and any photos or notes through the booking form. The team can then coordinate the right professional for {page.area.propertyMix} in {page.area.name} and nearby service pockets.
                 </p>
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
@@ -118,13 +132,39 @@ export default function LocalServiceLanding() {
               </div>
             </div>
 
+            <section className="rounded-3xl border border-border/50 bg-card p-6 shadow-[var(--card-shadow)] md:p-8">
+              <h2 className="text-2xl font-bold text-foreground">Why {page.area.name} customers choose Ithihasam</h2>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {whyChooseItems.map((item) => (
+                  <div key={item} className="flex gap-3 rounded-2xl border border-border/50 bg-background/70 p-4">
+                    <CheckCircle2 size={19} className="mt-0.5 shrink-0 text-primary" />
+                    <p className="text-sm leading-6 text-muted-foreground">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-foreground">
+                Common {page.template.serviceName} problems we handle in {page.area.name}
+              </h2>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {problemItems.map((problem) => (
+                  <div key={problem} className="flex items-center gap-3 rounded-xl border border-border/50 bg-card p-4">
+                    <CheckCircle2 size={18} className="shrink-0 text-whatsapp" />
+                    <span className="text-sm font-semibold text-foreground">{problem}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+
             <section>
               <h2 className="text-2xl font-bold text-foreground">Services included in {page.area.name}</h2>
               <p className="mt-3 text-base leading-7 text-muted-foreground">
                 These are the common jobs customers can request through this page.
               </p>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                {[...page.template.commonJobs, ...parentService.includes.slice(0, 4).map((item) => item.en)]
+                {[...serviceItems, ...parentService.includes.slice(0, 4).map((item) => item.en)]
                   .filter((job, index, jobs) => jobs.indexOf(job) === index)
                   .map((job, index) => (
                     <motion.div
@@ -147,14 +187,30 @@ export default function LocalServiceLanding() {
               </div>
             </section>
 
+            {page.template.brands?.length ? (
+              <section className="rounded-3xl border border-border/50 bg-card p-6 shadow-[var(--card-shadow)] md:p-8">
+                <h2 className="text-2xl font-bold text-foreground">Popular brands and materials</h2>
+                <p className="mt-3 text-base leading-7 text-muted-foreground">
+                  These are common brands or material names customers mention while booking {page.template.serviceName.toLowerCase()} in {page.area.name}.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {page.template.brands.map((brand) => (
+                    <span key={brand} className="rounded-full border border-border/70 bg-background px-3 py-1.5 text-sm font-semibold text-foreground">
+                      {brand}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
             {faqItems.length > 0 && (
               <section className="rounded-3xl border border-border/50 bg-card p-6 shadow-[var(--card-shadow)] md:p-8">
                 <h2 className="text-2xl font-bold text-foreground">FAQs for {page.title}</h2>
                 <div className="mt-6 divide-y divide-border/60">
                   {faqItems.map((faq) => (
-                    <div key={faq.q.en} className="py-5 first:pt-0 last:pb-0">
-                      <h3 className="text-base font-bold text-foreground">{getLocalizedText(faq.q, lang)}</h3>
-                      <p className="mt-2 text-sm leading-7 text-muted-foreground">{getLocalizedText(faq.a, lang)}</p>
+                    <div key={faq.question} className="py-5 first:pt-0 last:pb-0">
+                      <h3 className="text-base font-bold text-foreground">{faq.question}</h3>
+                      <p className="mt-2 text-sm leading-7 text-muted-foreground">{faq.answer}</p>
                     </div>
                   ))}
                 </div>
