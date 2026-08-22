@@ -2,27 +2,30 @@
 #
 # Patches the nginx server block that serves ithihasam.in.
 #
-#   sudo bash fix-nginx.sh
+#   sudo bash deploy/fix-nginx.sh
 #
-# Step 3 of fix-production.sh looked for the literal string "ithihasam" in the
-# config and found nothing — the server block is probably named `default`, or
-# server_name is `_` or the instance IP. This finds the block by what it does
-# rather than what it is called: the one listening on 443, or the one whose
-# root points at the frontend build.
+# Your config explicitly proxies these to Django:
 #
-# Fixes two things:
-#   1. Includes the SEO snippet so /robots.txt and /sitemap.xml are served as
-#      static files instead of being proxied into Django.
-#   2. Rewrites try_files so nginx serves $uri/index.html directly. Letting it
-#      resolve $uri as a directory is what emits the 301 that appends a trailing
-#      slash, and every canonical tag on the site is the no-slash form.
+#     location = /sitemap.xml { proxy_pass http://127.0.0.1:8000/sitemap.xml; }
+#     location = /robots.txt  { proxy_pass http://127.0.0.1:8000/robots.txt;  }
 #
-# Backs up before touching anything and rolls back if `nginx -t` fails.
+# Django has no robots route, so /robots.txt returns its 404 page. Its sitemap
+# view is a leftover that emits a flat urlset, while the build now produces a
+# sitemap index over five child sitemaps. Both blocks are removed rather than
+# shadowed — nginx rejects two `location =` blocks for the same path.
+#
+# Also rewrites `try_files $uri $uri/ /index.html`. Letting nginx resolve $uri
+# as a directory is what makes it 301 to a trailing slash, and every canonical
+# tag on the site is the no-slash form, so the canonical currently names a URL
+# that redirects away from itself.
+#
+# Backs up every file it touches and rolls back if `nginx -t` fails.
 
 set -euo pipefail
 
 SNIPPET=/etc/nginx/snippets/ithihasam-seo.conf
 FRONTEND_DIST=/srv/apps/Ithihasam_frontend/dist
+PATCHER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/patch-nginx.py"
 STAMP=$(date +%Y%m%d-%H%M%S)
 
 log()  { printf '\n\033[1;36m==> %s\033[0m\n' "$*"; }
@@ -31,6 +34,7 @@ warn() { printf '  \033[1;33m%s\033[0m\n' "$*"; }
 fail() { printf '\n\033[1;31mFAILED: %s\033[0m\n' "$*" >&2; exit 1; }
 
 [ "$(id -u)" -eq 0 ] || fail "Run with sudo: sudo bash $0"
+[ -f "$PATCHER" ] || fail "patch-nginx.py not found next to this script."
 
 # ---------------------------------------------------------------- snippet
 
@@ -38,10 +42,10 @@ log "Writing SEO snippet"
 
 mkdir -p "$(dirname "$SNIPPET")"
 cat > "$SNIPPET" <<NGINXEOF
-# Managed by deploy/fix-nginx.sh — serves SEO files from the frontend build.
+# Managed by deploy/fix-nginx.sh — serves SEO files from the frontend build
+# instead of proxying them to Django.
 
 location = /robots.txt {
-    root ${FRONTEND_DIST};
     default_type text/plain;
     add_header Cache-Control "public, max-age=3600";
     access_log off;
@@ -49,7 +53,6 @@ location = /robots.txt {
 }
 
 location = /llms.txt {
-    root ${FRONTEND_DIST};
     default_type text/plain;
     add_header Cache-Control "public, max-age=3600";
     access_log off;
@@ -57,28 +60,25 @@ location = /llms.txt {
 }
 
 location ~ ^/sitemap(-[a-z-]+)?\.xml\$ {
-    root ${FRONTEND_DIST};
     default_type application/xml;
     add_header Cache-Control "public, max-age=3600";
     access_log off;
 }
 
 location = /feed.xml {
-    root ${FRONTEND_DIST};
     default_type application/rss+xml;
     add_header Cache-Control "public, max-age=3600";
     access_log off;
 }
 
 location = /site.webmanifest {
-    root ${FRONTEND_DIST};
     default_type application/manifest+json;
     access_log off;
 }
 
 location /og/ {
-    root ${FRONTEND_DIST};
     expires 30d;
+    add_header Cache-Control "public";
     access_log off;
 }
 NGINXEOF
@@ -88,11 +88,15 @@ ok "$SNIPPET"
 
 log "Locating the server block"
 
-CANDIDATES=$(grep -rl --include='*' -E "listen[[:space:]]+443|${FRONTEND_DIST}|proxy_pass.*:8000" \
-  /etc/nginx/sites-enabled /etc/nginx/conf.d /etc/nginx/nginx.conf 2>/dev/null | sort -u || true)
+# -R (not -r) so symlinks in sites-enabled are followed, and sites-available is
+# searched directly. That symlink behaviour is why the previous attempt found
+# nothing even though the config plainly contains the domain.
+CANDIDATES=$(grep -RlE "server_name[^;]*ithihasam|${FRONTEND_DIST}" \
+  /etc/nginx/sites-enabled /etc/nginx/sites-available /etc/nginx/conf.d /etc/nginx/nginx.conf \
+  2>/dev/null | xargs -r -n1 readlink -f | sort -u || true)
 
-[ -n "$CANDIDATES" ] || fail "No nginx config found with listen 443, the dist path, or a :8000 proxy.
-  Show me:  ls -la /etc/nginx/sites-enabled/ && sudo nginx -T | head -60"
+[ -n "$CANDIDATES" ] || fail "Still no match. Show me:
+  sudo nginx -T | grep -n 'server_name\\|root\\|try_files' | head -30"
 
 echo "$CANDIDATES" | sed 's/^/  candidate: /'
 
@@ -103,107 +107,32 @@ log "Patching"
 PATCHED=""
 for CONF in $CANDIDATES; do
   cp "$CONF" "${CONF}.backup-${STAMP}"
-
-  if python3 - "$CONF" "$SNIPPET" "$FRONTEND_DIST" <<'PYEOF'
-import re, sys
-
-path, snippet, dist = sys.argv[1], sys.argv[2], sys.argv[3]
-conf = open(path).read()
-original = conf
-
-
-def blocks(text):
-    """Yield (start, end) spans of each top-level `server { ... }` block."""
-    for m in re.finditer(r"\bserver\s*\{", text):
-        depth, i = 0, m.end() - 1
-        while i < len(text):
-            if text[i] == "{":
-                depth += 1
-            elif text[i] == "}":
-                depth -= 1
-                if depth == 0:
-                    yield m.start(), i + 1
-                    break
-            i += 1
-
-
-changed = False
-out = []
-last = 0
-
-for start, end in blocks(conf):
-    body = conf[start:end]
-
-    # The block that actually serves the site: listens on 443, or roots at the
-    # frontend build. A plain :80 redirect block needs neither change.
-    serves_site = ("listen" in body and "443" in body) or dist in body
-    is_redirect_only = "return 301" in body and "location" not in body
-
-    if not serves_site or is_redirect_only:
-        continue
-
-    new = body
-
-    # 1. include the snippet once
-    if snippet not in new:
-        anchor = re.search(r"\n(\s*)(server_name[^;]*;|root[^;]*;|listen[^;]*;)", new)
-        if anchor:
-            indent = anchor.group(1)
-            new = new[: anchor.end()] + f"\n{indent}include {snippet};" + new[anchor.end() :]
-
-    # 2. serve $uri/index.html before nginx resolves $uri as a directory
-    new = re.sub(
-        r"try_files\s+\$uri\s+\$uri/\s+(/index\.html\s*;)",
-        r"try_files $uri $uri/index.html \1",
-        new,
-    )
-    new = re.sub(
-        r"try_files\s+\$uri\s+\$uri/index\.html\s+\$uri/\s+(/index\.html\s*;)",
-        r"try_files $uri $uri/index.html \1",
-        new,
-    )
-
-    if new != body:
-        out.append(conf[last:start])
-        out.append(new)
-        last = end
-        changed = True
-
-out.append(conf[last:])
-conf = "".join(out)
-
-if not changed or conf == original:
-    sys.exit(1)
-
-open(path, "w").write(conf)
-sys.exit(0)
-PYEOF
-  then
+  if python3 "$PATCHER" "$CONF" "$SNIPPET" "$FRONTEND_DIST"; then
     ok "patched $CONF"
-    PATCHED="$CONF ${PATCHED}"
+    PATCHED="${CONF} ${PATCHED}"
   else
     rm -f "${CONF}.backup-${STAMP}"
-    printf '  skipped %s (no matching server block)\n' "$CONF"
+    printf '  skipped %s (nothing to change)\n' "$CONF"
   fi
 done
 
-[ -n "$PATCHED" ] || fail "Found candidates but none had a patchable server block.
-  Show me:  sudo nginx -T | grep -A40 'listen.*443'"
+[ -n "$PATCHED" ] || fail "Found the config but nothing matched. Show me:
+  sudo nginx -T | sed -n '185,265p'"
 
-# ---------------------------------------------------------------- verify
+# ---------------------------------------------------------------- test
 
 log "Testing config"
 
 if ! nginx -t 2>&1 | tail -2; then
-  for CONF in $PATCHED; do
-    cp "${CONF}.backup-${STAMP}" "$CONF"
-  done
-  fail "nginx -t failed — all changes rolled back. Nothing was applied."
+  for CONF in $PATCHED; do cp "${CONF}.backup-${STAMP}" "$CONF"; done
+  fail "nginx -t failed — every change rolled back. Nothing applied."
 fi
 
 systemctl reload nginx
 ok "nginx reloaded"
 sleep 2
+
+# ---------------------------------------------------------------- verify
 
 log "Verifying"
 
@@ -226,11 +155,17 @@ check /sitemap.xml "xml"        || STATUS=1
 check /feed.xml    "xml"        || STATUS=1
 check /api/blog/   "json"       || STATUS=1
 
-printf '\n  sitemap root   : '
+printf '\n  sitemap root  : '
 curl -s --max-time 15 https://ithihasam.in/sitemap.xml | grep -o '<sitemapindex\|<urlset' | head -1
-printf '  /contact code  : '
+printf '  /contact      : '
 curl -s -o /dev/null -w '%{http_code}' --max-time 15 https://ithihasam.in/contact
-printf '  (200 = fixed, 301 = still redirecting)\n'
+printf '   (200 = fixed, 301 = still redirecting)\n'
+printf '  robots first line: '
+curl -s --max-time 15 https://ithihasam.in/robots.txt | head -1
 
 echo
-[ "$STATUS" -eq 0 ] && log "All checks passed" || warn "Some checks failed. Backups: *.backup-${STAMP}"
+if [ "$STATUS" -eq 0 ]; then
+  log "All checks passed"
+else
+  warn "Some checks failed. Backups: *.backup-${STAMP}"
+fi
