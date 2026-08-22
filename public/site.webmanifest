@@ -1,0 +1,14 @@
+{
+  "name": "Ithihasam Home Services",
+  "short_name": "Ithihasam",
+  "description": "Home maintenance services in Kannur district, Kerala.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0f14",
+  "theme_color": "#0b0f14",
+  "lang": "en-IN",
+  "icons": [
+    { "src": "/ithihasa-logo.jpeg", "sizes": "891x876", "type": "image/jpeg", "purpose": "any" }
+  ]
+}

@@ -93,7 +93,7 @@ const translations: Record<string, Record<Lang, string>> = {
   "footer.services": { en: "Services", ml: "സേവനങ്ങൾ" },
   "footer.contactUs": { en: "Contact Us", ml: "ബന്ധപ്പെടുക" },
   "footer.whatsappUs": { en: "WhatsApp Us", ml: "വാട്ട്സ്ആപ്പിൽ ബന്ധപ്പെടൂ" },
-  "footer.copyright": { en: "© 2026 Ithihasam. All rights reserved.", ml: "© 2026 ഇത്തിഹാസ. എല്ലാ അവകാശങ്ങളും സംരക്ഷിതമാണ്." },
+  "footer.rightsReserved": { en: "All rights reserved.", ml: "എല്ലാ അവകാശങ്ങളും സംരക്ഷിതമാണ്." },
 
   "blog.title": { en: "Blog & Tips", ml: "ബ്ലോഗ് & ടിപ്പുകൾ" },
   "blog.subtitle": { en: "Expert advice and home improvement tips from Ithihasam", ml: "ഇത്തിഹാസയുടെ വിദഗ്ധ നിർദേശങ്ങളും ഹോം മെച്ചപ്പെടുത്തൽ ടിപ്പുകളും" },
@@ -153,7 +153,16 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Lang>(getStoredLanguage);
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, lang);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, lang);
+    } catch {
+      /* Private mode or blocked storage: the choice just won't persist. */
+    }
+
+    // Keep <html lang> in step with the visible language. It was pinned to "en"
+    // regardless of the toggle, which tells screen readers to pronounce
+    // Malayalam with English phonetics and misreports the page to crawlers.
+    document.documentElement.lang = lang === "ml" ? "ml-IN" : "en-IN";
   }, [lang]);
 
   const setLang = useCallback((next: Lang) => setLangState(next), []);

@@ -389,7 +389,7 @@ function buildLandingPage(template: LocalServiceTemplate, area: ServiceAreaEntry
 
   return {
     slug,
-    path: `/${slug}/`,
+    path: `/${slug}`,
     area,
     template,
     title,

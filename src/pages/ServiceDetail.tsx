@@ -7,6 +7,8 @@ import { Footer } from "@/components/Footer";
 import { CategoryIconStrip } from "@/components/CategoryIconStrip";
 import { QuickBookingForm } from "@/components/QuickBookingForm";
 import { ContactCTAButtons } from "@/components/ContactCTAButtons";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { DistrictSelector } from "@/components/DistrictSelector";
 import { SeoMeta } from "@/components/SeoMeta";
 import { ServiceAreaGrid } from "@/components/ServiceAreaGrid";
 import { TestimonialCard } from "@/components/TestimonialCard";
@@ -123,8 +125,8 @@ export default function ServiceDetail() {
       <div className="min-h-screen bg-background">
         <SeoMeta
           title="Service Not Found | Ithihasam"
-          description="The requested Ithihasam service page could not be found. Browse trusted home maintenance services in Kannur and Thrissur."
-          keywords={["service not found", "Ithihasam services", "Kannur home services", "Thrissur home services"]}
+          description="The requested Ithihasam service page could not be found. Browse trusted home maintenance services in Kannur."
+          keywords={["service not found", "Ithihasam services", "Kannur home services"]}
           robots="noindex, nofollow"
           canonicalPath={slug ? `/services/${slug}` : "/services"}
         />
@@ -158,7 +160,7 @@ export default function ServiceDetail() {
     service.supportedBrands?.map((brand) => `${brand} ${service.title.en}`) || [],
     "Ithihasam",
     "Kannur home services",
-    "Thrissur home services",
+    "Kannur district home services",
     serviceAreaNames.map((areaName) => `${service.title.en} in ${areaName}`),
   );
   const localPagesForService = localServiceLandingPages.filter(
@@ -190,8 +192,9 @@ export default function ServiceDetail() {
 
       <BannerCarousel images={service.bannerImages} title={title} />
 
-      <div className="relative z-10 -mt-5 flex justify-center">
+      <div className="relative z-10 -mt-5 flex flex-col items-center gap-4">
         <ContactCTAButtons size="lg" showLabels />
+        <DistrictSelector slugPrefix={service.slug} serviceName={service.title.en} />
       </div>
 
       <div className="container mt-8 lg:hidden">
@@ -199,6 +202,16 @@ export default function ServiceDetail() {
       </div>
 
       <CategoryIconStrip />
+
+      <div className="container pt-6">
+        <Breadcrumbs
+          items={[
+            { label: "Home", to: "/" },
+            { label: "Services", to: "/services" },
+            { label: service.title.en },
+          ]}
+        />
+      </div>
 
       <div className="container grid gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_28rem]">
         <div className="space-y-12">

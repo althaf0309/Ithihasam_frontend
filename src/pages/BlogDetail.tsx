@@ -6,9 +6,11 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { QuickBookingForm } from "@/components/QuickBookingForm";
 import { SeoMeta } from "@/components/SeoMeta";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { fetchBlogPost } from "@/lib/api";
 import { resolveContentImage } from "@/lib/content-images";
 import { createKeywordSet, extractPlainText, truncateText } from "@/lib/seo";
+import { sanitizeHtml } from "@/lib/sanitize-html";
 import { useLang } from "@/contexts/LangContext";
 
 export default function BlogDetail() {
@@ -26,7 +28,7 @@ export default function BlogDetail() {
         <SeoMeta
           title="Loading Blog Article | Ithihasam"
           description="Browse the latest Ithihasam blog articles on home maintenance and local home services."
-          keywords={["Ithihasam blog", "home maintenance blog", "Kannur home services", "Thrissur home services"]}
+          keywords={["Ithihasam blog", "home maintenance blog", "Kannur home services"]}
           canonicalPath={slug ? `/blog/${slug}` : "/blog"}
         />
         <Header />
@@ -67,7 +69,7 @@ export default function BlogDetail() {
     post.slug.replace(/-/g, " "),
     "Ithihasam blog",
     "home maintenance blog Kannur",
-    "home maintenance blog Thrissur",
+    "home maintenance blog Kerala",
     "electrical plumbing painting cleaning tips",
   );
 
@@ -98,6 +100,10 @@ export default function BlogDetail() {
       </div>
 
       <div className="container py-10">
+        <Breadcrumbs
+          className="mb-4"
+          items={[{ label: "Home", to: "/" }, { label: "Blog", to: "/blog" }, { label: post.title }]}
+        />
         <Link to="/blog" className="mb-6 inline-flex items-center gap-1 text-sm text-primary hover:underline">
           <ArrowLeft size={14} /> {t("blog.back")}
         </Link>
@@ -110,7 +116,7 @@ export default function BlogDetail() {
             </div>
             <article
               className="prose prose-sm max-w-none text-foreground prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary prose-img:rounded-2xl prose-img:shadow-[var(--card-shadow)]"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
             />
           </div>
 

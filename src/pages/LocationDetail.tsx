@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { SeoMeta } from "@/components/SeoMeta";
 import { CategoryIconStrip } from "@/components/CategoryIconStrip";
 import { ContactCTAButtons } from "@/components/ContactCTAButtons";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { QuickBookingForm } from "@/components/QuickBookingForm";
 import { ServiceCard } from "@/components/ServiceCard";
 import { ServiceAreaGrid } from "@/components/ServiceAreaGrid";
@@ -95,6 +96,14 @@ export default function LocationDetail() {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10" />
         <div className="container relative">
           <div className="max-w-4xl">
+            <Breadcrumbs
+              className="mb-5"
+              items={[
+                { label: "Home", to: "/" },
+                { label: "Services", to: "/services" },
+                { label: area.name },
+              ]}
+            />
             <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               {getUiText(lang, "badge")}
             </span>

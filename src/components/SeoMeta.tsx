@@ -72,10 +72,14 @@ export function SeoMeta({
   robots = "index, follow",
   publishedTime,
 }: SeoMetaProps) {
+  // Callers build this array inline, so its identity changes on every render.
+  // Depending on the array itself re-ran the effect and rewrote ~14 head tags
+  // continuously; the joined string is stable when the content is unchanged.
+  const keywordsContent = keywords.join(", ");
+
   useEffect(() => {
     const canonicalUrl = toAbsoluteUrl(canonicalPath || window.location.pathname);
     const imageUrl = toAbsoluteUrl(image) || toAbsoluteUrl(DEFAULT_SEO_IMAGE);
-    const keywordsContent = keywords.join(", ");
 
     document.title = title;
 
@@ -94,7 +98,7 @@ export function SeoMeta({
     upsertMeta('meta[name="twitter:image"]', { name: "twitter:image" }, imageUrl);
     upsertMeta('meta[property="article:published_time"]', { property: "article:published_time" }, publishedTime);
     upsertCanonical(canonicalUrl);
-  }, [canonicalPath, description, image, keywords, publishedTime, robots, title, type]);
+  }, [canonicalPath, description, image, keywordsContent, publishedTime, robots, title, type]);
 
   return null;
 }

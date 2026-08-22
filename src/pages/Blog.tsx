@@ -19,7 +19,7 @@ export default function Blog() {
   const pageKeywords = createKeywordSet(
     "Ithihasam blog",
     "home maintenance blog Kannur",
-    "home maintenance blog Thrissur",
+    "home maintenance blog Kerala",
     "electrical and plumbing tips",
     "house painting ideas Kerala",
     "appliance servicing tips",
@@ -30,8 +30,8 @@ export default function Blog() {
   return (
     <div className="min-h-screen bg-background">
       <SeoMeta
-        title="Ithihasam Blog | Home Maintenance Tips for Kannur & Thrissur"
-        description="Read Ithihasam blog articles on home maintenance, electrical work, plumbing, painting, appliance repair, cleaning, pest control, and smart home services in Kannur and Thrissur."
+        title="Ithihasam Blog | Home Maintenance Tips for Kannur"
+        description="Read Ithihasam blog articles on home maintenance, electrical work, plumbing, painting, appliance repair, cleaning, pest control, and smart home services in Kannur."
         keywords={pageKeywords}
         image={posts?.[0] ? resolveContentImage(posts[0].cover_image) : undefined}
         canonicalPath="/blog"
@@ -45,7 +45,7 @@ export default function Blog() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-2 text-3xl font-bold text-primary-foreground md:text-4xl"
           >
-            Home Maintenance Blog for Kannur & Thrissur
+            Home Maintenance Blog for Kannur
           </motion.h1>
           <p className="text-primary-foreground/80">{t("blog.subtitle")}</p>
         </div>
@@ -83,7 +83,7 @@ export default function Blog() {
                       <span className="flex items-center gap-1"><User size={12} /> {post.author_name}</span>
                       <span className="flex items-center gap-1"><Calendar size={12} /> {formatDate(post.published_at)}</span>
                     </div>
-                    <h3 className="mb-2 line-clamp-2 text-lg font-bold text-foreground">{post.title}</h3>
+                    <h2 className="mb-2 line-clamp-2 text-lg font-bold text-foreground">{post.title}</h2>
                     <p className="mb-2 line-clamp-2 text-sm text-muted-foreground">{post.excerpt}</p>
                     <p className="mb-4 text-xs text-muted-foreground">{post.read_time_minutes} {t("blog.readTime")}</p>
                     <Link

@@ -7,6 +7,7 @@ import { SeoMeta } from "@/components/SeoMeta";
 import { CategoryIconStrip } from "@/components/CategoryIconStrip";
 import { QuickBookingForm } from "@/components/QuickBookingForm";
 import { ContactCTAButtons } from "@/components/ContactCTAButtons";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ServiceAreaGrid } from "@/components/ServiceAreaGrid";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { getLocalizedText, serviceCatalogBySlug } from "@/lib/service-catalog";
@@ -74,6 +75,15 @@ export default function LocalServiceLanding() {
         </div>
         <div className="container relative py-16 md:py-20">
           <div className="max-w-3xl">
+            <Breadcrumbs
+              className="mb-5"
+              items={[
+                { label: "Home", to: "/" },
+                { label: "Services", to: "/services" },
+                { label: parentService.title.en, to: page.parentServicePath },
+                { label: page.title },
+              ]}
+            />
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               <MapPin size={14} />
               {page.area.name}

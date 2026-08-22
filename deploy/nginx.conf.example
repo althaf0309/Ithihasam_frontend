@@ -1,0 +1,98 @@
+# Ithihasam — nginx config for the prerendered SPA.
+#
+# The critical line is the `try_files` in `location /`. Without it, every route
+# that is not prerendered (/about, /contact, /blog/*, /locations/*, the legal
+# pages) returns a hard 404 — including URLs listed in sitemap.xml.
+#
+#   cp deploy/nginx.conf.example /etc/nginx/sites-available/ithihasam
+#   ln -s /etc/nginx/sites-available/ithihasam /etc/nginx/sites-enabled/
+#   nginx -t && systemctl reload nginx
+
+server {
+    listen 80;
+    server_name ithihasam.in www.ithihasam.in;
+    return 301 https://ithihasam.in$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name www.ithihasam.in;
+
+    ssl_certificate     /etc/letsencrypt/live/ithihasam.in/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ithihasam.in/privkey.pem;
+
+    return 301 https://ithihasam.in$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name ithihasam.in;
+
+    ssl_certificate     /etc/letsencrypt/live/ithihasam.in/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ithihasam.in/privkey.pem;
+
+    root /var/www/ithihasam/dist;
+    index index.html;
+
+    # Canonical URL style is no-trailing-slash, matching sitemap.xml and every
+    # <link rel="canonical">. Strip a trailing slash so both forms resolve to one.
+    rewrite ^/(.*)/$ /$1 permanent;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.web3forms.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://api.web3forms.com" always;
+
+    gzip on;
+    gzip_types text/plain text/css application/javascript application/json application/xml image/svg+xml;
+    gzip_min_length 1024;
+
+    # Django API and admin. Keep these above the SPA fallback.
+    location /api/ {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /django-admin/ {
+        proxy_pass http://127.0.0.1:8000/admin/;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /media/ {
+        alias /var/www/ithihasam/media/;
+        expires 30d;
+        access_log off;
+    }
+
+    # sitemap.xml is generated at build time into dist/ and covers all 406
+    # canonical URLs, so it is served as a static file — not proxied to Django.
+    location = /sitemap.xml {
+        add_header Content-Type "application/xml";
+        try_files /sitemap.xml =404;
+    }
+
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    location /og/ {
+        expires 30d;
+        access_log off;
+    }
+
+    # Prerendered directories resolve to their index.html; anything else falls
+    # back to the React shell so client-side routes work on a cold load.
+    location / {
+        try_files $uri $uri/index.html $uri/ /index.html;
+    }
+}

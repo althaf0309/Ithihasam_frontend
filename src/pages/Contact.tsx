@@ -5,7 +5,6 @@ import { Footer } from "@/components/Footer";
 import { SeoMeta } from "@/components/SeoMeta";
 import { QuickBookingForm } from "@/components/QuickBookingForm";
 import { ContactCTAButtons } from "@/components/ContactCTAButtons";
-import { useLang } from "@/contexts/LangContext";
 import {
   BUSINESS_EMAIL,
   BUSINESS_LOCATION,
@@ -42,14 +41,13 @@ const contactHighlights = [
 ];
 
 export default function Contact() {
-  const { lang } = useLang();
   const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BUSINESS_LOCATION)}`;
 
   return (
     <div className="min-h-screen bg-background">
       <SeoMeta
         title="Contact Ithihasam | Call, WhatsApp, Address and Booking"
-        description="Contact Ithihasam for home maintenance bookings, WhatsApp support, phone assistance, office address details, and service enquiries in Kannur and Thrissur."
+        description="Contact Ithihasam for home maintenance bookings, WhatsApp support, phone assistance, office address details, and service enquiries in Kannur."
         keywords={[
           "contact Ithihasam",
           "Ithihasam phone number",
@@ -172,9 +170,9 @@ export default function Contact() {
             <div className="rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/10 via-card to-secondary/10 p-6 shadow-[var(--card-shadow)]">
               <h3 className="text-xl font-bold text-foreground">Service Coverage</h3>
               <p className="mt-4 text-sm leading-7 text-muted-foreground">
-                We are actively focused on service demand in Kannur and Thrissur districts, while continuing to support broader home-maintenance expansion.
+                We are actively focused on service demand in Kannur district, while continuing to support broader home-maintenance expansion.
               </p>
-              <p className="mt-3 text-sm font-semibold text-foreground">{lang === "ml" ? "Kannur and Thrissur Focus" : "Kannur and Thrissur Focus"}</p>
+              <p className="mt-3 text-sm font-semibold text-foreground">Kannur District Focus</p>
             </div>
           </aside>
         </div>

@@ -11,6 +11,7 @@ import { Footer } from "@/components/Footer";
 import { SeoMeta } from "@/components/SeoMeta";
 import { featuredHomeServiceSlugs, getLocalizedText, serviceCatalogBySlug } from "@/lib/service-catalog";
 import { createKeywordSet } from "@/lib/seo";
+import { AREAS_COVERED, BUSINESS_STATS } from "@/lib/business-stats";
 import { useLang } from "@/contexts/LangContext";
 
 import bannerElectrical from "@/assets/banner-electrical.jpg";
@@ -58,13 +59,13 @@ export default function Index() {
   const { lang, t } = useLang();
   const homeKeywords = createKeywordSet(
     "home maintenance services Kannur",
-    "home maintenance services Thrissur",
+    "home maintenance services Kannur district",
     "electrician in Kannur",
-    "plumber in Thrissur",
+    "plumber in Thalassery",
     "house painting services Kannur",
-    "AC service Thrissur",
+    "AC service Thalassery",
     "deep cleaning services Kannur",
-    "pest control Thrissur",
+    "pest control Thalassery",
     "CCTV installation Kannur",
     "Ithihasam",
   );
@@ -142,8 +143,8 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-background">
       <SeoMeta
-        title="Ithihasam Home Maintenance Services in Kannur & Thrissur"
-        description="Book trusted home maintenance services in Kannur and Thrissur with Ithihasam for electrical, plumbing, painting, appliance repair, carpentry, roofing, deep cleaning, pest control, and smart home setup."
+        title="Ithihasam Home Maintenance Services in Kannur"
+        description="Book trusted home maintenance services in Kannur with Ithihasam for electrical, plumbing, painting, appliance repair, carpentry, roofing, deep cleaning, pest control, and smart home setup."
         keywords={homeKeywords}
         image={bannerElectrical}
         canonicalPath="/"
@@ -209,10 +210,10 @@ export default function Index() {
               <p className="mb-8 leading-relaxed text-muted-foreground">{t("home.aboutParagraph2")}</p>
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { icon: Users, value: "10,000+", label: t("home.aboutStatCustomers") },
-                  { icon: Award, value: "500+", label: t("home.aboutStatPros") },
-                  { icon: Target, value: "15+", label: t("home.aboutStatCities") },
-                  { icon: Heart, value: "98%", label: t("home.aboutStatSatisfaction") },
+                  { icon: Users, value: BUSINESS_STATS.customers, label: t("home.aboutStatCustomers") },
+                  { icon: Award, value: BUSINESS_STATS.professionals, label: t("home.aboutStatPros") },
+                  { icon: Target, value: AREAS_COVERED, label: t("home.aboutStatCities") },
+                  { icon: Heart, value: BUSINESS_STATS.satisfaction, label: t("home.aboutStatSatisfaction") },
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}

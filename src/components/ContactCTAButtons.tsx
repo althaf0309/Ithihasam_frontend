@@ -1,5 +1,6 @@
 import { MessageCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { trackContactClick } from "@/lib/analytics";
 import { useLang } from "@/contexts/LangContext";
 import { BUSINESS_PHONE, BUSINESS_WHATSAPP } from "@/lib/site";
 
@@ -19,7 +20,7 @@ export function ContactCTAButtons({ size = "default", showLabels = false }: Prop
         asChild
         className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
       >
-        <a href={`tel:${BUSINESS_PHONE}`}>
+        <a href={`tel:${BUSINESS_PHONE}`} onClick={() => trackContactClick("phone")}>
           <Phone size={16} />
           {showLabels && <span className="ml-1">{t("contact.callNow")}</span>}
         </a>
@@ -29,7 +30,12 @@ export function ContactCTAButtons({ size = "default", showLabels = false }: Prop
         asChild
         className="bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90"
       >
-        <a href={`https://wa.me/${BUSINESS_WHATSAPP}`} target="_blank" rel="noopener noreferrer">
+        <a
+          href={`https://wa.me/${BUSINESS_WHATSAPP}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackContactClick("whatsapp")}
+        >
           <MessageCircle size={16} />
           {showLabels && <span className="ml-1">{t("contact.whatsapp")}</span>}
         </a>

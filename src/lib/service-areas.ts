@@ -143,11 +143,244 @@ export const serviceAreas: ServiceAreaEntry[] = [
       "coastal residences, apartments, retail outlets, clinics, and office spaces",
     nearbySlugs: ["taliparamba", "thazhe-chovva", "anjarakandy"],
   },
+  {
+    slug: "kannur",
+    name: "Kannur",
+    district: "Kannur district",
+    localityFocus:
+      "high-volume electrical, plumbing, AC servicing, painting, cleaning, and CCTV bookings across the district headquarters and its surrounding urban belt",
+    propertyMix:
+      "apartments, independent houses, shops, showrooms, clinics, hospitals, and office buildings across the city",
+    nearbySlugs: ["thazhe-chovva", "chakkarakkal", "thalassery"],
+  },
+  {
+    slug: "thrissur",
+    name: "Thrissur",
+    district: "Thrissur district",
+    localityFocus:
+      "city-wide appliance servicing, electrical and plumbing repairs, home painting, deep cleaning, and smart home installation for a dense mix of residential and commercial property",
+    propertyMix:
+      "flats, heritage homes, villas, retail outlets, offices, and institutional buildings across the city and its suburbs",
+    nearbySlugs: ["ollur", "irinjalakuda", "guruvayur"],
+  },
+  {
+    slug: "guruvayur",
+    name: "Guruvayur",
+    district: "Thrissur district",
+    localityFocus:
+      "guest house and hotel maintenance, AC servicing, plumbing repairs, deep cleaning, and pest control driven by heavy year-round visitor footfall",
+    propertyMix:
+      "hotels, lodges, guest houses, family homes, shops, and temple-side commercial units",
+    nearbySlugs: ["chavakkad", "kunnamkulam", "thrissur"],
+  },
+  {
+    slug: "kunnamkulam",
+    name: "Kunnamkulam",
+    district: "Thrissur district",
+    localityFocus:
+      "trade-town home maintenance, wiring and switchboard work, appliance repair, fabrication, and repainting for busy commercial and residential streets",
+    propertyMix:
+      "merchant homes, shop buildings, warehouses, apartments, and small manufacturing units",
+    nearbySlugs: ["guruvayur", "wadakkanchery", "chavakkad"],
+  },
+  {
+    slug: "chalakudy",
+    name: "Chalakudy",
+    district: "Thrissur district",
+    localityFocus:
+      "household repairs, AC and refrigerator service, roofing and fabrication, plumbing maintenance, and pest control for town and highway-side properties",
+    propertyMix:
+      "independent houses, rental homes, roadside shops, small industrial units, and offices",
+    nearbySlugs: ["kodakara", "irinjalakuda", "mala"],
+  },
+  {
+    slug: "irinjalakuda",
+    name: "Irinjalakuda",
+    district: "Thrissur district",
+    localityFocus:
+      "residential electrical and plumbing repairs, carpentry, appliance servicing, interior painting, and scheduled cleaning for established neighbourhoods",
+    propertyMix:
+      "family homes, apartments, colleges, clinics, and local commercial buildings",
+    nearbySlugs: ["mala", "chalakudy", "thrissur"],
+  },
+  {
+    slug: "kodungallur",
+    name: "Kodungallur",
+    district: "Thrissur district",
+    localityFocus:
+      "coastal-belt maintenance including damp and rust-related repairs, exterior repainting, AC service, plumbing work, and pest control",
+    propertyMix:
+      "coastal homes, rental properties, shops, guest houses, and small offices",
+    nearbySlugs: ["mala", "irinjalakuda", "chalakudy"],
+  },
+  {
+    slug: "wadakkanchery",
+    name: "Wadakkanchery",
+    district: "Thrissur district",
+    localityFocus:
+      "routine home maintenance, wiring repairs, appliance service, carpentry, roofing sheet work, and deep cleaning for growing residential pockets",
+    propertyMix:
+      "independent homes, new villa projects, farm properties, shops, and local institutions",
+    nearbySlugs: ["kunnamkulam", "thrissur", "ollur"],
+  },
+  {
+    slug: "chavakkad",
+    name: "Chavakkad",
+    district: "Thrissur district",
+    localityFocus:
+      "beachside property upkeep, corrosion-prone fittings replacement, AC servicing, painting, plumbing, and pest control",
+    propertyMix:
+      "coastal residences, guest houses, apartments, retail outlets, and clinics",
+    nearbySlugs: ["guruvayur", "kunnamkulam", "thrissur"],
+  },
+  {
+    slug: "ollur",
+    name: "Ollur",
+    district: "Thrissur district",
+    localityFocus:
+      "suburban home repairs, appliance servicing, electrical upgrades, interior work, cleaning, and smart home installation close to the city",
+    propertyMix:
+      "apartments, gated-community homes, independent houses, offices, and roadside businesses",
+    nearbySlugs: ["thrissur", "irinjalakuda", "wadakkanchery"],
+  },
+  {
+    slug: "mala",
+    name: "Mala",
+    district: "Thrissur district",
+    localityFocus:
+      "everyday home maintenance, plumbing and electrical repairs, appliance service, carpentry, and roof work for semi-urban households",
+    propertyMix:
+      "family homes, rental houses, shops, small workshops, and community buildings",
+    nearbySlugs: ["kodungallur", "irinjalakuda", "chalakudy"],
+  },
+  {
+    slug: "kodakara",
+    name: "Kodakara",
+    district: "Thrissur district",
+    localityFocus:
+      "highway-corridor property maintenance, AC and appliance repair, fabrication, plumbing, painting, and pest control",
+    propertyMix:
+      "independent homes, roadside commercial units, godowns, offices, and rental properties",
+    nearbySlugs: ["chalakudy", "irinjalakuda", "ollur"],
+  },
+  {
+    slug: "ernakulam",
+    name: "Ernakulam",
+    district: "Ernakulam district",
+    localityFocus:
+      "high-density city maintenance: AC servicing, appliance repair, electrical and plumbing work, deep cleaning, and smart home installation for flats and commercial property",
+    propertyMix:
+      "high-rise flats, gated communities, villas, IT offices, showrooms, restaurants, and clinics across the city",
+    nearbySlugs: ["kakkanad", "tripunithura", "aluva"],
+  },
+  {
+    slug: "kakkanad",
+    name: "Kakkanad",
+    district: "Ernakulam district",
+    localityFocus:
+      "IT-corridor apartment servicing, AC and appliance maintenance, smart home installation, deep cleaning, and pest control for a young rental-heavy population",
+    propertyMix:
+      "IT-park apartments, gated villas, serviced flats, co-living units, and office spaces",
+    nearbySlugs: ["ernakulam", "tripunithura", "aluva"],
+  },
+  {
+    slug: "aluva",
+    name: "Aluva",
+    district: "Ernakulam district",
+    localityFocus:
+      "riverside and airport-belt home maintenance, AC servicing, plumbing repairs, painting, and appliance support for a fast-growing residential corridor",
+    propertyMix:
+      "apartments, independent homes, guest houses, shops, and industrial-area offices",
+    nearbySlugs: ["ernakulam", "angamaly", "perumbavoor"],
+  },
+  {
+    slug: "perumbavoor",
+    name: "Perumbavoor",
+    district: "Ernakulam district",
+    localityFocus:
+      "town and industrial-belt maintenance covering electrical work, plumbing, fabrication, appliance repair, and roofing for homes and small units",
+    propertyMix:
+      "family homes, rental properties, plywood and timber units, shops, and workshops",
+    nearbySlugs: ["aluva", "kothamangalam", "muvattupuzha"],
+  },
+  {
+    slug: "muvattupuzha",
+    name: "Muvattupuzha",
+    district: "Ernakulam district",
+    localityFocus:
+      "town-side household repairs, AC and refrigerator service, carpentry, painting, and pest control for established residential areas",
+    propertyMix:
+      "independent houses, apartments, schools, clinics, and commercial buildings",
+    nearbySlugs: ["kothamangalam", "perumbavoor", "piravom"],
+  },
+  {
+    slug: "angamaly",
+    name: "Angamaly",
+    district: "Ernakulam district",
+    localityFocus:
+      "highway and airport-adjacent property maintenance, appliance servicing, electrical upgrades, fabrication, and deep cleaning",
+    propertyMix:
+      "homes, hotels, godowns, roadside commercial units, and small factories",
+    nearbySlugs: ["aluva", "perumbavoor", "ernakulam"],
+  },
+  {
+    slug: "kothamangalam",
+    name: "Kothamangalam",
+    district: "Ernakulam district",
+    localityFocus:
+      "hill-side town maintenance including damp-related repairs, roofing work, plumbing, appliance service, and repainting",
+    propertyMix:
+      "independent homes, estates, colleges, shops, and guest houses",
+    nearbySlugs: ["muvattupuzha", "perumbavoor", "angamaly"],
+  },
+  {
+    slug: "tripunithura",
+    name: "Tripunithura",
+    district: "Ernakulam district",
+    localityFocus:
+      "heritage-town and suburban servicing: AC and appliance repair, carpentry, interior painting, cleaning, and smart home setup",
+    propertyMix:
+      "heritage homes, apartments, gated villas, clinics, and retail outlets",
+    nearbySlugs: ["ernakulam", "kakkanad", "piravom"],
+  },
+  {
+    slug: "north-paravur",
+    name: "North Paravur",
+    district: "Ernakulam district",
+    localityFocus:
+      "coastal-belt maintenance covering corrosion-prone fittings, plumbing, exterior repainting, AC service, and pest control",
+    propertyMix:
+      "coastal homes, rental houses, shops, and small offices",
+    nearbySlugs: ["ernakulam", "aluva", "angamaly"],
+  },
+  {
+    slug: "piravom",
+    name: "Piravom",
+    district: "Ernakulam district",
+    localityFocus:
+      "semi-urban home maintenance including electrical repairs, appliance service, carpentry, roofing, and scheduled cleaning",
+    propertyMix:
+      "family homes, farm properties, shops, and community buildings",
+    nearbySlugs: ["muvattupuzha", "tripunithura", "ernakulam"],
+  },
 ];
 
 export const serviceAreaBySlug = Object.fromEntries(
   serviceAreas.map((area) => [area.slug, area]),
 ) as Record<string, ServiceAreaEntry>;
+
+
+/**
+ * The districts we market as separate service areas.
+ *
+ * Each is also an entry in serviceAreas, so it already has a /locations page and
+ * a full set of local service pages. This list is what the UI offers as a choice.
+ */
+export const serviceDistricts = [
+  { slug: "kannur", name: "Kannur" },
+  { slug: "thrissur", name: "Thrissur" },
+  { slug: "ernakulam", name: "Ernakulam" },
+] as const;
 
 export const serviceAreaNames = serviceAreas.map((area) => area.name);
 export const serviceAreaCoverageLine = serviceAreaNames.join(", ");

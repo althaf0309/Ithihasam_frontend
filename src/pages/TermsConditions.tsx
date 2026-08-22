@@ -12,7 +12,7 @@ export default function TermsConditions() {
         "service booking terms",
         "home maintenance booking policy",
         "cancellation policy home services",
-        "Kannur Thrissur service terms",
+        "Kannur service terms",
       ]}
       canonicalPath="/terms-and-conditions"
     />

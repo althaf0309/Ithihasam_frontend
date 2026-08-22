@@ -161,7 +161,7 @@ export default function News() {
   const newsKeywords = createKeywordSet(
     "Ithihasam news",
     "home services news Kannur",
-    "home services news Thrissur",
+    "home services news Kerala",
     "company updates Kerala home maintenance",
     "cleaning drive news",
     "carpentry training Kerala",
@@ -220,7 +220,7 @@ export default function News() {
                     <Calendar size={12} />
                     {formatDate(article.date)}
                   </span>
-                  <h3 className="mb-2 text-xl font-bold text-foreground">{article.title[lang]}</h3>
+                  <h2 className="mb-2 text-xl font-bold text-foreground">{article.title[lang]}</h2>
                   <p className="mb-4 text-sm text-muted-foreground">{article.excerpt[lang]}</p>
                   <Link
                     to={`/news/${article.slug}`}

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { initAnalytics, trackPageView } from "@/lib/analytics";
 
 const HASH_SCROLL_RETRY_DELAY_MS = 120;
 const HASH_SCROLL_MAX_RETRIES = 8;
@@ -31,6 +32,17 @@ function scrollToHash(hash: string, attempt = 0) {
 
 export function ScrollToRouteTarget() {
   const location = useLocation();
+
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
+  useEffect(() => {
+    // Title is set by SeoMeta in its own effect; defer a tick so the page view
+    // reports the real title rather than the previous route's.
+    const timer = window.setTimeout(() => trackPageView(location.pathname, document.title), 0);
+    return () => window.clearTimeout(timer);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (location.hash) {

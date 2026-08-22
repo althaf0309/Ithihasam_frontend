@@ -1,6 +1,11 @@
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api").replace(/\/$/, "");
 const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
-const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "363780d2-d8e4-4fb3-ae62-ebfc13d91418";
+
+// Configured via VITE_WEB3FORMS_ACCESS_KEY. There is deliberately no hardcoded
+// fallback: any key committed here ships in the JS bundle, and anyone reading it
+// can post unlimited mail to the business inbox. With no key configured the
+// email fallback is simply skipped and the backend stays the only destination.
+const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || "";
 
 export class ApiError extends Error {
   details?: unknown;
@@ -110,23 +115,48 @@ function extractWeb3FormsMessage(payload: unknown) {
   return "Your enquiry has been sent successfully.";
 }
 
-export async function createBookingSubmission(payload: BookingSubmissionPayload) {
+async function submitToBackend(payload: BookingSubmissionPayload, subject: string) {
+  const response = await fetch(`${API_BASE_URL}/contact/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ ...payload, subject }),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    // 429 is the server's throttle. Surface it plainly rather than retrying,
+    // and never fall through to the email fallback — that would defeat the limit.
+    if (response.status === 429) {
+      throw new ApiError(
+        "You have sent several booking requests recently. Please call or WhatsApp us instead.",
+        data,
+      );
+    }
+    throw new ApiError("Backend rejected the booking.", data);
+  }
+
+  return data;
+}
+
+async function submitToWeb3Forms(payload: BookingSubmissionPayload, subject: string) {
+  if (!WEB3FORMS_ACCESS_KEY) {
+    throw new ApiError(
+      "We couldn't reach our booking service. Please call or WhatsApp us and we'll take your request directly.",
+    );
+  }
+
   const sourcePage = typeof window !== "undefined" ? window.location.pathname : "/";
   const pageUrl = typeof window !== "undefined" ? window.location.href : undefined;
-  const subject = `New ${payload.service} enquiry from ${payload.name}`;
 
   const response = await fetch(WEB3FORMS_ENDPOINT, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify({
       access_key: WEB3FORMS_ACCESS_KEY,
       subject,
       from_name: "Ithihasam Website",
       replyto: payload.email || undefined,
-      botcheck: false,
       source_page: sourcePage,
       page_url: pageUrl,
       ...payload,
@@ -140,11 +170,44 @@ export async function createBookingSubmission(payload: BookingSubmissionPayload)
     throw new ApiError(message || "Unable to send your enquiry right now.", data);
   }
 
-  return {
-    success: true,
-    message,
-    data: typeof data === "object" && data !== null && "data" in data ? data.data as BookingSubmissionResponse["data"] : undefined,
-  } satisfies BookingSubmissionResponse;
+  return { message, data };
+}
+
+/**
+ * Submits a booking.
+ *
+ * The Django API is the system of record: it persists the enquiry so it appears
+ * in the admin and survives an email failure, and it enforces the per-IP rate
+ * limit. Web3Forms is only a fallback for when the backend is unreachable, so a
+ * lead is never silently lost — previously it was the *only* destination, which
+ * meant no booking was ever stored anywhere.
+ */
+export async function createBookingSubmission(payload: BookingSubmissionPayload) {
+  const subject = `New ${payload.service} enquiry from ${payload.name}`;
+
+  try {
+    const data = await submitToBackend(payload, subject);
+    return {
+      success: true,
+      message:
+        typeof data === "object" && data !== null && "message" in data
+          ? String((data as { message: unknown }).message)
+          : "Booking request received.",
+      data: undefined,
+    } satisfies BookingSubmissionResponse;
+  } catch (error) {
+    // A throttle rejection is a decision, not an outage. Do not route around it.
+    if (error instanceof ApiError && error.message.startsWith("You have sent several")) {
+      throw error;
+    }
+
+    if (import.meta.env.DEV) {
+      console.warn("Booking API unavailable, falling back to Web3Forms.", error);
+    }
+
+    const { message } = await submitToWeb3Forms(payload, subject);
+    return { success: true, message, data: undefined } satisfies BookingSubmissionResponse;
+  }
 }
 
 export { API_BASE_URL };

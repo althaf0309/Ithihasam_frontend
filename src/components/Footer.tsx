@@ -26,7 +26,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-semibold text-foreground">{t("footer.quickLinks")}</h4>
+          <h2 className="mb-3 text-sm font-semibold text-foreground">{t("footer.quickLinks")}</h2>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li><Link to="/" className="transition-colors hover:text-primary">{t("nav.home")}</Link></li>
             <li><Link to="/services" className="transition-colors hover:text-primary">{t("nav.services")}</Link></li>
@@ -38,7 +38,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-semibold text-foreground">{t("footer.services")}</h4>
+          <h2 className="mb-3 text-sm font-semibold text-foreground">{t("footer.services")}</h2>
           <ul className="space-y-2 text-sm text-muted-foreground">
             {footerServiceSlugs.map((slug) => {
               const service = serviceCatalogBySlug[slug];
@@ -54,7 +54,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-semibold text-foreground">{t("footer.contactUs")}</h4>
+          <h2 className="mb-3 text-sm font-semibold text-foreground">{t("footer.contactUs")}</h2>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-center gap-2">
               <Phone size={14} className="text-primary" />
@@ -77,11 +77,11 @@ export function Footer() {
       </div>
       <div className="border-t border-border/50 py-4">
         <div className="container flex flex-col items-center justify-between gap-3 text-center text-xs text-muted-foreground md:flex-row md:text-left">
-          <span>{t("footer.copyright")}</span>
+          <span>&copy; {new Date().getFullYear()} Ithihasam. {t("footer.rightsReserved")}</span>
           <div className="flex flex-wrap items-center justify-center gap-4 md:justify-end">
             {legalLinks.map((link) => (
               <Link key={link.to} to={link.to} className="transition-colors hover:text-primary">
-                {lang === "ml" ? link.label : link.label}
+                {link.label}
               </Link>
             ))}
           </div>

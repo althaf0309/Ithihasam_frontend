@@ -4,9 +4,83 @@ import { ArrowLeft, Calendar } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SeoMeta } from "@/components/SeoMeta";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { createKeywordSet } from "@/lib/seo";
 import { newsArticles } from "./News";
 import { useLang } from "@/contexts/LangContext";
+
+type ArticleBlock =
+  | { kind: "heading"; text: string }
+  | { kind: "list"; items: string[] }
+  | { kind: "paragraph"; text: string };
+
+/**
+ * Parses the mini-markdown used by news entries into blocks.
+ *
+ * Consecutive "- " lines are gathered into one list. The previous version
+ * emitted bare <li> elements with no <ul> parent, which is invalid HTML and
+ * drops the list semantics screen readers and crawlers depend on.
+ */
+function parseArticleBlocks(content: string): ArticleBlock[] {
+  const blocks: ArticleBlock[] = [];
+
+  for (const line of content.split("\n")) {
+    const trimmed = line.trim();
+
+    if (!trimmed) {
+      continue;
+    }
+
+    if (trimmed.startsWith("## ")) {
+      blocks.push({ kind: "heading", text: trimmed.slice(3) });
+      continue;
+    }
+
+    if (trimmed.startsWith("- ")) {
+      const previous = blocks[blocks.length - 1];
+      if (previous?.kind === "list") {
+        previous.items.push(trimmed.slice(2));
+      } else {
+        blocks.push({ kind: "list", items: [trimmed.slice(2)] });
+      }
+      continue;
+    }
+
+    blocks.push({ kind: "paragraph", text: trimmed });
+  }
+
+  return blocks;
+}
+
+function renderArticleBlocks(content: string) {
+  return parseArticleBlocks(content).map((block, index) => {
+    if (block.kind === "heading") {
+      return (
+        <h2 key={index} className="mb-3 mt-8 text-xl font-bold text-foreground">
+          {block.text}
+        </h2>
+      );
+    }
+
+    if (block.kind === "list") {
+      return (
+        <ul key={index} className="mb-3 ml-6 list-disc space-y-1">
+          {block.items.map((item) => (
+            <li key={item} className="text-sm text-muted-foreground">
+              {item}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+
+    return (
+      <p key={index} className="mb-3 leading-relaxed text-muted-foreground">
+        {block.text}
+      </p>
+    );
+  });
+}
 
 export default function NewsDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -40,14 +114,14 @@ export default function NewsDetail() {
     "Ithihasam news",
     "Kerala home services",
     "Kannur home services",
-    "Thrissur home services",
+    "Kannur district home services",
   );
 
   return (
     <div className="min-h-screen bg-background">
       <SeoMeta
         title={`${article.title.en} | Ithihasam News`}
-        description={article.excerpt.en}
+        description={article.excerpt[lang]}
         keywords={pageKeywords}
         image={article.image}
         type="article"
@@ -70,6 +144,10 @@ export default function NewsDetail() {
       </div>
 
       <div className="container max-w-3xl py-10">
+        <Breadcrumbs
+          className="mb-4"
+          items={[{ label: "Home", to: "/" }, { label: "News", to: "/news" }, { label: article.title[lang] }]}
+        />
         <Link to="/news" className="mb-6 inline-flex items-center gap-1 text-sm text-primary hover:underline">
           <ArrowLeft size={14} /> {t("news.back")}
         </Link>
@@ -77,21 +155,7 @@ export default function NewsDetail() {
           <Calendar size={14} />
           {formatDate(article.date)}
         </div>
-        <article>
-          {article.content[lang].split("\n").map((line, index) => {
-            const trimmed = line.trim();
-            if (trimmed.startsWith("## ")) {
-              return <h2 key={index} className="mb-3 mt-8 text-xl font-bold text-foreground">{trimmed.replace("## ", "")}</h2>;
-            }
-            if (trimmed.startsWith("- ")) {
-              return <li key={index} className="mb-1 ml-4 list-disc text-sm text-muted-foreground">{trimmed.replace("- ", "")}</li>;
-            }
-            if (!trimmed) {
-              return null;
-            }
-            return <p key={index} className="mb-3 leading-relaxed text-muted-foreground">{trimmed}</p>;
-          })}
-        </article>
+        <article>{renderArticleBlocks(article.content[lang])}</article>
       </div>
 
       <Footer />

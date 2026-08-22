@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
         "privacy policy home services",
         "booking privacy policy",
         "website data policy",
-        "Kannur Thrissur home services privacy",
+        "Kannur Kannur district home services privacy",
       ]}
       canonicalPath="/privacy-policy"
     />

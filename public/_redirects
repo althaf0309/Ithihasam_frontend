@@ -1,0 +1,4 @@
+# Netlify / Cloudflare Pages SPA fallback.
+# Prerendered routes are real files and are served directly; everything else
+# falls through to the React shell instead of hard-404ing.
+/*    /index.html   200

@@ -20,7 +20,7 @@ export default function Services() {
   const pageKeywords = createKeywordSet(
     serviceCatalog.map((service) => service.title.en),
     "home maintenance services Kannur",
-    "home maintenance services Thrissur",
+    "home maintenance services Kannur district",
     "electrical plumbing painting appliance carpentry cleaning pest control smart home",
     "Ithihasam services",
     serviceAreaNames.map((areaName) => `home services in ${areaName}`),
@@ -74,7 +74,7 @@ export default function Services() {
                 description: "Electrical, plumbing, painting, appliance repair, carpentry, fabrication, cleaning, pest control, and smart home setup in one platform.",
               },
               {
-                title: "Kannur and Thrissur focus",
+                title: "Kannur focus",
                 description: `Our current service content and booking flow now also covers practical local demand across ${serviceAreaCoverageLine}.`,
               },
               {

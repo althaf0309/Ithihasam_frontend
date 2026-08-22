@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion"
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLang } from "@/contexts/LangContext";
 import { BUSINESS_WHATSAPP } from "@/lib/site";
+import { ResponsiveImage, heroPreloadHref } from "@/components/ResponsiveImage";
 
 import bannerElectrical from "@/assets/banner-electrical.jpg";
 import bannerPainting from "@/assets/banner-painting.jpg";
@@ -47,6 +48,21 @@ export function HeroSection() {
   const overlayOpacity = useTransform(scrollYProgress, [0, 0.5], [0.3, 0.7]);
   const next = useCallback(() => setCurrent((value) => (value + 1) % slides.length), [slides.length]);
 
+  // Start the LCP image download during head parsing rather than after React
+  // mounts and the carousel decides which slide is first.
+  useEffect(() => {
+    const href = heroPreloadHref(slideImages[0]);
+    if (document.head.querySelector(`link[rel="preload"][href="${href}"]`)) return;
+
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = href;
+    link.type = "image/webp";
+    link.setAttribute("fetchpriority", "high");
+    document.head.appendChild(link);
+  }, []);
+
   useEffect(() => {
     const timer = setInterval(next, 5000);
     return () => clearInterval(timer);
@@ -68,7 +84,13 @@ export function HeroSection() {
               scale: { duration: 8, ease: "linear" },
             }}
           >
-            <img src={slides[current].image} alt={slides[current].title} className="h-full w-full object-cover" />
+            <ResponsiveImage
+              src={slides[current].image}
+              alt={slides[current].title}
+              className="h-full w-full object-cover"
+              priority={current === 0}
+              sizes="100vw"
+            />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -103,7 +125,7 @@ export function HeroSection() {
               transition={{ duration: 0.6 }}
             >
               <h1 className="mb-3 text-3xl font-extrabold leading-[1.1] tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl">
-                <span className="text-gradient">Ithihasam Home Maintenance Services in Kannur & Thrissur</span>
+                <span className="text-gradient">Ithihasam Home Maintenance Services in Kannur</span>
               </h1>
               <p className="mb-2 text-lg font-semibold text-foreground drop-shadow-md md:text-2xl">
                 {slides[current].title}

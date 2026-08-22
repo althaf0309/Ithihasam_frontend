@@ -58,13 +58,25 @@ export const privacyPolicyContent: LegalPageContent = {
       bullets: [
         same("To respond to enquiries, confirm bookings, assign professionals, and provide home maintenance services."),
         same("To contact you by phone, WhatsApp, SMS, or email about your request, scheduling, updates, invoices, or support."),
-        same("To improve our website, service quality, operational planning, and customer experience across Kannur, Thrissur, and other service areas."),
+        same("To improve our website, service quality, operational planning, and customer experience across Kannur district and nearby service areas."),
       ],
     },
     {
       title: same("Sharing of Information"),
       paragraphs: [
         same("We may share relevant booking details with our internal team, service professionals, technology providers, and communication partners only to the extent needed to operate the service. We do not sell your personal information to unrelated third parties."),
+      ],
+      bullets: [
+        same("Service professionals: the technician assigned to your job receives your name, contact number, address or area, and the job description so they can reach you and carry out the work."),
+        same("Booking and email delivery: booking form submissions are stored on our own servers and a notification is emailed to our operations team. If our servers are temporarily unreachable, the enquiry is delivered by Web3Forms, an email relay service, purely so your request is not lost."),
+        same("Hosting and infrastructure: our website and database are operated on hosting infrastructure that processes data on our instructions."),
+        same("Legal and regulatory: we may disclose information where required by applicable law, court order, or a lawful request from a competent authority."),
+      ],
+    },
+    {
+      title: same("Your Rights Under Indian Data Protection Law"),
+      paragraphs: [
+        same("Under the Digital Personal Data Protection Act, 2023, you have the right to ask for access to the personal data we hold about you, to have inaccurate data corrected, to request erasure where we no longer need it, to nominate another person to exercise your rights, and to raise a grievance about how your data has been handled. Write to us using the contact details on this page and we will respond within a reasonable period."),
       ],
     },
     {

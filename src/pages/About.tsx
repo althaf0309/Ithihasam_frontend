@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { SeoMeta } from "@/components/SeoMeta";
 import { CategoryIconStrip } from "@/components/CategoryIconStrip";
 import { ContactCTAButtons } from "@/components/ContactCTAButtons";
-import { useLang } from "@/contexts/LangContext";
+import { AREAS_COVERED, BUSINESS_STATS } from "@/lib/business-stats";
 
 import bannerElectrical from "@/assets/banner-electrical.jpg";
 import bannerPainting from "@/assets/banner-painting.jpg";
@@ -21,13 +21,11 @@ const aboutImages = [
 ];
 
 export default function About() {
-  const { lang } = useLang();
-
   const stats = [
-    { icon: Users, value: "10,000+", label: "Happy customers served" },
-    { icon: Award, value: "500+", label: "Verified professionals" },
-    { icon: Target, value: "15+", label: "Cities and growing" },
-    { icon: HeartHandshake, value: "98%", label: "Customer satisfaction" },
+    { icon: Users, value: BUSINESS_STATS.customers, label: "Happy customers served" },
+    { icon: Award, value: BUSINESS_STATS.professionals, label: "Verified professionals" },
+    { icon: Target, value: AREAS_COVERED, label: "Service areas covered" },
+    { icon: HeartHandshake, value: BUSINESS_STATS.satisfaction, label: "Customer satisfaction" },
   ];
 
   const values = [
@@ -50,7 +48,7 @@ export default function About() {
 
   const paragraphs = [
     "Ithihasam was built to make home maintenance simpler, faster, and more dependable for everyday households. Instead of customers searching separately for electricians, plumbers, painters, appliance technicians, carpenters, cleaning teams, or smart home installers, we bring trusted services into one platform.",
-    "We are especially focused on practical local support for customers in Kannur and Thrissur, while continuing to build a broader service network. The goal is straightforward: reduce confusion, improve response time, and make it easier to book quality home service help with confidence.",
+    "We are especially focused on practical local support for customers in Kannur, while continuing to build a broader service network. The goal is straightforward: reduce confusion, improve response time, and make it easier to book quality home service help with confidence.",
     "Our team cares about service quality, professional behavior, and honest communication. Whether the requirement is a small repair, a scheduled maintenance job, or a bigger home improvement task, we want the booking experience to feel organized and dependable from start to finish.",
   ];
 
@@ -58,12 +56,12 @@ export default function About() {
     <div className="min-h-screen bg-background">
       <SeoMeta
         title="About Ithihasam | Trusted Home Maintenance Services"
-        description="Learn about Ithihasam, our mission, service standards, local focus in Kannur and Thrissur, and how we connect households with trusted home maintenance professionals."
+        description="Learn about Ithihasam, our mission, service standards, local focus in Kannur, and how we connect households with trusted home maintenance professionals."
         keywords={[
           "about Ithihasam",
           "home maintenance company Kerala",
           "Kannur home services",
-          "Thrissur home services",
+          "Kannur district home services",
           "trusted electricians plumbers painters Kerala",
         ]}
         image={bannerElectrical}
@@ -105,7 +103,7 @@ export default function About() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Our Story</p>
             <div className="mt-5 space-y-5 text-base leading-8 text-muted-foreground">
               {paragraphs.map((paragraph) => (
-                <p key={paragraph}>{lang === "ml" ? paragraph : paragraph}</p>
+                <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
           </div>
@@ -185,9 +183,9 @@ export default function About() {
         <div className="container">
           <div className="rounded-3xl border border-primary/15 bg-gradient-to-br from-primary/10 via-card to-secondary/10 p-8 shadow-[var(--card-shadow)] md:p-10">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Local Focus</p>
-            <h2 className="mt-3 text-3xl font-bold text-foreground">Focused on real service demand in Kannur and Thrissur</h2>
+            <h2 className="mt-3 text-3xl font-bold text-foreground">Focused on real service demand in Kannur</h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-muted-foreground">
-              Our current content, service pages, and lead flow are strongly optimized for households and businesses searching for electricians, plumbers, painters, cleaners, appliance technicians, carpenters, fabrication workers, pest control, and smart home support in Kannur and Thrissur.
+              Our current content, service pages, and lead flow are strongly optimized for households and businesses searching for electricians, plumbers, painters, cleaners, appliance technicians, carpenters, fabrication workers, pest control, and smart home support in Kannur.
             </p>
           </div>
         </div>
