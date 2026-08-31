@@ -382,6 +382,62 @@ export const serviceDistricts = [
   { slug: "ernakulam", name: "Ernakulam" },
 ] as const;
 
+
+export interface DistrictLanding {
+  slug: string;
+  areaSlug: string;
+  name: string;
+  district: string;
+  aka: string;
+  towns: string[];
+}
+
+/**
+ * Root-level district landing pages: /kochi, /thrissur, /kannur.
+ *
+ * Short URLs are what marketing links to and what customers remember, so these
+ * are the canonical district pages. /locations/<slug> still renders for each
+ * one but canonicalises here, so the pair never competes for the same query.
+ *
+ * Mirrors districtLandings in scripts/site-data.mjs; check-seo-data.mjs fails
+ * the build if they drift.
+ */
+export const districtLandings: DistrictLanding[] = [
+  {
+    slug: "kochi",
+    areaSlug: "ernakulam",
+    name: "Kochi",
+    district: "Ernakulam district",
+    aka: "Ernakulam",
+    towns: ["Kakkanad", "Aluva", "Perumbavoor", "Muvattupuzha", "Angamaly", "Kothamangalam", "Tripunithura", "North Paravur", "Piravom"],
+  },
+  {
+    slug: "thrissur",
+    areaSlug: "thrissur",
+    name: "Thrissur",
+    district: "Thrissur district",
+    aka: "Trichur",
+    towns: ["Guruvayur", "Kunnamkulam", "Chalakudy", "Irinjalakuda", "Kodungallur", "Wadakkanchery", "Chavakkad", "Ollur", "Mala", "Kodakara"],
+  },
+  {
+    slug: "kannur",
+    areaSlug: "kannur",
+    name: "Kannur",
+    district: "Kannur district",
+    aka: "Cannanore",
+    towns: ["Thalassery", "Taliparamba", "Payyannur", "Mattannur", "Iritty", "Kuthuparamba", "Panoor", "Chakkarakkal", "Anjarakandy", "Thazhe Chovva", "Chalode", "Mahe"],
+  },
+];
+
+export const districtLandingBySlug = Object.fromEntries(
+  districtLandings.map((entry) => [entry.slug, entry]),
+) as Record<string, DistrictLanding>;
+
+/** Maps an area slug back to its district landing page, for canonical links. */
+export const districtLandingByAreaSlug = Object.fromEntries(
+  districtLandings.map((entry) => [entry.areaSlug, entry]),
+) as Record<string, DistrictLanding>;
+
 export const serviceAreaNames = serviceAreas.map((area) => area.name);
 export const serviceAreaCoverageLine = serviceAreaNames.join(", ");
 

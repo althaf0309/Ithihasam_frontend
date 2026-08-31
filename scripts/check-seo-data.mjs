@@ -11,7 +11,14 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { serviceAreas, services, localTemplates, duplicateTemplateCanonicals, newsArticles } from "./site-data.mjs";
+import {
+  serviceAreas,
+  services,
+  localTemplates,
+  duplicateTemplateCanonicals,
+  newsArticles,
+  districtLandings,
+} from "./site-data.mjs";
 
 const problems = [];
 
@@ -60,12 +67,43 @@ const areasSource = read("src/lib/service-areas.ts");
 if (!areasSource) {
   problems.push("src/lib/service-areas.ts not found");
 } else {
+  // The file also declares districtLandings, whose entries look identical at a
+  // glance. Scope this to the serviceAreas array or /kochi reads as an area.
+  const areasArray = areasSource.match(/export const serviceAreas[^=]*=\s*\[([\s\S]*?)\]\s*;/);
   compare(
     "area slugs",
     expectedAreas,
-    uniqueSorted([...areasSource.matchAll(/^\s{4}slug:\s*"([a-z0-9-]+)"/gm)].map((m) => m[1])),
+    areasArray
+      ? uniqueSorted([...areasArray[1].matchAll(/slug:\s*"([a-z0-9-]+)"/g)].map((m) => m[1]))
+      : [],
     "src/lib/service-areas.ts",
   );
+
+  // District landings must mirror site-data.mjs, and each must point at a real
+  // service area — otherwise /kochi renders with no local service pages behind it.
+  const landingArray = areasSource.match(/export const districtLandings[^=]*=\s*\[([\s\S]*?)\]\s*;/);
+  compare(
+    "district landing slugs",
+    uniqueSorted(districtLandings.map((entry) => entry.slug)),
+    landingArray
+      ? uniqueSorted([...landingArray[1].matchAll(/^\s{4}slug:\s*"([a-z0-9-]+)"/gm)].map((m) => m[1]))
+      : [],
+    "src/lib/service-areas.ts",
+  );
+
+  for (const entry of districtLandings) {
+    if (!expectedAreas.includes(entry.areaSlug)) {
+      problems.push(
+        `districtLandings: /${entry.slug} points at area "${entry.areaSlug}", which is not a service area`,
+      );
+    }
+    if (expectedAreas.includes(entry.slug) && entry.slug !== entry.areaSlug) {
+      problems.push(
+        `districtLandings: /${entry.slug} collides with an area slug of the same name; ` +
+          "the root route and the local-service route would fight",
+      );
+    }
+  }
 }
 
 const catalogSource = read("src/lib/service-catalog.ts");

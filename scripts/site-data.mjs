@@ -72,7 +72,7 @@ export const services = [
     description:
       "Book electricians and plumbers in Kerala for wiring, switchboard repair, pipe leakage repair, bathroom fittings, drainage, and home maintenance.",
     intro:
-      "Ithihasam coordinates practical electrical and plumbing support for homes, shops, offices, and apartments across Kannur and Thrissur districts in Kerala. Customers can request help for wiring faults, switchboard work, pipe leakage, bathroom fittings, motor connections, and drainage issues.",
+      "Ithihasam coordinates practical electrical and plumbing support for homes, shops, offices, and apartments across the Kannur, Thrissur, and Ernakulam districts of Kerala. Customers can request help for wiring faults, switchboard work, pipe leakage, bathroom fittings, motor connections, and drainage issues.",
     items: ["Switchboard repair", "House wiring", "MCB and DB checks", "Pipe leakage repair", "Tap replacement", "Bathroom plumbing"],
     faqs: [
       ["Do you handle emergency electrical faults?", "Yes. Urgent electrical faults such as MCB tripping, short circuits, and total power loss are prioritised based on technician availability in your area."],
@@ -86,7 +86,7 @@ export const services = [
     description:
       "Professional house painting services in Kerala for interior painting, exterior painting, putty work, waterproof coating, and repainting.",
     intro:
-      "Ithihasam supports interior painting, exterior painting, wall putty, primer, waterproof coating, rental repainting, and full home repainting requirements across Kannur and Thrissur districts in Kerala.",
+      "Ithihasam supports interior painting, exterior painting, wall putty, primer, waterproof coating, rental repainting, and full home repainting requirements across the Kannur, Thrissur, and Ernakulam districts of Kerala.",
     items: ["Interior painting", "Exterior painting", "Wall putty work", "Primer application", "Waterproof coating", "Full home repainting"],
     faqs: [
       ["How is painting work priced?", "Painting is usually quoted per square foot or per room after a site check, based on surface condition, putty and primer requirements, and the paint brand selected."],
@@ -100,7 +100,7 @@ export const services = [
     description:
       "Doorstep AC, fridge, washing machine, microwave, TV, purifier, chimney, and geyser service support in Kerala. Call Ithihasam to book.",
     intro:
-      "Ithihasam brings appliance service coordination to your doorstep across Kannur and Thrissur districts in Kerala. Whether your AC is not cooling, your refrigerator is making unusual noise, or your washing machine has stopped working, you can book trained technician support for major household appliances.",
+      "Ithihasam brings appliance service coordination to your doorstep across the Kannur, Thrissur, and Ernakulam districts of Kerala. Whether your AC is not cooling, your refrigerator is making unusual noise, or your washing machine has stopped working, you can book trained technician support for major household appliances.",
     items: ["AC repair and service", "Fridge and refrigerator repair", "Washing machine repair", "Microwave oven repair", "TV repair", "Water purifier service", "Kitchen chimney cleaning", "Geyser and water heater support"],
     brands: ["LG", "Samsung", "Whirlpool", "Godrej", "Haier", "Daikin", "Voltas", "Bosch", "IFB", "Panasonic", "Sony", "Blue Star"],
     faqs: [
@@ -251,6 +251,46 @@ export const newsArticles = [
     title: "Ithihasam Partners with ITIs for Carpentry Skill Development",
     excerpt: "Our partnership with ITIs will train aspiring carpenters with industry-ready skills.",
     image: "/og/carpentry.jpg",
+  },
+];
+
+
+/**
+ * Short, root-level district landing pages: /kochi, /kannur, /thrissur.
+ *
+ * These are the pages marketing links to and customers remember, so they are
+ * the canonical district page. The matching /locations/<slug> page still
+ * renders, but points its canonical here so the two do not compete.
+ *
+ * `areaSlug` ties each one back to a real serviceArea, which is what supplies
+ * the local service pages (/ac-repair-ernakulam and friends).
+ */
+export const districtLandings = [
+  {
+    slug: "kochi",
+    areaSlug: "ernakulam",
+    name: "Kochi",
+    district: "Ernakulam district",
+    // Kochi is the city people search for; Ernakulam is the district and the
+    // area slug already used across the local service pages.
+    aka: "Ernakulam",
+    towns: ["Kakkanad", "Aluva", "Perumbavoor", "Muvattupuzha", "Angamaly", "Kothamangalam", "Tripunithura", "North Paravur", "Piravom"],
+  },
+  {
+    slug: "thrissur",
+    areaSlug: "thrissur",
+    name: "Thrissur",
+    district: "Thrissur district",
+    aka: "Trichur",
+    towns: ["Guruvayur", "Kunnamkulam", "Chalakudy", "Irinjalakuda", "Kodungallur", "Wadakkanchery", "Chavakkad", "Ollur", "Mala", "Kodakara"],
+  },
+  {
+    slug: "kannur",
+    areaSlug: "kannur",
+    name: "Kannur",
+    district: "Kannur district",
+    aka: "Cannanore",
+    towns: ["Thalassery", "Taliparamba", "Payyannur", "Mattannur", "Iritty", "Kuthuparamba", "Panoor", "Chakkarakkal", "Anjarakandy", "Thazhe Chovva", "Chalode", "Mahe"],
   },
 ];
 

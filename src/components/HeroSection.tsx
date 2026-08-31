@@ -125,7 +125,7 @@ export function HeroSection() {
               transition={{ duration: 0.6 }}
             >
               <h1 className="mb-3 text-3xl font-extrabold leading-[1.1] tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl">
-                <span className="text-gradient">Ithihasam Home Maintenance Services in Kannur</span>
+                <span className="text-gradient">Ithihasam Home Maintenance Services in Kochi, Thrissur &amp; Kannur</span>
               </h1>
               <p className="mb-2 text-lg font-semibold text-foreground drop-shadow-md md:text-2xl">
                 {slides[current].title}

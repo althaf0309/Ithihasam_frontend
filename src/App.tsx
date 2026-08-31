@@ -14,6 +14,7 @@ import Index from "./pages/Index.tsx";
 const Services = lazy(() => import("./pages/Services.tsx"));
 const ServiceDetail = lazy(() => import("./pages/ServiceDetail.tsx"));
 const LocationDetail = lazy(() => import("./pages/LocationDetail.tsx"));
+const DistrictLanding = lazy(() => import("./pages/DistrictLanding.tsx"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard.tsx"));
 const Blog = lazy(() => import("./pages/Blog.tsx"));
 const BlogDetail = lazy(() => import("./pages/BlogDetail.tsx"));
@@ -65,6 +66,11 @@ const App = () => (
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsConditions />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              {/* Short district landing pages. These must precede the
+                  /:landingSlug catch-all, which would otherwise swallow them. */}
+              <Route path="/kochi" element={<DistrictLanding />} />
+              <Route path="/thrissur" element={<DistrictLanding />} />
+              <Route path="/kannur" element={<DistrictLanding />} />
               <Route path="/:landingSlug" element={<LocalServiceLanding />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

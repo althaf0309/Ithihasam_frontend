@@ -26,6 +26,7 @@ import {
   localTemplates,
   duplicateTemplateCanonicals,
   newsArticles,
+  districtLandings,
 } from "./site-data.mjs";
 
 // The districts marketed as separate service areas. Mirrors serviceDistricts in
@@ -119,8 +120,14 @@ function localRoutes() {
 }
 
 function locationRoutes() {
+  const landingByArea = Object.fromEntries(districtLandings.map((entry) => [entry.areaSlug, entry]));
+
   return serviceAreas.map((area) => ({
     path: `/locations/${area.slug}`,
+    // The three district areas also have a short landing page (/kochi and
+    // friends). That is the URL marketing uses, so it wins the canonical and
+    // this page defers to it rather than competing for the same query.
+    canonicalOverride: landingByArea[area.slug] ? `/${landingByArea[area.slug].slug}` : undefined,
     title: `Home Services in ${area.name} | Electrical, Plumbing, Painting & More | Ithihasam`,
     description: `Book electrical, plumbing, painting, appliance servicing, carpentry, roofing, deep cleaning, pest control, and smart home setup in ${area.name}, ${area.district}.`,
     h1: `Home services in ${area.name}`,
@@ -198,6 +205,39 @@ async function blogRoutes() {
     console.warn(`  ! Could not fetch blog posts (${error.message}). Skipping blog prerender.`);
     return [];
   }
+}
+
+
+/**
+ * Short district landing pages: /kochi, /thrissur, /kannur.
+ *
+ * These take the district-level intent ("home services Kochi") that the
+ * per-service local pages are too narrow for. They are the canonical district
+ * page; the matching /locations/<slug> points its canonical here.
+ */
+function districtLandingRoutes() {
+  return districtLandings.map((entry) => ({
+    path: `/${entry.slug}`,
+    title: `Home Services in ${entry.name} | Electrician, Plumber, AC & Cleaning | Ithihasam`,
+    description: `Book trusted home maintenance in ${entry.name}. Electricians, plumbers, painters, AC and appliance repair, carpentry, deep cleaning, pest control, and CCTV installation across ${entry.district}.`,
+    h1: `Home Maintenance Services in ${entry.name}`,
+    areaName: entry.name,
+    district: entry.district,
+    intro: `Ithihasam coordinates verified electricians, plumbers, painters, carpenters, appliance technicians, cleaners, pest control teams, and smart home installers across ${entry.name} and ${entry.district}. One booking flow covers homes, apartments, shops, and offices.`,
+    items: services.map((service) => service.name),
+    image: "/og/default.jpg",
+    priority: "0.95",
+    isLocation: true,
+    districtTowns: entry.towns,
+    districtAreaSlug: entry.areaSlug,
+    breadcrumbs: [["Home", "/"], [entry.name, `/${entry.slug}`]],
+    faqs: [
+      [`Does Ithihasam provide home services in ${entry.name}?`, `Yes. All eight Ithihasam categories are bookable across ${entry.name} and ${entry.district}: electrical and plumbing, painting, appliance servicing, carpentry, roofing and fabrication, deep cleaning, pest control, and smart home setup.`],
+      [`Which towns in ${entry.district} are covered?`, `${entry.towns.join(", ")}, and nearby localities, subject to technician availability on the day.`],
+      [`How do I book a technician in ${entry.name}?`, `Call or WhatsApp ${businessPhone}, or submit the booking form with your service, exact location in ${entry.name}, and preferred date.`],
+      [`Is there a visit charge in ${entry.name}?`, "Visit and inspection charges depend on the job type and distance, and are confirmed with you before a technician is scheduled."],
+    ],
+  }));
 }
 
 function staticRoutes() {
@@ -605,6 +645,7 @@ function contentFor(route) {
       <p><strong>Quick answer:</strong> ${escapeHtml(answerSummary(route))}</p>
       ${items.length ? `<h2>${escapeHtml(route.isContact ? "Contact details" : "Services we cover")}</h2><ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : ""}
       ${brands.length ? `<h2>Popular brands</h2><p>${brands.map(escapeHtml).join(", ")}</p>` : ""}
+      ${route.districtTowns ? `<h2>Towns covered in ${escapeHtml(route.district)}</h2><ul>${route.districtTowns.map((town) => `<li>${escapeHtml(town)}</li>`).join("")}</ul>` : ""}
       ${route.districtLinksFor ? `<h2>Choose your district</h2><ul>${HEADLINE_DISTRICTS.map((d) => `<li><a href="/${route.districtLinksFor}-${d.slug}">${escapeHtml(route.serviceName ?? "Services")} in ${escapeHtml(d.name)}</a></li>`).join("")}</ul>` : ""}
       <h2>Service areas</h2>
       <p>Book Ithihasam services across ${escapeHtml(areaCoverageLine)} and nearby localities in Kannur district.</p>
@@ -796,6 +837,7 @@ const routes = [
   ...serviceRoutes(),
   ...locationRoutes(),
   ...localRoutes(),
+  ...districtLandingRoutes(),
   ...newsRoutes(),
   ...(await blogRoutes()),
 ];
