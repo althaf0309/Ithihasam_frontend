@@ -294,6 +294,74 @@ export const districtLandings = [
   },
 ];
 
+
+/**
+ * Multi-service bundles for milestone events.
+ *
+ * Ithihasam covers trades, cleaning, and appliance work with one team, so jobs
+ * that normally need three separate vendors can be booked once. Single-trade
+ * competitors cannot answer "moving into a new flat, what do I need?" at all,
+ * and that is the query an answer engine is asked — not "electrician near me".
+ */
+export const serviceBundles = [
+  {
+    slug: "move-in",
+    name: "Move-In Package",
+    occasion: "moving into a new home",
+    summary:
+      "Deep cleaning, electrical and plumbing checks, and appliance installation before you move in, booked as one job instead of three separate vendors.",
+    includes: [
+      "Full-home deep cleaning, including kitchen degreasing and bathroom sanitising",
+      "Electrical safety check: switchboards, MCB, earthing, and fan or light fitting",
+      "Plumbing check: taps, flush tanks, drainage, and leak inspection",
+      "AC installation or servicing, and washing machine connection",
+      "Pest control treatment before furniture arrives",
+    ],
+  },
+  {
+    slug: "villa-handover",
+    name: "New Villa Handover Check",
+    occasion: "taking handover of a newly built house",
+    summary:
+      "Post-construction cleaning plus the electrical, plumbing, and finish checks worth doing before you sign off a handover and lose your leverage with the builder.",
+    includes: [
+      "Post-construction deep cleaning and debris removal",
+      "Water tank cleaning and plumbing pressure check",
+      "Full electrical load and earthing verification",
+      "Paint touch-ups and putty finishing where needed",
+      "Door, window, and cabinet alignment by a carpenter",
+    ],
+  },
+  {
+    slug: "office-setup",
+    name: "Office Setup and Relocation",
+    occasion: "setting up or relocating an office",
+    summary:
+      "Electrical points, network and CCTV installation, AC commissioning, and a full clean, sequenced so the space is ready on your move-in date.",
+    includes: [
+      "Electrical points, switchboards, and cabling for workstations",
+      "CCTV installation with mobile viewing setup",
+      "Wi-Fi and network point setup",
+      "AC installation, relocation, or servicing",
+      "Deep cleaning before occupancy",
+    ],
+  },
+  {
+    slug: "monsoon-prep",
+    name: "Monsoon Readiness Check",
+    occasion: "preparing a home for the monsoon",
+    summary:
+      "Roof, drainage, electrical, and damp checks done before the rain starts, when the same faults cost far more to fix.",
+    includes: [
+      "Roof leak inspection and sheet or sealing repair",
+      "Gutter and drainage clearing",
+      "Electrical earthing and damp-point safety check",
+      "Exterior waterproof coating where needed",
+      "Pest and termite treatment ahead of the wet season",
+    ],
+  },
+];
+
 // Templates that are search-synonym duplicates of a stronger sibling. These keep
 // their URL (so existing links and rankings survive) but carry a canonical
 // pointing at the primary page, which is what Google asks for instead of

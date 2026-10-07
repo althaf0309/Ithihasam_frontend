@@ -27,6 +27,7 @@ import {
   duplicateTemplateCanonicals,
   newsArticles,
   districtLandings,
+  serviceBundles,
 } from "./site-data.mjs";
 
 // The districts marketed as separate service areas. Mirrors serviceDistricts in
@@ -577,7 +578,9 @@ function jsonLd(route) {
     graph.push({
       "@type": "FAQPage",
       "@id": `${canonical}#faq`,
-      mainEntity: route.faqs.map(([question, answer]) => ({
+      // The citable blocks are written to be lifted verbatim by an answer
+      // engine, so they belong in the markup too, not only in the body.
+      mainEntity: [...citableBlocks(route), ...route.faqs].map(([question, answer]) => ({
         "@type": "Question",
         name: question,
         acceptedAnswer: { "@type": "Answer", text: answer },
@@ -597,7 +600,7 @@ function jsonLd(route) {
     inLanguage: "en-IN",
     speakable: {
       "@type": "SpeakableSpecification",
-      cssSelector: [".seo-answer-summary", ".seo-prerender h1"],
+      cssSelector: [".seo-answer-summary", ".seo-citable", ".seo-prerender h1"],
     },
   });
 
@@ -626,6 +629,81 @@ function answerSummary(route) {
     : "electrical, plumbing, painting, appliance repair, carpentry, roofing, deep cleaning, pest control, and smart home services";
 
   return `${businessName} provides ${what} in ${where}. Bookings are taken by phone or WhatsApp on ${businessPhone}, or through the enquiry form at ${siteUrl}. Typical service hours are 8:00 to 20:00, seven days a week.`;
+}
+
+/**
+ * Question-and-answer pairs written to be lifted whole.
+ *
+ * An answer engine quotes a passage, not a page. A passage only survives the
+ * trip if it carries its own context: who, what service, which area, and how to
+ * get it. These deliberately repeat the business name and location inside each
+ * answer rather than relying on the surrounding page, because the surrounding
+ * page does not travel with the quote.
+ *
+ * No prices appear here. The business quotes per job after a site check, and a
+ * figure invented for snippet bait would be quoted back by customers and
+ * repeated by models as fact.
+ */
+function citableBlocks(route) {
+  const area = route.areaName ?? "Kannur district";
+  const district = route.district ?? "Kannur district";
+  const service = route.serviceName?.toLowerCase();
+
+  const blocks = [];
+
+  if (service) {
+    blocks.push([
+      `How do I book ${service} in ${area}?`,
+      `To book ${service} in ${area}, call or WhatsApp ${businessName} on ${businessPhone}, or submit the form at ${siteUrl}. Share the problem, your exact location in ${area}, and a preferred date. The team confirms a technician and the expected charge before the visit.`,
+    ]);
+    blocks.push([
+      `How quickly can a technician reach ${area}?`,
+      `${businessName} covers ${area} and nearby ${district} localities seven days a week, 8:00 to 20:00. Urgent electrical faults, water leaks, and appliance breakdowns are prioritised over routine work. Same-day slots depend on technician availability, so booking earlier in the day helps.`,
+    ]);
+  } else {
+    blocks.push([
+      `What home services does Ithihasam provide in ${area}?`,
+      `${businessName} provides eight categories across ${area}: electrical and plumbing, house painting, appliance repair, carpentry, roofing and fabrication, deep cleaning, pest control, and CCTV or smart home setup. One booking covers several jobs, for homes, flats, shops, and offices.`,
+    ]);
+    blocks.push([
+      `Can I book more than one service in a single visit?`,
+      `Yes. Because ${businessName} covers trades, cleaning, and appliance work with one team, jobs that normally need several vendors can be scheduled together. Mention every requirement when booking and the team arranges them in one visit where the scope allows.`,
+    ]);
+  }
+
+  blocks.push([
+    `How is the price decided?`,
+    `${businessName} quotes per job rather than from a fixed price list, because cost depends on the fault, the materials, and the property. Scope and charges are confirmed with you before work starts, and any visit or inspection fee is stated upfront. There are no hidden charges.`,
+  ]);
+
+  return blocks;
+}
+
+/**
+ * The multi-service packages, rendered on district and location pages.
+ *
+ * This is the question single-trade competitors cannot answer: someone moving
+ * into a new flat needs cleaning, an electrical check, and an AC installed, and
+ * searches for the occasion rather than for any one trade. Ithihasam covers all
+ * three with one team, so the occasion is worth naming on the page.
+ */
+function bundlesHtml(route) {
+  const where = route.areaName ?? "your area";
+
+  const sections = serviceBundles
+    .map(
+      (bundle) =>
+        `<h3>${escapeHtml(bundle.name)}</h3>` +
+        `<p class="seo-citable">${escapeHtml(bundle.summary)}</p>` +
+        `<ul>${bundle.includes.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`,
+    )
+    .join("");
+
+  return (
+    `<h2>Multi-service packages in ${escapeHtml(where)}</h2>` +
+    `<p>Ithihasam covers trades, cleaning, and appliance work with one team, so jobs that usually need several separate vendors can be booked together in ${escapeHtml(where)}.</p>` +
+    sections
+  );
 }
 
 function contentFor(route) {
@@ -665,6 +743,11 @@ function contentFor(route) {
       </p>
       <address>${escapeHtml(businessAddress)}, ${escapeHtml(businessRegion)}, India</address>
       ${route.parentServicePath ? `<p><a href="${escapeHtml(route.parentServicePath)}">View the main service page</a></p>` : ""}
+      ${route.isLocation ? bundlesHtml(route) : ""}
+      <h2>Common questions</h2>
+      ${citableBlocks(route)
+        .map(([question, answer]) => `<h3>${escapeHtml(question)}</h3><p class="seo-citable">${escapeHtml(answer)}</p>`)
+        .join("")}
       ${faqs.length ? `<h2>Frequently asked questions</h2>${faqs.map(([question, answer]) => `<h3>${escapeHtml(question)}</h3><p>${escapeHtml(answer)}</p>`).join("")}` : ""}
     </main>`;
 }
