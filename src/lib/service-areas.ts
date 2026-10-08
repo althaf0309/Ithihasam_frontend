@@ -101,10 +101,10 @@ export const serviceAreas: ServiceAreaEntry[] = [
       "family-home repairs, deep cleaning, painting, appliance care, and security installation for expanding residential clusters",
     propertyMix:
       "villas, town homes, educational campuses, clinics, and small businesses",
-    nearbySlugs: ["thalassery", "mattannur", "chalod"],
+    nearbySlugs: ["thalassery", "mattannur", "chalode"],
   },
   {
-    slug: "chalod",
+    slug: "chalode",
     name: "Chalode",
     district: "Kannur district",
     localityFocus:
@@ -121,7 +121,7 @@ export const serviceAreas: ServiceAreaEntry[] = [
       "high-frequency electrical, plumbing, AC servicing, cleaning, pest control, and CCTV bookings for dense urban neighbourhoods",
     propertyMix:
       "apartments, office spaces, hospitals, retail stores, and nearby residential colonies",
-    nearbySlugs: ["chalod", "anjarakandy", "taliparamba"],
+    nearbySlugs: ["chalode", "anjarakandy", "taliparamba"],
   },
   {
     slug: "taliparamba",

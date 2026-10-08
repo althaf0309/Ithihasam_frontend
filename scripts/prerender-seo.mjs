@@ -28,6 +28,8 @@ import {
   newsArticles,
   districtLandings,
   serviceBundles,
+  businessGeo,
+  businessSameAs,
 } from "./site-data.mjs";
 
 // The districts marketed as separate service areas. Mirrors serviceDistricts in
@@ -81,6 +83,59 @@ function serviceRoutes() {
   }));
 }
 
+const areaBySlug = Object.fromEntries(serviceAreas.map((area) => [area.slug, area]));
+
+/**
+ * Conditions that genuinely change how a job is done in a given place.
+ *
+ * Keyed off facts already recorded per area, so this is description rather than
+ * invention: a coastal town really does corrode fittings faster, and a town of
+ * hotels really does need work scheduled around guests.
+ */
+function localConditions(area) {
+  const focus = area.localityFocus ?? "";
+  const notes = [];
+
+  if (/coastal|beachside|riverside/.test(focus)) {
+    notes.push(
+      "Salt-laden air near the coast corrodes switchboards, fan mountings, taps, and grills far faster than inland. Technicians carry corrosion-resistant fittings and check earthing more closely here.",
+    );
+  }
+  if (/hotel|guest house|visitor/.test(focus)) {
+    notes.push(
+      "Guest houses and hotels need work scheduled around occupancy, so early-morning and between-checkout slots are common, and jobs are staged room by room rather than closing a floor.",
+    );
+  }
+  if (/IT-|apartment|flat|high-rise|gated/.test(focus)) {
+    notes.push(
+      "Apartment and gated-community work needs association permission, service-lift booking, and a time window agreed with security. Sharing your block and flat number when booking avoids a wasted visit.",
+    );
+  }
+  if (/industrial|trade-town|warehouse|godown|highway/.test(focus)) {
+    notes.push(
+      "Commercial and light-industrial properties here often need heavier-duty fittings and three-phase work, which is quoted separately from domestic jobs.",
+    );
+  }
+  if (/hill|estate|damp/.test(focus)) {
+    notes.push(
+      "Higher rainfall and persistent damp in this belt bring recurring roof leaks, wall seepage, and electrical earthing faults, so inspections look at the cause rather than only the visible symptom.",
+    );
+  }
+  if (/heritage/.test(focus)) {
+    notes.push(
+      "Older and heritage properties often have legacy wiring and non-standard fittings. Work is quoted after a site check, because replacements rarely match off-the-shelf sizes.",
+    );
+  }
+
+  if (!notes.length) {
+    notes.push(
+      "Most properties here are independent houses and small commercial units, so access is straightforward and same-day visits are easier to arrange than in high-rise areas.",
+    );
+  }
+
+  return notes;
+}
+
 function localRoutes() {
   const routes = [];
 
@@ -89,6 +144,10 @@ function localRoutes() {
       const parent = servicesBySlug[parentSlug];
       const primaryPrefix = duplicateTemplateCanonicals[prefix];
       const lower = serviceName.toLowerCase();
+
+      const neighbours = (area.nearbySlugs ?? [])
+        .map((slug) => areaBySlug[slug])
+        .filter(Boolean);
 
       routes.push({
         path: `/${prefix}-${area.slug}`,
@@ -101,15 +160,33 @@ function localRoutes() {
         serviceName,
         areaName: area.name,
         district: area.district,
-        intro: `Ithihasam helps customers book ${lower} in ${area.name}. Share your issue, exact location, and preferred date so the team can coordinate the right professional for ${area.district}.`,
+        // The intro leads with what is specific to this town rather than the
+        // same sentence with a name swapped. Sibling pages previously shared
+        // ~98% of their words, which is what Google treats as scaled duplicate
+        // content; the per-area facts below are what make them distinct.
+        intro:
+          `Ithihasam books ${lower} across ${area.name}, covering ${area.localityFocus ?? "everyday household maintenance"}. ` +
+          `Local work is mostly ${area.propertyMix ?? "homes and small commercial units"}.`,
         items: jobs,
         brands: parent?.brands,
         image: `/og/${parentSlug}.jpg`,
         priority: primaryPrefix ? "0.4" : "0.7",
         parentServicePath: `/services/${parentSlug}`,
+        localConditions: localConditions(area),
+        neighbours: neighbours.map((n) => [`${serviceName} in ${n.name}`, `/${prefix}-${n.slug}`]),
+        areaHubPath: `/locations/${area.slug}`,
         breadcrumbs: [["Home", "/"], ["Services", "/services"], [parent?.name ?? serviceName, `/services/${parentSlug}`], [`${serviceName} in ${area.name}`, `/${prefix}-${area.slug}`]],
         faqs: [
-          [`Can I book ${lower} in ${area.name}?`, `Yes. Ithihasam supports ${lower} booking requests in ${area.name} and nearby localities, subject to slot and technician availability.`],
+          [
+            `What makes ${lower} in ${area.name} different?`,
+            `Work in ${area.name} is shaped by the local property mix: ${area.propertyMix ?? "mostly independent homes"}. ${localConditions(area)[0]}`,
+          ],
+          [
+            `Which areas near ${area.name} are also covered?`,
+            neighbours.length
+              ? `Besides ${area.name}, the same team covers ${neighbours.map((n) => n.name).join(", ")}, so a technician routed to one can often reach the others the same day.`
+              : `Ithihasam covers ${area.name} and nearby localities across ${area.district}, subject to technician availability.`,
+          ],
           ["How do I book?", `Use the website enquiry form, WhatsApp, or call ${businessPhone}. Share the service needed, location, and preferred date.`],
           ["Do you charge a visit fee?", "Visit and inspection charges depend on the job type and distance. Any charge is confirmed with you before a technician is scheduled."],
         ],
@@ -129,7 +206,8 @@ function locationRoutes() {
     // friends). That is the URL marketing uses, so it wins the canonical and
     // this page defers to it rather than competing for the same query.
     canonicalOverride: landingByArea[area.slug] ? `/${landingByArea[area.slug].slug}` : undefined,
-    title: `Home Services in ${area.name} | Electrical, Plumbing, Painting & More | Ithihasam`,
+    // Kept under 60 characters so Google does not truncate it in the SERP.
+    title: `Home Maintenance in ${area.name} | Ithihasam`,
     description: `Book electrical, plumbing, painting, appliance servicing, carpentry, roofing, deep cleaning, pest control, and smart home setup in ${area.name}, ${area.district}.`,
     h1: `Home services in ${area.name}`,
     areaName: area.name,
@@ -219,7 +297,7 @@ async function blogRoutes() {
 function districtLandingRoutes() {
   return districtLandings.map((entry) => ({
     path: `/${entry.slug}`,
-    title: `Home Services in ${entry.name} | Electrician, Plumber, AC & Cleaning | Ithihasam`,
+    title: `Home Maintenance in ${entry.name} | Ithihasam`,
     description: `Book trusted home maintenance in ${entry.name}. Electricians, plumbers, painters, AC and appliance repair, carpentry, deep cleaning, pest control, and CCTV installation across ${entry.district}.`,
     h1: `Home Maintenance Services in ${entry.name}`,
     areaName: entry.name,
@@ -421,6 +499,9 @@ const localBusinessNode = {
   telephone: businessPhonePlain,
   email: businessEmail,
   priceRange: "₹₹",
+  geo: { "@type": "GeoCoordinates", latitude: businessGeo.latitude, longitude: businessGeo.longitude },
+  // Only populated once the profiles are live and their NAP matches this file.
+  ...(businessSameAs.length ? { sameAs: businessSameAs } : {}),
   currenciesAccepted: "INR",
   parentOrganization: { "@id": `${siteUrl}/#organization` },
   address: {
@@ -725,9 +806,12 @@ function contentFor(route) {
       ${brands.length ? `<h2>Popular brands</h2><p>${brands.map(escapeHtml).join(", ")}</p>` : ""}
       ${route.districtTowns ? `<h2>Towns covered in ${escapeHtml(route.district)}</h2><ul>${route.districtTowns.map((town) => `<li>${escapeHtml(town)}</li>`).join("")}</ul>` : ""}
       ${route.districtLinksFor ? `<h2>Choose your district</h2><ul>${HEADLINE_DISTRICTS.map((d) => `<li><a href="/${route.districtLinksFor}-${d.slug}">${escapeHtml(route.serviceName ?? "Services")} in ${escapeHtml(d.name)}</a></li>`).join("")}</ul>` : ""}
+      ${route.localConditions?.length ? `<h2>What to expect in ${escapeHtml(route.areaName ?? "this area")}</h2>${route.localConditions.map((note) => `<p class="seo-citable">${escapeHtml(note)}</p>`).join("")}` : ""}
+      ${route.neighbours?.length ? `<h2>Nearby areas we also cover</h2><ul>${route.neighbours.map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul>` : ""}
+      ${route.areaHubPath ? `<p><a href="${escapeHtml(route.areaHubPath)}">All Ithihasam services in ${escapeHtml(route.areaName ?? "this area")}</a></p>` : ""}
       <h2>Service areas</h2>
-      <p>Book Ithihasam services across ${escapeHtml(areaCoverageLine)} and nearby localities in Kannur district.</p>
-      <ul>${serviceAreas.map((area) => `<li><a href="/locations/${area.slug}">Home services in ${escapeHtml(area.name)}</a></li>`).join("")}</ul>
+      <p>${route.areaName ? `Ithihasam also covers nearby towns across ${escapeHtml(route.district ?? "Kerala")}.` : `Book Ithihasam services across ${escapeHtml(areaCoverageLine)}.`}</p>
+      ${route.areaName ? "" : `<ul>${serviceAreas.map((area) => `<li><a href="/locations/${area.slug}">Home services in ${escapeHtml(area.name)}</a></li>`).join("")}</ul>`}
       <h2>Why choose Ithihasam</h2>
       <ul>
         <li>Doorstep service coordination for homes, shops, offices, and apartments.</li>

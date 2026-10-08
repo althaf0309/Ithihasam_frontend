@@ -48,7 +48,7 @@ export default function DistrictLanding() {
   return (
     <div className="min-h-screen bg-background">
       <SeoMeta
-        title={`Home Services in ${entry.name} | Electrician, Plumber, AC & Cleaning | Ithihasam`}
+        title={`Home Maintenance in ${entry.name} | Ithihasam`}
         description={`Book trusted home maintenance in ${entry.name}. Electricians, plumbers, painters, AC and appliance repair, carpentry, deep cleaning, pest control, and CCTV installation across ${entry.district}.`}
         keywords={keywords}
         canonicalPath={`/${entry.slug}`}
