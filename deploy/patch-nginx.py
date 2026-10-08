@@ -67,6 +67,45 @@ def drop_location(body, path):
     return body, False
 
 
+def ensure_www_redirect(conf):
+    """Add a www -> non-www 301 server block if one is not already present.
+
+    Every canonical tag on the site uses the non-www form. Serving the same
+    pages at www as well splits ranking signals across two hostnames, and
+    Search Console treats them as separate properties. A redirect keeps one
+    canonical host while still answering customers who type www from habit.
+
+    The certificate must cover www or browsers hit a TLS warning before they
+    ever reach the redirect:
+
+        sudo certbot --nginx -d ithihasam.in -d www.ithihasam.in
+    """
+    if "server_name www.ithihasam.in" in conf:
+        return conf, False
+
+    # Reuse whatever cert paths certbot already configured, so this block stays
+    # in step with the rest of the file rather than hardcoding a path.
+    cert = re.search(r"ssl_certificate\s+([^;]+);", conf)
+    key = re.search(r"ssl_certificate_key\s+([^;]+);", conf)
+    if not cert or not key:
+        return conf, False
+
+    lines = [
+        "",
+        "# Canonical host is the non-www form, matching every canonical tag.",
+        "server {",
+        "    listen 443 ssl;",
+        "    listen [::]:443 ssl;",
+        "    server_name www.ithihasam.in;",
+        "    ssl_certificate {};".format(cert.group(1).strip()),
+        "    ssl_certificate_key {};".format(key.group(1).strip()),
+        "    return 301 https://ithihasam.in$request_uri;",
+        "}",
+        "",
+    ]
+    return conf + "\n".join(lines), True
+
+
 def patch(path, snippet, dist):
     with open(path) as handle:
         conf = handle.read()
@@ -122,6 +161,11 @@ def patch(path, snippet, dist):
 
     pieces.append(conf[last:])
     conf = "".join(pieces)
+
+    conf, added_www = ensure_www_redirect(conf)
+    if added_www:
+        print("  added: www -> non-www 301 redirect block")
+        changed = True
 
     if not changed or conf == original:
         return False
