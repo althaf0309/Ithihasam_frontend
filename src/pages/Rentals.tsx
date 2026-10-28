@@ -9,6 +9,9 @@ import { ContactCTAButtons } from "@/components/ContactCTAButtons";
 import { QuickBookingForm } from "@/components/QuickBookingForm";
 import { RentalGallery } from "@/components/RentalGallery";
 import { createKeywordSet } from "@/lib/seo";
+import bannerCarpentry from "@/assets/banner-carpentry.jpg";
+import bannerAppliance from "@/assets/banner-appliance.jpg";
+import heroProfessionals from "@/assets/hero-professionals.jpg";
 import {
   formatInr,
   howRentingWorks,
@@ -150,11 +153,17 @@ function CityLinks({ heading }: { heading: string }) {
   );
 }
 
-const gallery = (kind: string, slug: string) => [
-  { src: `/og/rental-${kind}-${slug}.jpg`, alt: `${slug.replace(/-/g, " ")} available on monthly rent from Ithihasam` },
-  { src: `/og/rental-${kind}-${slug}-2.jpg`, alt: "Delivery and installation included with every Ithihasam rental" },
-  { src: `/og/rental-${kind}-${slug}-3.jpg`, alt: "Cleaned and inspected before every new rental" },
-];
+// Rental pages reuse the existing photo library rather than pointing at files
+// that do not exist. Carpentry imagery stands in for furniture and appliance
+// imagery for appliances, which is honest — these are Ithihasam's own photos.
+// Replace with real rental-inventory shots as they are taken.
+const RENTAL_IMAGES = {
+  furniture: { src: bannerCarpentry, alt: "Furniture available on monthly rent from Ithihasam" },
+  appliance: { src: bannerAppliance, alt: "Home appliances available on monthly rent" },
+  team: { src: heroProfessionals, alt: "Ithihasam team delivering and installing a rental order" },
+} as const;
+
+const gallery = () => [RENTAL_IMAGES.furniture, RENTAL_IMAGES.appliance, RENTAL_IMAGES.team];
 
 /** /rentals */
 export function RentalsHub() {
@@ -168,7 +177,7 @@ export function RentalsHub() {
       badge="Monthly rental"
       h1="Furniture and Appliance Rental in Kerala"
       intro="Rent furniture and appliances monthly instead of buying. Ithihasam delivers, installs and maintains everything for the whole rental period across Kochi, Trivandrum and Kozhikode."
-      gallery={gallery("hub", "kerala")}
+      gallery={gallery()}
     >
       <CatalogueList />
       <CityLinks heading="Choose your city" />
@@ -219,7 +228,7 @@ export function RentalCityPage() {
       badge={city.district}
       h1={`Furniture and Appliance Rental in ${city.name}`}
       intro={`Ithihasam rents furniture and appliances on a monthly subscription across ${city.name} (${city.aka}). Demand here comes from ${city.demandDriver}. Most of our ${city.name} rentals go into ${city.propertyMix}.`}
-      gallery={gallery("city", city.slug)}
+      gallery={gallery()}
     >
       <CatalogueList cityName={city.name} />
 
@@ -256,7 +265,7 @@ export function RentalLocalityPage() {
       badge={`${city.name} · ${city.district}`}
       h1={`Furniture Rental in ${locality.name}`}
       intro={`Ithihasam rents furniture and appliances monthly in ${locality.name}, ${city.name} — an area known for ${locality.note}. Delivery, installation and maintenance are included for the whole rental period.`}
-      gallery={gallery("city", city.slug)}
+      gallery={gallery()}
     >
       <CatalogueList cityName={locality.name} />
 
@@ -297,7 +306,7 @@ export function RentalAudiencePage() {
       badge="Rental plans"
       h1={`Furniture Rental for ${audience.name}`}
       intro={`Ithihasam rents furniture and appliances monthly to ${audience.name.toLowerCase()} across Kochi, Trivandrum and Kozhikode, where the common requirement is ${audience.need}.`}
-      gallery={gallery("hub", "kerala")}
+      gallery={gallery()}
     >
       <CatalogueList />
       <CityLinks heading="Available in" />

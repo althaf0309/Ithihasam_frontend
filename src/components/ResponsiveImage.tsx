@@ -62,7 +62,9 @@ export function ResponsiveImage({
       // The hero image is the LCP element; lazy-loading it delays the metric
       // the ranking signal is measured on.
       loading={priority ? "eager" : "lazy"}
-      fetchPriority={priority ? "high" : "auto"}
+      // React 18 does not map the camelCase prop, so the DOM attribute name is
+      // used directly. Without this the hint is dropped and a warning is logged.
+      {...{ fetchpriority: priority ? "high" : "auto" }}
       decoding={priority ? "sync" : "async"}
     />
   );

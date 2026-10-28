@@ -25,12 +25,18 @@ import {
 
 const inr = (value) => `₹${Number(value).toLocaleString("en-IN")}`;
 
-/** Images per page. The prerenderer renders these as a gallery with srcset. */
-function galleryFor(kind, slug) {
+/**
+ * Images per page, rendered as a real gallery in the prerendered HTML.
+ *
+ * These point at files that exist. Generating paths for photos that have not
+ * been taken yet produced broken images on every rental page, and a crawler
+ * following an og:image to a 404 simply drops the preview.
+ */
+function galleryFor() {
   return [
-    { src: `/og/rental-${kind}-${slug}.jpg`, alt: `${slug.replace(/-/g, " ")} available on monthly rent from Ithihasam` },
-    { src: `/og/rental-${kind}-${slug}-2.jpg`, alt: `Delivery and installation included with every Ithihasam rental` },
-    { src: `/og/rental-${kind}-${slug}-3.jpg`, alt: `Cleaned and inspected before every new rental` },
+    { src: "/og/rental-furniture.jpg", alt: "Furniture available on monthly rent from Ithihasam" },
+    { src: "/og/rental-appliance.jpg", alt: "Home appliances available on monthly rent" },
+    { src: "/og/rental-team.jpg", alt: "Ithihasam team delivering and installing a rental order" },
   ];
 }
 
@@ -81,7 +87,7 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
     intro: `${rentalBrand.tagline} Ithihasam rents beds, mattresses, wardrobes, sofas, dining sets, refrigerators, washing machines and air conditioners on a monthly subscription across Kochi, Trivandrum and Kozhikode. Delivery, installation and maintenance are included for the whole rental period.`,
     items: rentalCatalogue.map((item) => item.name),
     image: "/og/rental-hub.jpg",
-    gallery: galleryFor("hub", "kerala"),
+    gallery: galleryFor(),
     priority: "0.95",
     isRental: true,
     rentalHowItWorks: howItWorks,
@@ -105,8 +111,8 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
       // city pages are not one page with the name swapped.
       intro: `Ithihasam rents furniture and appliances on a monthly subscription across ${city.name} (${city.aka}). Demand here comes from ${city.demandDriver}. Most of our ${city.name} rentals go into ${city.propertyMix}.`,
       items: cityProducts.length ? cityProducts.map((item) => `${item.name} — from ${inr(item.monthlyRate)}/month`) : rentalCatalogue.map((item) => item.name),
-      image: `/og/rental-city-${city.slug}.jpg`,
-      gallery: galleryFor("city", city.slug),
+      image: "/og/rental-hub.jpg",
+      gallery: galleryFor(),
       priority: "0.9",
       isRental: true,
       rentalHowItWorks: howItWorks,
@@ -140,8 +146,8 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
         // The locality note is what makes each of these 24 pages distinct.
         intro: `Ithihasam rents furniture and appliances monthly in ${loc.name}, ${city.name} — an area known for ${loc.note}. Delivery, installation and maintenance are included for the whole rental period.`,
         items: cityProducts.length ? cityProducts.map((item) => item.name) : rentalCatalogue.map((item) => item.name),
-        image: `/og/rental-city-${city.slug}.jpg`,
-        gallery: galleryFor("city", city.slug),
+        image: "/og/rental-hub.jpg",
+        gallery: galleryFor(),
         priority: "0.7",
         isRental: true,
         rentalHowItWorks: howItWorks,
@@ -184,8 +190,8 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
           "Maintenance included for the whole period",
           "Free collection at the end of the rental",
         ],
-        image: `/og/rental-product-${item.slug}.jpg`,
-        gallery: galleryFor("product", item.slug),
+        image: "/og/rental-furniture.jpg",
+        gallery: galleryFor(),
         priority: "0.8",
         isRental: true,
         rentalProduct: item,
@@ -213,8 +219,8 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
       h1: pkg.name,
       intro: `A complete ${pkg.bhk} setup on one monthly rental, from ${inr(pkg.monthlyRate)} per month with a refundable deposit of ${inr(pkg.deposit)} and a minimum period of ${pkg.minTenureMonths} months. One delivery, one installation, one invoice.`,
       items: pkg.includes,
-      image: `/og/rental-package-${pkg.slug}.jpg`,
-      gallery: galleryFor("package", pkg.slug),
+      image: "/og/rental-furniture.jpg",
+      gallery: galleryFor(),
       priority: "0.85",
       isRental: true,
       rentalPackage: pkg,
@@ -235,7 +241,7 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
       intro: `Ithihasam rents furniture and appliances monthly to ${audience.name.toLowerCase()} across Kochi, Trivandrum and Kozhikode, where the common requirement is ${audience.need}.`,
       items: rentalCatalogue.map((item) => item.name),
       image: "/og/rental-hub.jpg",
-      gallery: galleryFor("hub", "kerala"),
+      gallery: galleryFor(),
       priority: "0.7",
       isRental: true,
       rentalHowItWorks: howItWorks,

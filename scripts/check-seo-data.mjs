@@ -236,6 +236,33 @@ if (!appSource) {
   }
 }
 
+
+// --- 6. Every /og/ image a page references must exist ----------------------
+// A page pointing at a photo that was never taken renders a broken image, and
+// an og:image that 404s makes social platforms drop the preview entirely.
+const rentalRoutesSource = read("scripts/rental-routes.mjs");
+const prerenderSource2 = read("scripts/prerender-seo.mjs");
+const ogDir = path.resolve("public/og");
+
+if (fs.existsSync(ogDir)) {
+  const present = new Set(fs.readdirSync(ogDir));
+  const referenced = new Set();
+
+  for (const source of [rentalRoutesSource, prerenderSource2]) {
+    if (!source) continue;
+    // Only literal paths can be checked; template expressions are skipped.
+    for (const match of source.matchAll(/["'`](\/og\/[A-Za-z0-9._-]+\.(?:jpg|jpeg|png|webp))["'`]/g)) {
+      referenced.add(match[1].replace("/og/", ""));
+    }
+  }
+
+  for (const file of referenced) {
+    if (!present.has(file)) {
+      problems.push(`missing image: /og/${file} is referenced but does not exist in public/og/`);
+    }
+  }
+}
+
 if (problems.length) {
   console.error("\nSEO route data is out of sync:\n");
   for (const problem of problems) console.error(`  - ${problem}`);
