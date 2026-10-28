@@ -15,6 +15,10 @@ export function Header() {
   const navLinks = [
     { label: t("nav.home"), to: "/" },
     { label: t("nav.services"), to: "/services" },
+    // Rentals is a separate business line, so it gets its own nav entry
+    // rather than sitting under Services. Without a link from the nav the
+    // whole section is orphaned and may never be crawled.
+    { label: "Rentals", to: "/rentals" },
     { label: t("nav.blog"), to: "/blog" },
     { label: t("nav.news"), to: "/news" },
     { label: t("nav.about"), to: "/about" },

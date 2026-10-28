@@ -31,6 +31,8 @@ import {
   businessGeo,
   businessSameAs,
 } from "./site-data.mjs";
+import { rentalRoutes, rentalSummary } from "./rental-routes.mjs";
+import { rentalCities, rentalCatalogue, rentalPackages } from "./rental-data.mjs";
 
 // The districts marketed as separate service areas. Mirrors serviceDistricts in
 // src/lib/service-areas.ts; check-seo-data.mjs fails the build if they diverge.
@@ -634,6 +636,62 @@ function jsonLd(route) {
     graph.push({ "@type": "Blog", "@id": `${canonical}#blog`, url: canonical, name: "Ithihasam Blog", publisher: { "@id": `${siteUrl}/#organization` } });
   }
 
+  // Rental items are products with a real price, so they carry Product/Offer
+  // markup. Only pages with a confirmed monthlyRate reach here, so no Offer is
+  // ever published without a genuine price behind it.
+  // Rental pages describe a service offering, so they carry Service markup in
+  // addition to any Product markup on priced items. Without it an answer engine
+  // sees the page but not what business activity it represents.
+  if (route.isRental) {
+    graph.push({
+      "@type": "Service",
+      "@id": `${canonical}#rental-service`,
+      name: route.h1,
+      serviceType: "Furniture and appliance rental",
+      description: route.description,
+      provider: { "@id": `${siteUrl}/#business` },
+      areaServed: route.areaName
+        ? [{ "@type": "City", name: route.areaName }]
+        : rentalCities.map((city) => ({ "@type": "City", name: city.name })),
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Furniture and appliance rental",
+        itemListElement: rentalCatalogue.map((item) => ({
+          "@type": "Offer",
+          itemOffered: { "@type": "Service", name: item.name },
+        })),
+      },
+    });
+  }
+
+  if (route.rentalProduct || route.rentalPackage) {
+    const item = route.rentalProduct ?? route.rentalPackage;
+    const where = route.rentalCity ? ` in ${route.rentalCity.name}` : "";
+    graph.push({
+      "@type": "Product",
+      "@id": `${canonical}#product`,
+      name: `${item.name}${where}`,
+      description: route.description,
+      image: `${siteUrl}${route.image}`,
+      brand: { "@id": `${siteUrl}/#organization` },
+      offers: {
+        "@type": "Offer",
+        url: canonical,
+        priceCurrency: "INR",
+        price: item.monthlyRate,
+        availability: "https://schema.org/InStock",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: item.monthlyRate,
+          priceCurrency: "INR",
+          unitCode: "MON",
+          billingIncrement: 1,
+        },
+        seller: { "@id": `${siteUrl}/#business` },
+      },
+    });
+  }
+
   if (route.isArticle) {
     graph.push({
       "@type": route.articleType ?? "Article",
@@ -787,6 +845,59 @@ function bundlesHtml(route) {
   );
 }
 
+/**
+ * Rental-specific page sections: image gallery, how it works, and the internal
+ * links that connect city hubs, localities, products and packages.
+ *
+ * The gallery is rendered as real <img> tags in the prerendered HTML rather
+ * than loaded by JavaScript, so crawlers and social preview fetchers see the
+ * images. Each carries width, height and lazy loading to avoid layout shift.
+ */
+function rentalSectionsHtml(route) {
+  const parts = [];
+
+  if (route.gallery?.length) {
+    parts.push(
+      `<h2>Photos</h2><div class="seo-gallery">` +
+        route.gallery
+          .map(
+            (img) =>
+              `<img src="${escapeHtml(img.src)}" alt="${escapeHtml(img.alt)}" width="1200" height="800" loading="lazy" decoding="async">`,
+          )
+          .join("") +
+        `</div>`,
+    );
+  }
+
+  if (route.rentalHowItWorks?.length) {
+    parts.push(
+      `<h2>How renting works</h2><ol>` +
+        route.rentalHowItWorks.map((step) => `<li>${escapeHtml(step)}</li>`).join("") +
+        `</ol>`,
+    );
+  }
+
+  const linkBlock = (heading, links) =>
+    links?.length
+      ? `<h2>${escapeHtml(heading)}</h2><ul>${links
+          .map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`)
+          .join("")}</ul>`
+      : "";
+
+  parts.push(linkBlock("Rental cities", route.rentalCities));
+  parts.push(linkBlock("Areas we deliver to", route.rentalLocalities));
+  parts.push(linkBlock("Available on rent", route.rentalProducts));
+  parts.push(linkBlock("Nearby areas", route.rentalNearby));
+
+  if (route.rentalParent) {
+    parts.push(
+      `<p><a href="${escapeHtml(route.rentalParent[1])}">${escapeHtml(route.rentalParent[0])}</a></p>`,
+    );
+  }
+
+  return parts.filter(Boolean).join("");
+}
+
 function contentFor(route) {
   const items = route.items || [];
   const brands = route.brands || [];
@@ -809,9 +920,10 @@ function contentFor(route) {
       ${route.localConditions?.length ? `<h2>What to expect in ${escapeHtml(route.areaName ?? "this area")}</h2>${route.localConditions.map((note) => `<p class="seo-citable">${escapeHtml(note)}</p>`).join("")}` : ""}
       ${route.neighbours?.length ? `<h2>Nearby areas we also cover</h2><ul>${route.neighbours.map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul>` : ""}
       ${route.areaHubPath ? `<p><a href="${escapeHtml(route.areaHubPath)}">All Ithihasam services in ${escapeHtml(route.areaName ?? "this area")}</a></p>` : ""}
-      <h2>Service areas</h2>
-      <p>${route.areaName ? `Ithihasam also covers nearby towns across ${escapeHtml(route.district ?? "Kerala")}.` : `Book Ithihasam services across ${escapeHtml(areaCoverageLine)}.`}</p>
-      ${route.areaName ? "" : `<ul>${serviceAreas.map((area) => `<li><a href="/locations/${area.slug}">Home services in ${escapeHtml(area.name)}</a></li>`).join("")}</ul>`}
+      ${route.isRental ? rentalSectionsHtml(route) : ""}
+      ${route.isRental ? "" : `<h2>Service areas</h2>`}
+      ${route.isRental ? "" : `<p>${route.areaName ? `Ithihasam also covers nearby towns across ${escapeHtml(route.district ?? "Kerala")}.` : `Book Ithihasam services across ${escapeHtml(areaCoverageLine)}.`}</p>`}
+      ${route.isRental || route.areaName ? "" : `<ul>${serviceAreas.map((area) => `<li><a href="/locations/${area.slug}">Home services in ${escapeHtml(area.name)}</a></li>`).join("")}</ul>`}
       <h2>Why choose Ithihasam</h2>
       <ul>
         <li>Doorstep service coordination for homes, shops, offices, and apartments.</li>
@@ -819,6 +931,7 @@ function contentFor(route) {
         <li>Clear scope and pricing discussion before work starts, with no hidden charges.</li>
         <li>Call and WhatsApp booking support at ${escapeHtml(businessPhone)}.</li>
       </ul>
+      ${route.isRental ? "" : `<h2>Also from Ithihasam</h2><p><a href="/rentals">Furniture and appliance rental</a> on a monthly subscription in Kochi, Trivandrum and Kozhikode.</p>`}
       <h2>Contact Ithihasam</h2>
       <p>
         <a href="tel:${escapeHtml(businessPhonePlain)}">${escapeHtml(businessPhone)}</a> &middot;
@@ -982,6 +1095,21 @@ ${services.map((service) => `- [${service.name}](${siteUrl}/services/${service.s
 
 ${serviceAreas.map((area) => `- [Home services in ${area.name}](${siteUrl}/locations/${area.slug}) — ${area.district}`).join("\n")}
 
+## Furniture and appliance rental
+
+Ithihasam also rents furniture and home appliances on a monthly subscription.
+This is a separate offering from the home maintenance services above: customers
+rent items rather than booking a repair, and the rental cities are different.
+
+- Rental hub: ${siteUrl}/rentals
+- Rental cities: ${rentalCities.map((city) => `${city.name} (${city.aka})`).join(", ")}
+- What is available: ${rentalCatalogue.map((item) => item.name).join(", ")}
+- Whole-home packages: ${rentalPackages.map((pkg) => pkg.name).join(", ")}
+- Included in every rental: delivery, installation, maintenance for the full period, and collection at the end
+- A refundable deposit and a minimum rental period apply to each item
+
+${rentalCities.map((city) => `- [Furniture rental in ${city.name}](${siteUrl}/rentals/${city.slug}) — ${city.district}`).join("\n")}
+
 ## Notes for summarisation
 
 - Ithihasam serves two Kerala districts: Kannur and Thrissur. Each has its own
@@ -1005,6 +1133,7 @@ const routes = [
   ...locationRoutes(),
   ...localRoutes(),
   ...districtLandingRoutes(),
+  ...rentalRoutes({ businessPhone, siteUrl }),
   ...newsRoutes(),
   ...(await blogRoutes()),
 ];
@@ -1034,3 +1163,15 @@ for (const { filename, count } of written) {
 console.log(`  sitemap.xml (index)          ${String(written.length).padStart(4)} child sitemaps, ${total} URLs total`);
 console.log(`  feed.xml                     ${String(feedCount).padStart(4)} articles`);
 console.log(`  llms.txt                     written`);
+
+const rentals = rentalSummary();
+console.log(
+  `  rentals                      ${rentals.priced}/${rentals.total} items priced, ` +
+    `${rentals.pkgPriced}/${rentals.pkgTotal} packages priced`,
+);
+if (rentals.priced < rentals.total) {
+  console.warn(
+    `  ! ${rentals.total - rentals.priced} rental items have no monthlyRate and were skipped. ` +
+      `Fill them in at scripts/rental-data.mjs to publish their pages.`,
+  );
+}

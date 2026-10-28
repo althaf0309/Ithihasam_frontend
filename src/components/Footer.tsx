@@ -30,6 +30,7 @@ export function Footer() {
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li><Link to="/" className="transition-colors hover:text-primary">{t("nav.home")}</Link></li>
             <li><Link to="/services" className="transition-colors hover:text-primary">{t("nav.services")}</Link></li>
+            <li><Link to="/rentals" className="transition-colors hover:text-primary">Furniture Rental</Link></li>
             <li><Link to="/blog" className="transition-colors hover:text-primary">{t("nav.blog")}</Link></li>
             <li><Link to="/news" className="transition-colors hover:text-primary">{t("nav.news")}</Link></li>
             <li><Link to="/about" className="transition-colors hover:text-primary">{t("nav.about")}</Link></li>
