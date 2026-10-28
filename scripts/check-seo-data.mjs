@@ -197,6 +197,45 @@ if (districtSource) {
   }
 }
 
+
+// --- 5. Every prerendered section must have a React route -------------------
+// A prerendered page returns HTTP 200 with correct HTML, then React mounts,
+// finds no matching route, and replaces it with the 404 page. curl cannot see
+// this because it never runs the JavaScript, so it has to be checked here.
+const appSource = read("src/App.tsx");
+if (!appSource) {
+  problems.push("src/App.tsx not found");
+} else {
+  const prerenderedSections = [
+    { path: "/rentals", pattern: /path="\/rentals"/ },
+    { path: "/rentals/:city", pattern: /path="\/rentals\/:citySlug"/ },
+    { path: "/rentals/:city/:locality", pattern: /path="\/rentals\/:citySlug\/:localitySlug"/ },
+    { path: "/rentals/for/:audience", pattern: /path="\/rentals\/for\/:audienceSlug"/ },
+    { path: "/kochi", pattern: /path="\/kochi"/ },
+    { path: "/thrissur", pattern: /path="\/thrissur"/ },
+    { path: "/kannur", pattern: /path="\/kannur"/ },
+    { path: "/locations/:slug", pattern: /path="\/locations\/:slug"/ },
+  ];
+
+  for (const section of prerenderedSections) {
+    if (!section.pattern.test(appSource)) {
+      problems.push(
+        `src/App.tsx: no React route for "${section.path}" — the prerendered page would ` +
+          "render, then be replaced by the 404 page as soon as React mounts",
+      );
+    }
+  }
+
+  // The catch-all swallows anything declared after it.
+  const catchAll = appSource.indexOf('path="/:landingSlug"');
+  const rentalsRoute = appSource.indexOf('path="/rentals"');
+  if (catchAll !== -1 && rentalsRoute !== -1 && rentalsRoute > catchAll) {
+    problems.push(
+      'src/App.tsx: /rentals is declared after the /:landingSlug catch-all, which will swallow it',
+    );
+  }
+}
+
 if (problems.length) {
   console.error("\nSEO route data is out of sync:\n");
   for (const problem of problems) console.error(`  - ${problem}`);

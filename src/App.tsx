@@ -15,6 +15,10 @@ const Services = lazy(() => import("./pages/Services.tsx"));
 const ServiceDetail = lazy(() => import("./pages/ServiceDetail.tsx"));
 const LocationDetail = lazy(() => import("./pages/LocationDetail.tsx"));
 const DistrictLanding = lazy(() => import("./pages/DistrictLanding.tsx"));
+const RentalsHub = lazy(() => import("./pages/Rentals.tsx").then((m) => ({ default: m.RentalsHub })));
+const RentalCityPage = lazy(() => import("./pages/Rentals.tsx").then((m) => ({ default: m.RentalCityPage })));
+const RentalLocalityPage = lazy(() => import("./pages/Rentals.tsx").then((m) => ({ default: m.RentalLocalityPage })));
+const RentalAudiencePage = lazy(() => import("./pages/Rentals.tsx").then((m) => ({ default: m.RentalAudiencePage })));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard.tsx"));
 const Blog = lazy(() => import("./pages/Blog.tsx"));
 const BlogDetail = lazy(() => import("./pages/BlogDetail.tsx"));
@@ -66,6 +70,12 @@ const App = () => (
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-and-conditions" element={<TermsConditions />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              {/* Furniture rental section. The /for/ route is listed before
+                  the city/locality route so "for" is not read as a city. */}
+              <Route path="/rentals" element={<RentalsHub />} />
+              <Route path="/rentals/for/:audienceSlug" element={<RentalAudiencePage />} />
+              <Route path="/rentals/:citySlug" element={<RentalCityPage />} />
+              <Route path="/rentals/:citySlug/:localitySlug" element={<RentalLocalityPage />} />
               {/* Short district landing pages. These must precede the
                   /:landingSlug catch-all, which would otherwise swallow them. */}
               <Route path="/kochi" element={<DistrictLanding />} />
