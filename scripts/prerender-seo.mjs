@@ -910,6 +910,7 @@ function contentFor(route) {
   return `
     <main class="seo-prerender" style="max-width:1120px;margin:0 auto;padding:32px 20px;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.65">
       ${route.breadcrumbs?.length > 1 ? nav : ""}
+      ${route.banner ? `<img src="${escapeHtml(route.banner.src)}" alt="${escapeHtml(route.banner.alt)}" width="1920" height="800" fetchpriority="high" decoding="async">` : ""}
       <h1>${escapeHtml(route.h1)}</h1>
       <p class="seo-answer-summary">${escapeHtml(route.intro || route.description)}</p>
       <p><strong>Quick answer:</strong> ${escapeHtml(answerSummary(route))}</p>

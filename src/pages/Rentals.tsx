@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ContactCTAButtons } from "@/components/ContactCTAButtons";
 import { QuickBookingForm } from "@/components/QuickBookingForm";
 import { RentalGallery } from "@/components/RentalGallery";
+import { ResponsiveImage } from "@/components/ResponsiveImage";
 import { createKeywordSet } from "@/lib/seo";
 import bannerCarpentry from "@/assets/banner-carpentry.jpg";
 import bannerAppliance from "@/assets/banner-appliance.jpg";
@@ -33,6 +34,7 @@ function Shell({
   h1,
   intro,
   gallery,
+  banner,
   children,
 }: {
   title: string;
@@ -44,6 +46,7 @@ function Shell({
   h1: string;
   intro: string;
   gallery: { src: string; alt: string }[];
+  banner: { src: string; alt: string };
   children: React.ReactNode;
 }) {
   return (
@@ -51,16 +54,39 @@ function Shell({
       <SeoMeta title={title} description={description} keywords={keywords} canonicalPath={canonicalPath} image="/og/default.jpg" />
       <Header />
 
+      {/* Hero banner, matching the service pages. Rentals previously had only a
+          flat gradient here, which made the section look unfinished next to
+          every other page on the site. */}
+      <div className="relative h-[280px] w-full overflow-hidden md:h-[380px]">
+        <ResponsiveImage
+          src={banner.src}
+          alt={banner.alt}
+          className="absolute inset-0 h-full w-full object-cover"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
+
+        <div className="absolute inset-0 flex items-end">
+          <div className="container pb-8">
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary backdrop-blur-sm">
+                <Package size={13} />
+                {badge}
+              </span>
+              <h1 className="mt-3 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-foreground drop-shadow-sm md:text-5xl">
+                {h1}
+              </h1>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
       <section className="border-b bg-gradient-to-b from-primary/5 to-background">
-        <div className="container py-10 md:py-14">
+        <div className="container py-8 md:py-10">
           <Breadcrumbs items={crumbs} />
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              <Package size={13} />
-              {badge}
-            </span>
-            <h1 className="mt-4 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-foreground md:text-5xl">{h1}</h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">{intro}</p>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
+            <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">{intro}</p>
             <div className="mt-6">
               <ContactCTAButtons size="lg" showLabels />
             </div>
@@ -178,6 +204,7 @@ export function RentalsHub() {
       h1="Furniture and Appliance Rental in Kerala"
       intro="Rent furniture and appliances monthly instead of buying. Ithihasam delivers, installs and maintains everything for the whole rental period across Kochi, Trivandrum and Kozhikode."
       gallery={gallery()}
+      banner={RENTAL_IMAGES.furniture}
     >
       <CatalogueList />
       <CityLinks heading="Choose your city" />
@@ -229,6 +256,7 @@ export function RentalCityPage() {
       h1={`Furniture and Appliance Rental in ${city.name}`}
       intro={`Ithihasam rents furniture and appliances on a monthly subscription across ${city.name} (${city.aka}). Demand here comes from ${city.demandDriver}. Most of our ${city.name} rentals go into ${city.propertyMix}.`}
       gallery={gallery()}
+      banner={RENTAL_IMAGES.appliance}
     >
       <CatalogueList cityName={city.name} />
 
@@ -266,6 +294,7 @@ export function RentalLocalityPage() {
       h1={`Furniture Rental in ${locality.name}`}
       intro={`Ithihasam rents furniture and appliances monthly in ${locality.name}, ${city.name} — an area known for ${locality.note}. Delivery, installation and maintenance are included for the whole rental period.`}
       gallery={gallery()}
+      banner={RENTAL_IMAGES.furniture}
     >
       <CatalogueList cityName={locality.name} />
 
@@ -307,6 +336,7 @@ export function RentalAudiencePage() {
       h1={`Furniture Rental for ${audience.name}`}
       intro={`Ithihasam rents furniture and appliances monthly to ${audience.name.toLowerCase()} across Kochi, Trivandrum and Kozhikode, where the common requirement is ${audience.need}.`}
       gallery={gallery()}
+      banner={RENTAL_IMAGES.team}
     >
       <CatalogueList />
       <CityLinks heading="Available in" />

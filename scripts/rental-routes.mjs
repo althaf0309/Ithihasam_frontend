@@ -32,6 +32,12 @@ const inr = (value) => `₹${Number(value).toLocaleString("en-IN")}`;
  * been taken yet produced broken images on every rental page, and a crawler
  * following an og:image to a 404 simply drops the preview.
  */
+const BANNERS = {
+  furniture: { src: "/og/rental-furniture.jpg", alt: "Furniture available on monthly rent from Ithihasam" },
+  appliance: { src: "/og/rental-appliance.jpg", alt: "Home appliances available on monthly rent" },
+  team: { src: "/og/rental-team.jpg", alt: "Ithihasam team delivering and installing a rental order" },
+};
+
 function galleryFor() {
   return [
     { src: "/og/rental-furniture.jpg", alt: "Furniture available on monthly rent from Ithihasam" },
@@ -88,6 +94,7 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
     items: rentalCatalogue.map((item) => item.name),
     image: "/og/rental-hub.jpg",
     gallery: galleryFor(),
+    banner: BANNERS.furniture,
     priority: "0.95",
     isRental: true,
     rentalHowItWorks: howItWorks,
@@ -113,6 +120,7 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
       items: cityProducts.length ? cityProducts.map((item) => `${item.name} — from ${inr(item.monthlyRate)}/month`) : rentalCatalogue.map((item) => item.name),
       image: "/og/rental-hub.jpg",
       gallery: galleryFor(),
+      banner: BANNERS.appliance,
       priority: "0.9",
       isRental: true,
       rentalHowItWorks: howItWorks,
@@ -148,6 +156,7 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
         items: cityProducts.length ? cityProducts.map((item) => item.name) : rentalCatalogue.map((item) => item.name),
         image: "/og/rental-hub.jpg",
         gallery: galleryFor(),
+        banner: BANNERS.furniture,
         priority: "0.7",
         isRental: true,
         rentalHowItWorks: howItWorks,
@@ -192,6 +201,7 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
         ],
         image: "/og/rental-furniture.jpg",
         gallery: galleryFor(),
+        banner: BANNERS.furniture,
         priority: "0.8",
         isRental: true,
         rentalProduct: item,
@@ -221,6 +231,7 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
       items: pkg.includes,
       image: "/og/rental-furniture.jpg",
       gallery: galleryFor(),
+      banner: BANNERS.furniture,
       priority: "0.85",
       isRental: true,
       rentalPackage: pkg,
@@ -242,6 +253,7 @@ export function rentalRoutes({ businessPhone, siteUrl }) {
       items: rentalCatalogue.map((item) => item.name),
       image: "/og/rental-hub.jpg",
       gallery: galleryFor(),
+      banner: BANNERS.team,
       priority: "0.7",
       isRental: true,
       rentalHowItWorks: howItWorks,
