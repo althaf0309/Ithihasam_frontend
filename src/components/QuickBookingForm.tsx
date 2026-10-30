@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ApiError, createBookingSubmission } from "@/lib/api";
 import { trackBookingSubmitted } from "@/lib/analytics";
+import { trackFormSubmit } from "@/lib/tracker";
 import { getLocalizedText, serviceCatalog } from "@/lib/service-catalog";
 import { useLang } from "@/contexts/LangContext";
 
@@ -96,6 +97,7 @@ export function QuickBookingForm({ compact = false, preselectedService, showMess
         city: variables.city,
         source: typeof window !== "undefined" ? window.location.pathname : "/",
       });
+      trackFormSubmit({ service: variables.service, city: variables.city, succeeded: true });
       toast.success(t("booking.success"));
       setForm(createInitialFormState(preselectedService));
       setErrors({});
