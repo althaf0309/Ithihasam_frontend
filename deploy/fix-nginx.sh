@@ -119,12 +119,37 @@ done
 [ -n "$PATCHED" ] || fail "Found the config but nothing matched. Show me:
   sudo nginx -T | sed -n '185,265p'"
 
+# ------------------------------------------------------------ compression
+
+log "Enabling gzip for JS and CSS"
+
+cp /etc/nginx/nginx.conf "/etc/nginx/nginx.conf.backup-${STAMP}"
+
+# Unquoted heredoc so $PATCHER expands. ensure_gzip is idempotent and exits 0
+# only when it actually changed the file.
+if python3 - <<PYEOF
+import importlib.util, sys
+spec = importlib.util.spec_from_file_location("pn", "$PATCHER")
+pn = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(pn)
+sys.exit(0 if pn.ensure_gzip("/etc/nginx/nginx.conf") else 1)
+PYEOF
+then
+  ok "gzip enabled for JS, CSS, JSON, SVG and fonts"
+  GZIP_BACKUP="/etc/nginx/nginx.conf.backup-${STAMP}"
+else
+  printf "  gzip already configured
+"
+  rm -f "/etc/nginx/nginx.conf.backup-${STAMP}"
+fi
+
 # ---------------------------------------------------------------- test
 
 log "Testing config"
 
 if ! nginx -t 2>&1 | tail -2; then
   for CONF in $PATCHED; do cp "${CONF}.backup-${STAMP}" "$CONF"; done
+  [ -n "${GZIP_BACKUP:-}" ] && cp "$GZIP_BACKUP" /etc/nginx/nginx.conf
   fail "nginx -t failed — every change rolled back. Nothing applied."
 fi
 

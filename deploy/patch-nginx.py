@@ -67,6 +67,73 @@ def drop_location(body, path):
     return body, False
 
 
+def ensure_hsts(conf):
+    """Add the HSTS header to the TLS server block if it is missing.
+
+    Tells browsers to use https for this domain for a year, so someone typing
+    the bare domain never makes a plaintext request that could be intercepted.
+    A site audit flagged its absence.
+    """
+    if "Strict-Transport-Security" in conf:
+        return conf, False
+
+    # ssl_certificate only appears in the TLS block, which is where this belongs.
+    match = re.search(r"\n(\s*)ssl_certificate\s+[^;]+;", conf)
+    if not match:
+        return conf, False
+
+    indent = match.group(1)
+    lines = [
+        "",
+        f"{indent}# Tells browsers to use https for a year. 'preload' is deliberately",
+        f"{indent}# omitted: that submission is effectively irreversible.",
+        f'{indent}add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;',
+    ]
+    return conf[: match.end()] + "\n".join(lines) + conf[match.end() :], True
+
+
+GZIP_BLOCK = """
+    # Compression. nginx gzips text/html by default and nothing else, which left
+    # the JS bundle and stylesheet being served raw - 184 files in a site audit.
+    # These types typically compress to about a third of their size.
+    gzip on;
+    gzip_vary on;
+    gzip_comp_level 6;
+    gzip_min_length 256;
+    gzip_proxied any;
+    gzip_types
+        text/plain text/css text/xml text/javascript
+        application/javascript application/json application/xml
+        application/rss+xml application/manifest+json
+        image/svg+xml font/woff font/woff2;
+"""
+
+
+def ensure_gzip(main_conf_path):
+    """Enable gzip for text assets in the http block of nginx.conf.
+
+    Belongs in nginx.conf rather than a server block so every site gets it and
+    the directives are not duplicated.
+    """
+    try:
+        with open(main_conf_path) as handle:
+            conf = handle.read()
+    except OSError:
+        return False
+
+    # gzip_types is the real marker: "gzip on;" by itself still only covers html.
+    if "gzip_types" in conf and "application/javascript" in conf:
+        return False
+
+    match = re.search(r"\nhttp\s*\{", conf)
+    if not match:
+        return False
+
+    with open(main_conf_path, "w") as handle:
+        handle.write(conf[: match.end()] + GZIP_BLOCK + conf[match.end() :])
+    return True
+
+
 def ensure_www_redirect(conf):
     """Add a www -> non-www 301 server block if one is not already present.
 
@@ -161,6 +228,11 @@ def patch(path, snippet, dist):
 
     pieces.append(conf[last:])
     conf = "".join(pieces)
+
+    conf, added_hsts = ensure_hsts(conf)
+    if added_hsts:
+        print("  added: HSTS header")
+        changed = True
 
     conf, added_www = ensure_www_redirect(conf)
     if added_www:

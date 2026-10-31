@@ -216,6 +216,13 @@ function locationRoutes() {
     district: area.district,
     intro: `Ithihasam provides electrical, plumbing, painting, appliance servicing, carpentry, roofing, deep cleaning, pest control, and smart home setup in ${area.name}. Customers searching for an electrician, plumber, painter, AC technician, or pest control team in ${area.name} can use one booking flow for multiple home maintenance needs.`,
     items: services.map((service) => service.name),
+    // Listing the services as text left these pages with four internal links.
+    // Linking each one gives the visitor a route to their service in their
+    // town, and passes authority down to the page that can actually rank.
+    districtServiceLinks: services.map((service) => [
+      `${service.name} in ${area.name}`,
+      `/${service.slug}-${area.slug}`,
+    ]),
     image: "/og/default.jpg",
     priority: "0.85",
     isLocation: true,
@@ -310,6 +317,16 @@ function districtLandingRoutes() {
     priority: "0.95",
     isLocation: true,
     districtTowns: entry.towns,
+    // Only three internal links before this: nav, breadcrumb and the form.
+    // A hub page that links nowhere passes no authority to the pages below it.
+    districtServiceLinks: services.map((service) => [
+      `${service.name} in ${entry.name}`,
+      `/${service.slug}-${entry.areaSlug}`,
+    ]),
+    districtTownLinks: entry.towns.map((town) => [
+      `Home services in ${town}`,
+      `/locations/${town.toLowerCase().replace(/\s+/g, "-")}`,
+    ]),
     districtAreaSlug: entry.areaSlug,
     breadcrumbs: [["Home", "/"], [entry.name, `/${entry.slug}`]],
     faqs: [
@@ -916,7 +933,8 @@ function contentFor(route) {
       <p><strong>Quick answer:</strong> ${escapeHtml(answerSummary(route))}</p>
       ${items.length ? `<h2>${escapeHtml(route.isContact ? "Contact details" : "Services we cover")}</h2><ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : ""}
       ${brands.length ? `<h2>Popular brands</h2><p>${brands.map(escapeHtml).join(", ")}</p>` : ""}
-      ${route.districtTowns ? `<h2>Towns covered in ${escapeHtml(route.district)}</h2><ul>${route.districtTowns.map((town) => `<li>${escapeHtml(town)}</li>`).join("")}</ul>` : ""}
+      ${route.districtServiceLinks?.length ? `<h2>Services in ${escapeHtml(route.areaName ?? "this district")}</h2><ul>${route.districtServiceLinks.map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul>` : ""}
+      ${route.districtTownLinks?.length ? `<h2>Towns covered in ${escapeHtml(route.district)}</h2><ul>${route.districtTownLinks.map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul>` : route.districtTowns ? `<h2>Towns covered in ${escapeHtml(route.district)}</h2><ul>${route.districtTowns.map((town) => `<li>${escapeHtml(town)}</li>`).join("")}</ul>` : ""}
       ${route.districtLinksFor ? `<h2>Choose your district</h2><ul>${HEADLINE_DISTRICTS.map((d) => `<li><a href="/${route.districtLinksFor}-${d.slug}">${escapeHtml(route.serviceName ?? "Services")} in ${escapeHtml(d.name)}</a></li>`).join("")}</ul>` : ""}
       ${route.localConditions?.length ? `<h2>What to expect in ${escapeHtml(route.areaName ?? "this area")}</h2>${route.localConditions.map((note) => `<p class="seo-citable">${escapeHtml(note)}</p>`).join("")}` : ""}
       ${route.neighbours?.length ? `<h2>Nearby areas we also cover</h2><ul>${route.neighbours.map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul>` : ""}
