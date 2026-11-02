@@ -127,7 +127,11 @@ function Shell({
         </div>
 
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <QuickBookingForm compact />
+          <QuickBookingForm
+            compact
+            formName="rental"
+            serviceOptions={rentalServiceOptions}
+          />
         </aside>
       </section>
 
@@ -190,6 +194,19 @@ const RENTAL_IMAGES = {
 } as const;
 
 const gallery = () => [RENTAL_IMAGES.furniture, RENTAL_IMAGES.appliance, RENTAL_IMAGES.team];
+
+/**
+ * What the enquiry form offers on rental pages.
+ *
+ * The shared form defaults to the eight maintenance services, which is wrong
+ * here: someone on /rentals wants a bed or a fridge, not pest control. Built
+ * from the same catalogue the page lists, so the two can never disagree.
+ */
+const rentalServiceOptions = [
+  ...rentalPackages.map((pkg) => ({ value: `Rental — ${pkg.name}`, label: pkg.name })),
+  ...rentalCatalogue.map((item) => ({ value: `Rental — ${item.name}`, label: item.name })),
+  { value: "Rental — Other", label: "Something else" },
+];
 
 /** /rentals */
 export function RentalsHub() {

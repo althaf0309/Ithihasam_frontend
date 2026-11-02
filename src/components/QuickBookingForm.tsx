@@ -15,6 +15,17 @@ interface Props {
   compact?: boolean;
   preselectedService?: string;
   showMessageField?: boolean;
+  /**
+   * Overrides the service dropdown.
+   *
+   * Rental pages offer furniture and appliances, not repair services. Showing
+   * the maintenance catalogue there meant a visitor wanting a bed on rent had
+   * to pick "Pest Control", and the enquiry arrived describing the wrong
+   * business entirely.
+   */
+  serviceOptions?: { value: string; label: string }[];
+  /** Distinguishes rental enquiries from service bookings in the admin. */
+  formName?: string;
 }
 
 // Indian mobile numbers, optionally with +91 / 0 prefix and spacing.
@@ -77,7 +88,13 @@ function validate(form: FormState, lang: "en" | "ml"): FieldErrors {
   return errors;
 }
 
-export function QuickBookingForm({ compact = false, preselectedService, showMessageField = !compact }: Props) {
+export function QuickBookingForm({
+  compact = false,
+  preselectedService,
+  showMessageField = !compact,
+  serviceOptions,
+  formName = "booking",
+}: Props) {
   const { lang, t } = useLang();
   const fieldId = useId();
   const [form, setForm] = useState(createInitialFormState(preselectedService));
@@ -97,7 +114,14 @@ export function QuickBookingForm({ compact = false, preselectedService, showMess
         city: variables.city,
         source: typeof window !== "undefined" ? window.location.pathname : "/",
       });
-      trackFormSubmit({ service: variables.service, city: variables.city, succeeded: true });
+      trackFormSubmit({
+        name: formName,
+        service: variables.service,
+        city: variables.city,
+        succeeded: true,
+        personName: variables.name,
+        personPhone: variables.phone,
+      });
       toast.success(t("booking.success"));
       setForm(createInitialFormState(preselectedService));
       setErrors({});
@@ -206,11 +230,17 @@ export function QuickBookingForm({ compact = false, preselectedService, showMess
             onChange={(e) => update("service", e.target.value)}
           >
             <option value="">{t("booking.service")}</option>
-            {serviceCatalog.map((service) => (
-              <option key={service.slug} value={service.title.en}>
-                {getLocalizedText(service.title, lang)}
-              </option>
-            ))}
+            {serviceOptions
+              ? serviceOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))
+              : serviceCatalog.map((service) => (
+                  <option key={service.slug} value={service.title.en}>
+                    {getLocalizedText(service.title, lang)}
+                  </option>
+                ))}
           </select>
         ))}
         {field("city", t("booking.city"), (props) => (

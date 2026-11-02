@@ -182,32 +182,58 @@ async function submitToWeb3Forms(payload: BookingSubmissionPayload, subject: str
  * lead is never silently lost — previously it was the *only* destination, which
  * meant no booking was ever stored anywhere.
  */
+/**
+ * Submits a booking.
+ *
+ * Two destinations, both attempted on every submission:
+ *
+ *   1. The Django API stores the enquiry. It is the system of record, so a
+ *      lead survives even if email delivery fails entirely.
+ *   2. Web3Forms delivers the notification email. The backend no longer sends
+ *      mail itself, which removes the need for SMTP credentials on the server.
+ *
+ * The call succeeds if EITHER destination accepts it. Losing a customer's
+ * enquiry because one of two services was briefly down would be the worst
+ * possible outcome here.
+ */
 export async function createBookingSubmission(payload: BookingSubmissionPayload) {
   const subject = `New ${payload.service} enquiry from ${payload.name}`;
 
-  try {
-    const data = await submitToBackend(payload, subject);
-    return {
-      success: true,
-      message:
-        typeof data === "object" && data !== null && "message" in data
-          ? String((data as { message: unknown }).message)
-          : "Booking request received.",
-      data: undefined,
-    } satisfies BookingSubmissionResponse;
-  } catch (error) {
-    // A throttle rejection is a decision, not an outage. Do not route around it.
-    if (error instanceof ApiError && error.message.startsWith("You have sent several")) {
-      throw error;
-    }
+  const [stored, emailed] = await Promise.allSettled([
+    submitToBackend(payload, subject),
+    submitToWeb3Forms(payload, subject),
+  ]);
 
-    if (import.meta.env.DEV) {
-      console.warn("Booking API unavailable, falling back to Web3Forms.", error);
-    }
-
-    const { message } = await submitToWeb3Forms(payload, subject);
-    return { success: true, message, data: undefined } satisfies BookingSubmissionResponse;
+  // A throttle rejection is a deliberate decision, not an outage: surface it
+  // rather than treating the Web3Forms success as a reason to ignore it.
+  if (
+    stored.status === "rejected" &&
+    stored.reason instanceof ApiError &&
+    stored.reason.message.startsWith("You have sent several")
+  ) {
+    throw stored.reason;
   }
+
+  if (stored.status === "rejected" && emailed.status === "rejected") {
+    throw new ApiError(
+      "We couldn't send your enquiry just now. Please call or WhatsApp us and we'll take your request directly.",
+    );
+  }
+
+  if (import.meta.env.DEV) {
+    if (stored.status === "rejected") console.warn("Booking not stored:", stored.reason);
+    if (emailed.status === "rejected") console.warn("Booking email not sent:", emailed.reason);
+  }
+
+  const message =
+    stored.status === "fulfilled" &&
+    typeof stored.value === "object" &&
+    stored.value !== null &&
+    "message" in stored.value
+      ? String((stored.value as { message: unknown }).message)
+      : "Booking request received.";
+
+  return { success: true, message, data: undefined } satisfies BookingSubmissionResponse;
 }
 
 export { API_BASE_URL };

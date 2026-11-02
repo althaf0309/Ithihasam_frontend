@@ -43,6 +43,10 @@ interface TrackedEvent {
   form_service?: string;
   form_city?: string;
   form_succeeded?: boolean;
+  // Sent only on a form submission. The server applies it to this visitor's
+  // earlier events so the click log shows a person, not an opaque id.
+  person_name?: string;
+  person_phone?: string;
 }
 
 function randomId() {
@@ -192,12 +196,21 @@ export function trackPageView() {
   track("page_view", { referrer: document.referrer || undefined });
 }
 
-export function trackFormSubmit(detail: { service?: string; city?: string; succeeded?: boolean; name?: string }) {
+export function trackFormSubmit(detail: {
+  service?: string;
+  city?: string;
+  succeeded?: boolean;
+  name?: string;
+  personName?: string;
+  personPhone?: string;
+}) {
   track("form_submit", {
     form_name: detail.name ?? "booking",
     form_service: detail.service,
     form_city: detail.city,
     form_succeeded: detail.succeeded,
+    person_name: detail.personName,
+    person_phone: detail.personPhone,
   });
   // Leads are the point of the site; send immediately rather than batching.
   flush();

@@ -152,3 +152,32 @@ describe("QuickBookingForm", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 });
+
+describe("QuickBookingForm service options", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.spyOn(Date, "now").mockReturnValue(1_000_000);
+  });
+
+  it("offers the maintenance catalogue by default", () => {
+    renderForm();
+    const select = screen.getByLabelText(/service required/i);
+
+    expect(select).toHaveTextContent("Painting Services");
+  });
+
+  it("offers rental items when a page supplies its own list", () => {
+    // Rental pages previously showed Pest Control and Electrical, so a visitor
+    // wanting a bed had to pick a repair service and the enquiry was wrong.
+    renderForm({
+      serviceOptions: [
+        { value: "Rental — Bed on Rent", label: "Bed on Rent" },
+        { value: "Rental — Sofa on Rent", label: "Sofa on Rent" },
+      ],
+    });
+    const select = screen.getByLabelText(/service required/i);
+
+    expect(select).toHaveTextContent("Bed on Rent");
+    expect(select).not.toHaveTextContent("Pest Control");
+  });
+});

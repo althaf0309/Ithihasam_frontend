@@ -50,7 +50,8 @@ export const privacyPolicyContent: LegalPageContent = {
       bullets: [
         same("Contact details such as your name, phone number, WhatsApp number, email address, and location or service area."),
         same("Booking details such as the service requested, preferred date, property details, and any notes or photos you share."),
-        same("Technical information such as device type, browser, pages visited, and basic analytics used to improve website performance."),
+        same("Technical information such as device type, browser, operating system, pages visited, time spent on each page, and the links and buttons you click."),
+        same("The approximate city, state and country you are browsing from. This is worked out from your connection at the time of the visit and stored only as a place name — we do not keep your IP address."),
       ],
     },
     {
@@ -76,13 +77,14 @@ export const privacyPolicyContent: LegalPageContent = {
     {
       title: same("Your Rights Under Indian Data Protection Law"),
       paragraphs: [
-        same("Under the Digital Personal Data Protection Act, 2023, you have the right to ask for access to the personal data we hold about you, to have inaccurate data corrected, to request erasure where we no longer need it, to nominate another person to exercise your rights, and to raise a grievance about how your data has been handled. Write to us using the contact details on this page and we will respond within a reasonable period."),
+        same("Under the Digital Personal Data Protection Act, 2023, you have the right to ask for access to the personal data we hold about you, to have inaccurate data corrected, to request erasure where we no longer need it, to nominate another person to exercise your rights, and to raise a grievance about how your data has been handled. This includes any website activity recorded against your booking, which we can delete on request. Write to us using the contact details on this page and we will respond within a reasonable period."),
       ],
     },
     {
       title: same("Data Retention and Security"),
       paragraphs: [
         same("We keep personal data only for as long as it is reasonably required for bookings, customer support, legal compliance, dispute handling, internal records, and service follow-up. We use reasonable administrative and technical safeguards, but no online platform can promise absolute security."),
+        same("Website analytics data is automatically deleted after 90 days. Booking enquiries are kept for longer so we can service your request and handle any follow-up or dispute."),
       ],
     },
     {
