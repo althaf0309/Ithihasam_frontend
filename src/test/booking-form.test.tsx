@@ -119,23 +119,41 @@ describe("QuickBookingForm", () => {
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
-  it("silently drops submissions that fill the honeypot", async () => {
-    const fetchSpy = vi.fn();
+  it("still submits when browser autofill trips the honeypot", async () => {
+    // Chrome and password managers fill hidden text inputs regardless of
+    // autoComplete="off". Treating that as a bot silently discarded real
+    // bookings while showing the customer a success message.
+    const fetchSpy = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 201,
+      headers: new Headers({ "content-type": "application/json" }),
+      json: async () => ({ message: "Received." }),
+    });
     vi.stubGlobal("fetch", fetchSpy);
     const user = userEvent.setup({ advanceTimers: () => {} });
 
     const { container } = renderForm();
     await fillValidBooking(user);
 
-    const honeypot = container.querySelector<HTMLInputElement>('input[name="company_website"]');
+    const honeypot = container.querySelector<HTMLInputElement>('input[name="ith_hp_field"]');
     expect(honeypot).not.toBeNull();
-    honeypot!.value = "https://spam.example";
+    honeypot!.value = "autofilled by the browser";
 
     vi.spyOn(Date, "now").mockReturnValue(1_010_000);
     await user.click(screen.getByRole("button", { name: /submit booking/i }));
 
-    await waitFor(() => expect(toast.success).toHaveBeenCalled());
-    expect(fetchSpy).not.toHaveBeenCalled();
+    await waitFor(() => expect(fetchSpy).toHaveBeenCalled());
+    expect(honeypot!.value).toBe("");
+  });
+
+  it("keeps the honeypot out of reach of autofill heuristics", () => {
+    const { container } = renderForm();
+    const honeypot = container.querySelector<HTMLInputElement>('input[name="ith_hp_field"]');
+
+    // "website", "company" and "url" all attract browser autofill.
+    expect(honeypot?.name).not.toMatch(/website|company|url|address|email/i);
+    expect(honeypot).toHaveAttribute("autocomplete", "new-password");
+    expect(honeypot).toHaveAttribute("readonly");
   });
 
   it("rejects a submission completed faster than a human could read the form", async () => {
@@ -150,6 +168,8 @@ describe("QuickBookingForm", () => {
     await user.click(screen.getByRole("button", { name: /submit booking/i }));
 
     expect(fetchSpy).not.toHaveBeenCalled();
+    // Must report the failure, never show a success the customer will trust.
+    await waitFor(() => expect(toast.error).toHaveBeenCalled());
   });
 });
 

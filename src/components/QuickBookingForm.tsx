@@ -33,9 +33,13 @@ const PHONE_PATTERN = /^(?:\+?91[-\s]?|0)?[6-9]\d{4}[-\s]?\d{5}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 // A bot that fills every field trips this; a human never sees it.
-const HONEYPOT_FIELD = "company_website";
+// Deliberately meaningless: "website", "company" and "url" all trigger
+// browser autofill, which is what silently dropped real bookings.
+const HONEYPOT_FIELD = "ith_hp_field";
 // Anything submitted faster than this is not a person reading the form.
-const MIN_FILL_MS = 3000;
+// A human cannot read and complete this form faster than this; scripted
+// posts arrive in milliseconds. Kept low so a quick genuine user is not blocked.
+const MIN_FILL_MS = 1200;
 
 type FormState = ReturnType<typeof createInitialFormState>;
 type FieldErrors = Partial<Record<keyof FormState, string>>;
@@ -142,10 +146,20 @@ export function QuickBookingForm({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Drop bot submissions silently: showing an error teaches the bot to adapt.
-    if (honeypotRef.current?.value || Date.now() - mountedAt.current < MIN_FILL_MS) {
-      toast.success(t("booking.success"));
-      setForm(createInitialFormState(preselectedService));
+    // A filled honeypot is almost certainly a bot, but browser autofill can trip
+    // it too — so the field is cleared and the submission proceeds rather than
+    // being dropped. Silently discarding it told real customers their booking
+    // had been received when nothing had been sent.
+    if (honeypotRef.current?.value) {
+      if (import.meta.env.DEV) {
+        console.warn("Honeypot was filled; clearing it and continuing.");
+      }
+      honeypotRef.current.value = "";
+    }
+
+    // Too fast to be a person. Ask them to retry instead of pretending it sent.
+    if (Date.now() - mountedAt.current < MIN_FILL_MS) {
+      toast.error(t("booking.error"));
       return;
     }
 
@@ -196,8 +210,18 @@ export function QuickBookingForm({
         {compact ? t("booking.quickEnquiry") : t("booking.bookService")}
       </h3>
 
-      {/* Honeypot. Hidden from people, offered to bots. */}
-      <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden opacity-0">
+      {/*
+        Honeypot: hidden from people, offered to bots.
+
+        Browsers and password managers ignore autoComplete="off" on a plain text
+        input and fill anything that looks like an address field, which silently
+        blocked real submissions. Defences, in order:
+          - a name no autofill heuristic recognises
+          - autoComplete="new-password", which managers do respect
+          - readOnly until focused, so autofill skips it entirely
+          - moved off-screen rather than sized to zero, which some fillers ignore
+      */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: "auto", width: 1, height: 1, overflow: "hidden" }}>
         <label htmlFor={`${fieldId}-hp`}>Do not fill this in</label>
         <input
           ref={honeypotRef}
@@ -205,7 +229,9 @@ export function QuickBookingForm({
           name={HONEYPOT_FIELD}
           type="text"
           tabIndex={-1}
-          autoComplete="off"
+          autoComplete="new-password"
+          readOnly
+          onFocus={(event) => event.target.removeAttribute("readonly")}
         />
       </div>
 
