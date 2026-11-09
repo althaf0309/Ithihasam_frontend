@@ -30,6 +30,9 @@ rollback() {
   for file in "${BACKUPS[@]:-}"; do
     [ -f "${file}.perf-backup-${STAMP}" ] && cp "${file}.perf-backup-${STAMP}" "$file"
   done
+  # Put the retired snippet back, so a failed run leaves nothing half-done.
+  [ -f "/etc/nginx/snippets/ithihasam-seo.conf.superseded-${STAMP}" ]     && mv "/etc/nginx/snippets/ithihasam-seo.conf.superseded-${STAMP}"           "/etc/nginx/snippets/ithihasam-seo.conf"
+  return 0
 }
 
 backup() {
@@ -169,6 +172,15 @@ ok "$SNIPPET"
 
 log "3/4  Include, HSTS, trailing slashes, www redirect"
 
+# An earlier run of fix-nginx.sh may have installed ithihasam-seo.conf, which
+# defines the same locations. nginx refuses to start with duplicates, so the
+# superseded snippet is retired first; this one covers everything it did.
+OLD_SNIPPET=/etc/nginx/snippets/ithihasam-seo.conf
+if [ -f "$OLD_SNIPPET" ]; then
+  mv "$OLD_SNIPPET" "${OLD_SNIPPET}.superseded-${STAMP}"
+  ok "retired the older ithihasam-seo.conf snippet"
+fi
+
 backup "$SITE_CONF"
 
 python3 - "$SITE_CONF" "$SNIPPET" "$FRONTEND_DIST" <<'PYEOF'
@@ -232,6 +244,12 @@ for start, end in server_blocks(conf):
         new, dropped = drop_location(new, location_path)
         if dropped:
             changes.append(f"removed proxy: location = {location_path}")
+
+    # Remove the include of the retired snippet, or nginx sees both.
+    before_include = new
+    new = re.sub(r"[ \t]*include\s+/etc/nginx/snippets/ithihasam-seo\.conf\s*;[ \t]*\n?", "", new)
+    if new != before_include:
+        changes.append("removed include of the superseded ithihasam-seo.conf")
 
     if snippet not in new:
         anchor = re.search(r"\n(\s*)root[^;]*;", new) or re.search(r"\n(\s*)server_name[^;]*;", new)
