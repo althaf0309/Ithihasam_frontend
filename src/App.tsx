@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 import { ScrollToRouteTarget } from "@/components/ScrollToRouteTarget";
 import { LangProvider } from "@/contexts/LangContext";
+import { constructionDistricts, constructionServices } from "@/lib/construction-catalogue";
 import Index from "./pages/Index.tsx";
 
 // Only the landing page is in the initial bundle. Every other route is split, so
@@ -20,6 +21,9 @@ const RentalsHub = lazy(() => import("./pages/Rentals.tsx").then((m) => ({ defau
 const RentalCityPage = lazy(() => import("./pages/Rentals.tsx").then((m) => ({ default: m.RentalCityPage })));
 const RentalLocalityPage = lazy(() => import("./pages/Rentals.tsx").then((m) => ({ default: m.RentalLocalityPage })));
 const RentalAudiencePage = lazy(() => import("./pages/Rentals.tsx").then((m) => ({ default: m.RentalAudiencePage })));
+const ConstructionHub = lazy(() => import("./pages/Construction.tsx").then((m) => ({ default: m.ConstructionHub })));
+const ConstructionDetail = lazy(() => import("./pages/Construction.tsx").then((m) => ({ default: m.ConstructionDetail })));
+const ConstructionServiceDistrict = lazy(() => import("./pages/Construction.tsx").then((m) => ({ default: m.ConstructionServiceDistrict })));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard.tsx"));
 const Blog = lazy(() => import("./pages/Blog.tsx"));
 const BlogDetail = lazy(() => import("./pages/BlogDetail.tsx"));
@@ -31,6 +35,15 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy.tsx"));
 const TermsConditions = lazy(() => import("./pages/TermsConditions.tsx"));
 const LocalServiceLanding = lazy(() => import("./pages/LocalServiceLanding.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+
+// Built from the catalogue so a new category or district cannot be added to the
+// data without its route existing: 18 categories x 6 districts = 108 paths.
+// Counting them here rather than listing them is what kept the rentals 404 bug
+// from repeating — a prerendered page with no React route returns 200 to curl
+// and then replaces itself with the 404 as soon as React mounts.
+const CONSTRUCTION_SERVICE_DISTRICT_PATHS = constructionServices.flatMap((service) =>
+  constructionDistricts.map((district) => `/${service.slug}-${district.slug}`),
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -78,6 +91,14 @@ const App = () => (
               <Route path="/rentals/for/:audienceSlug" element={<RentalAudiencePage />} />
               <Route path="/rentals/:citySlug" element={<RentalCityPage />} />
               <Route path="/rentals/:citySlug/:localitySlug" element={<RentalLocalityPage />} />
+              {/* Construction. The service x district paths (/sand-aggregates-kochi)
+                  are shaped like local-service slugs, so they are listed before
+                  the /:landingSlug catch-all that would otherwise claim them. */}
+              <Route path="/construction" element={<ConstructionHub />} />
+              <Route path="/construction/:slug" element={<ConstructionDetail />} />
+              {CONSTRUCTION_SERVICE_DISTRICT_PATHS.map((path) => (
+                <Route key={path} path={path} element={<ConstructionServiceDistrict />} />
+              ))}
               {/* Short district landing pages. These must precede the
                   /:landingSlug catch-all, which would otherwise swallow them. */}
               <Route path="/kochi" element={<DistrictLanding />} />

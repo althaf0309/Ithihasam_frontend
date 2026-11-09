@@ -19,6 +19,7 @@ export function Header() {
     // rather than sitting under Services. Without a link from the nav the
     // whole section is orphaned and may never be crawled.
     { label: "Rentals", to: "/rentals" },
+    { label: "Construction", to: "/construction" },
     { label: t("nav.blog"), to: "/blog" },
     { label: t("nav.news"), to: "/news" },
     { label: t("nav.about"), to: "/about" },

@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/check-seo-data.mjs && node scripts/generate-images.mjs && vite build && node scripts/prerender-seo.mjs",
+    "build": "node scripts/generate-construction-catalogue.mjs && node scripts/check-seo-data.mjs && node scripts/generate-service-cards.mjs && node scripts/generate-images.mjs && vite build && node scripts/prerender-seo.mjs",
     "build:dev": "vite build --mode development",
-    "check:seo": "node scripts/check-seo-data.mjs",
+    "check:seo": "node scripts/generate-construction-catalogue.mjs && node scripts/check-seo-data.mjs",
     "images": "node scripts/generate-images.mjs",
     "lint": "eslint .",
     "preview": "vite preview",

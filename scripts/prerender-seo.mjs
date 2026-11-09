@@ -32,6 +32,7 @@ import {
   businessSameAs,
 } from "./site-data.mjs";
 import { rentalRoutes, rentalSummary } from "./rental-routes.mjs";
+import { constructionRoutes, constructionSummary } from "./construction-routes.mjs";
 import { rentalCities, rentalCatalogue, rentalPackages } from "./rental-data.mjs";
 
 // The districts marketed as separate service areas. Mirrors serviceDistricts in
@@ -231,6 +232,13 @@ function locationRoutes() {
       [`Which home services are available in ${area.name}?`, `All eight Ithihasam categories are bookable in ${area.name}: electrical and plumbing, painting, appliance servicing, carpentry, roofing and fabrication, deep cleaning, pest control, and smart home setup.`],
       [`How quickly can a technician reach ${area.name}?`, `Response time depends on the service type and technician availability on the day. Urgent electrical, plumbing, and appliance faults are prioritised.`],
       ["How do I book?", `Call or WhatsApp ${businessPhone}, or submit the booking form with your service, exact location in ${area.name}, and preferred date.`],
+      // Area-specific questions. These differ per town because the property
+      // mix and local conditions differ, which is what makes 35 location
+      // pages distinct rather than one page with the name swapped.
+      [`What kind of properties do you work on in ${area.name}?`, `Mostly ${area.propertyMix ?? "homes and small commercial units"}. Access, parking and permissions vary by property type, so mentioning yours when booking helps the team arrive prepared.`],
+      [`Is there a visit charge in ${area.name}?`, `Visit and inspection charges depend on the job type and the distance from our Thalassery base. Any charge is confirmed with you before a technician is scheduled, never added afterwards.`],
+      [`Do you work weekends in ${area.name}?`, `Yes. Ithihasam operates seven days a week, 8:00 to 20:00. Weekend slots fill earlier, so booking a day or two ahead helps for non-urgent work.`],
+      [`Can I book several services in one visit to ${area.name}?`, `Yes, and it is usually cheaper than separate visits. Because Ithihasam covers trades, cleaning and appliance work with one team, jobs that would normally need several vendors can be scheduled together.`],
     ],
   }));
 }
@@ -915,6 +923,81 @@ function rentalSectionsHtml(route) {
   return parts.filter(Boolean).join("");
 }
 
+/**
+ * Construction page sections: gallery, how it works, compliance notice, and
+ * the links between service hubs, districts and service-in-district pages.
+ *
+ * The compliance notice is rendered prominently rather than buried, because
+ * sand sourcing and RERA registration are legal obligations and a page that
+ * stays silent on them invites enquiries we cannot lawfully fulfil.
+ */
+function constructionSectionsHtml(route) {
+  const parts = [];
+
+  if (route.constructionCompliance) {
+    parts.push(
+      `<h2>Important</h2><p class="seo-citable"><strong>${escapeHtml(route.constructionCompliance)}</strong></p>`,
+    );
+  }
+
+  // Stated on machinery, transport and quarry pages. The business coordinates
+  // this work rather than owning the fleet, and the page has to say so — both
+  // because it is true and because an AI answer that cites the page will
+  // otherwise claim an owned fleet on our behalf.
+  if (route.constructionPartnerNote) {
+    parts.push(
+      `<h2>How this is arranged</h2><p class="seo-citable">${escapeHtml(route.constructionPartnerNote)}</p>`,
+    );
+  }
+
+  if (route.gallery?.length) {
+    parts.push(
+      `<h2>Photos</h2><div class="seo-gallery">` +
+        route.gallery
+          .map(
+            (img) =>
+              `<img src="${escapeHtml(img.src)}" alt="${escapeHtml(img.alt)}" width="1200" height="800" loading="lazy" decoding="async">`,
+          )
+          .join("") +
+        `</div>`,
+    );
+  }
+
+  if (route.constructionSteps?.length) {
+    parts.push(
+      `<h2>How it works</h2><ol>` +
+        route.constructionSteps.map((step) => `<li>${escapeHtml(step)}</li>`).join("") +
+        `</ol>`,
+    );
+  }
+
+  if (route.constructionTowns?.length) {
+    parts.push(
+      `<h2>Towns we deliver to</h2><ul>` +
+        route.constructionTowns.map((town) => `<li>${escapeHtml(town)}</li>`).join("") +
+        `</ul>`,
+    );
+  }
+
+  const linkBlock = (heading, links) =>
+    links?.length
+      ? `<h2>${escapeHtml(heading)}</h2><ul>${links
+          .map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`)
+          .join("")}</ul>`
+      : "";
+
+  parts.push(linkBlock("Materials and services", route.constructionLinks));
+  parts.push(linkBlock("Districts we cover", route.constructionDistrictLinks));
+
+  if (route.constructionParent) {
+    parts.push(
+      `<p><a href="${escapeHtml(route.constructionParent[1])}">${escapeHtml(route.constructionParent[0])}</a></p>`,
+    );
+  }
+
+  return parts.filter(Boolean).join("");
+}
+
 function contentFor(route) {
   const items = route.items || [];
   const brands = route.brands || [];
@@ -940,9 +1023,10 @@ function contentFor(route) {
       ${route.neighbours?.length ? `<h2>Nearby areas we also cover</h2><ul>${route.neighbours.map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul>` : ""}
       ${route.areaHubPath ? `<p><a href="${escapeHtml(route.areaHubPath)}">All Ithihasam services in ${escapeHtml(route.areaName ?? "this area")}</a></p>` : ""}
       ${route.isRental ? rentalSectionsHtml(route) : ""}
-      ${route.isRental ? "" : `<h2>Service areas</h2>`}
-      ${route.isRental ? "" : `<p>${route.areaName ? `Ithihasam also covers nearby towns across ${escapeHtml(route.district ?? "Kerala")}.` : `Book Ithihasam services across ${escapeHtml(areaCoverageLine)}.`}</p>`}
-      ${route.isRental || route.areaName ? "" : `<ul>${serviceAreas.map((area) => `<li><a href="/locations/${area.slug}">Home services in ${escapeHtml(area.name)}</a></li>`).join("")}</ul>`}
+      ${route.isConstruction ? constructionSectionsHtml(route) : ""}
+      ${route.isRental || route.isConstruction ? "" : `<h2>Service areas</h2>`}
+      ${route.isRental || route.isConstruction ? "" : `<p>${route.areaName ? `Ithihasam also covers nearby towns across ${escapeHtml(route.district ?? "Kerala")}.` : `Book Ithihasam services across ${escapeHtml(areaCoverageLine)}.`}</p>`}
+      ${route.isRental || route.isConstruction || route.areaName ? "" : `<ul>${serviceAreas.map((area) => `<li><a href="/locations/${area.slug}">Home services in ${escapeHtml(area.name)}</a></li>`).join("")}</ul>`}
       <h2>Why choose Ithihasam</h2>
       <ul>
         <li>Doorstep service coordination for homes, shops, offices, and apartments.</li>
@@ -1153,6 +1237,7 @@ const routes = [
   ...localRoutes(),
   ...districtLandingRoutes(),
   ...rentalRoutes({ businessPhone, siteUrl }),
+  ...constructionRoutes({ businessPhone, siteUrl }),
   ...newsRoutes(),
   ...(await blogRoutes()),
 ];
@@ -1182,6 +1267,12 @@ for (const { filename, count } of written) {
 console.log(`  sitemap.xml (index)          ${String(written.length).padStart(4)} child sitemaps, ${total} URLs total`);
 console.log(`  feed.xml                     ${String(feedCount).padStart(4)} articles`);
 console.log(`  llms.txt                     written`);
+
+const construction = constructionSummary();
+console.log(
+  `  construction                 ${construction.pages} pages ` +
+    `(${construction.services} services x ${construction.districts} districts)`,
+);
 
 const rentals = rentalSummary();
 console.log(

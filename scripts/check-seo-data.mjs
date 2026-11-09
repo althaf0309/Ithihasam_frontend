@@ -19,6 +19,7 @@ import {
   newsArticles,
   districtLandings,
 } from "./site-data.mjs";
+import { constructionDistricts, allConstructionServices } from "./construction-data.mjs";
 
 const problems = [];
 
@@ -259,6 +260,88 @@ if (fs.existsSync(ogDir)) {
   for (const file of referenced) {
     if (!present.has(file)) {
       problems.push(`missing image: /og/${file} is referenced but does not exist in public/og/`);
+    }
+  }
+}
+
+
+// --- 6. Construction section ------------------------------------------------
+const constructionSource = read("src/lib/construction-catalogue.ts");
+if (!constructionSource) {
+  problems.push(
+    "src/lib/construction-catalogue.ts not found — run node scripts/generate-construction-catalogue.mjs",
+  );
+} else {
+  // The catalogue is generated from construction-data.mjs, so the two can no
+  // longer be edited out of step. What can still go wrong is a stale generated
+  // file committed from an older data file, which this catches: every slug the
+  // data defines must be present in the generated output.
+  if (!/GENERATED FILE/.test(constructionSource)) {
+    problems.push(
+      "src/lib/construction-catalogue.ts is not the generated file — it is now produced by " +
+        "scripts/generate-construction-catalogue.mjs and must not be hand-edited",
+    );
+  }
+
+  for (const district of constructionDistricts) {
+    if (!constructionSource.includes(`"slug": "${district.slug}"`)) {
+      problems.push(
+        `src/lib/construction-catalogue.ts is stale: district "${district.slug}" is missing. ` +
+          "Run node scripts/generate-construction-catalogue.mjs",
+      );
+    }
+  }
+
+  for (const service of allConstructionServices) {
+    if (!constructionSource.includes(`"slug": "${service.slug}"`)) {
+      problems.push(
+        `src/lib/construction-catalogue.ts is stale: category "${service.slug}" is missing. ` +
+          "Run node scripts/generate-construction-catalogue.mjs",
+      );
+    }
+  }
+
+  // Every prerendered construction page needs a React route, or it renders
+  // and is then replaced by the 404 as soon as React mounts.
+  const appSource2 = read("src/App.tsx");
+  if (appSource2) {
+    for (const pattern of [/path="\/construction"/, /path="\/construction\/:slug"/, /CONSTRUCTION_SERVICE_DISTRICT_PATHS/]) {
+      if (!pattern.test(appSource2)) {
+        problems.push(`src/App.tsx: missing construction route matching ${pattern}`);
+      }
+    }
+
+    const catchAll = appSource2.indexOf('path="/:landingSlug"');
+    const constructionAt = appSource2.indexOf("CONSTRUCTION_SERVICE_DISTRICT_PATHS.map");
+    if (catchAll !== -1 && constructionAt !== -1 && constructionAt > catchAll) {
+      problems.push(
+        'src/App.tsx: construction service-district routes are declared after /:landingSlug, which will swallow them',
+      );
+    }
+  }
+
+  // A compliance obligation is only useful if it reaches the page, so the
+  // component must render the field rather than merely carry the data.
+  const constructionPage = read("src/pages/Construction.tsx");
+  if (constructionPage) {
+    for (const field of ["compliance", "partner"]) {
+      if (!constructionPage.includes(field)) {
+        problems.push(
+          `src/pages/Construction.tsx does not render "${field}" — the notice would exist in the ` +
+            "data and never be shown to a customer",
+        );
+      }
+    }
+  }
+
+  // Every category needs a card image that exists, or the page renders a
+  // broken image where the service photo should be.
+  const cardIcons = new Set(allConstructionServices.map((s) => s.icon));
+  for (const icon of cardIcons) {
+    const expected = `construction-${icon === "materials" ? "materials" : icon}.jpg`;
+    const alt = icon === "building" ? "construction-site.jpg" : expected;
+    if (!fs.existsSync(path.resolve("public/og", alt))) {
+      problems.push(`missing image: public/og/${alt} is needed for construction icon "${icon}"`);
     }
   }
 }
