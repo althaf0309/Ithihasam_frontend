@@ -59,47 +59,18 @@ ok "$SITE_CONF"
 
 log "1/4  Compression"
 
-# nginx gzips text/html by default and nothing else, which is why the JS bundle
-# and stylesheet were being sent raw. These belong in the http block so every
-# site gets them and the directives are not duplicated per server.
-# Ubuntu ships nginx.conf with gzip_types commented out. Matching the bare
-# string reported "already configured" while only text/html was compressed,
-# so the check now requires an uncommented directive.
-if grep -qE "^[[:space:]]*gzip_types" "$MAIN_CONF"; then
-  ok "already configured"
-else
-  backup "$MAIN_CONF"
-  python3 - "$MAIN_CONF" <<'PYEOF'
-import re
-import sys
+# Delegated to enable-gzip.py. The stock Ubuntu config has "gzip on;" active
+# with every other gzip directive commented out, so the file looks configured
+# while compressing text/html only. Inserting a prewritten block duplicates
+# "gzip on" and nginx refuses to start, so the helper adds only what is missing.
+GZIP_HELPER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/enable-gzip.py"
+[ -f "$GZIP_HELPER" ] || fail "enable-gzip.py not found next to this script."
 
-path = sys.argv[1]
-with open(path) as handle:
-    conf = handle.read()
-
-block = """
-    # Compression. Without gzip_types, nginx compresses text/html only, which
-    # left ~665 kB of JS and CSS being served raw on every first visit.
-    gzip on;
-    gzip_vary on;
-    gzip_comp_level 6;
-    gzip_min_length 256;
-    gzip_proxied any;
-    gzip_types
-        text/plain text/css text/xml text/javascript
-        application/javascript application/json application/xml
-        application/rss+xml application/manifest+json
-        image/svg+xml font/woff font/woff2;
-"""
-
-match = re.search(r"\nhttp\s*\{", conf)
-if not match:
-    sys.exit("no http block in nginx.conf")
-
-with open(path, "w") as handle:
-    handle.write(conf[: match.end()] + block + conf[match.end() :])
-PYEOF
+backup "$MAIN_CONF"
+if python3 "$GZIP_HELPER" "$MAIN_CONF"; then
   ok "gzip enabled for JS, CSS, JSON, SVG and fonts"
+else
+  ok "already configured"
 fi
 
 # ─────────────────────────────────────────────── 2. caching + routing
