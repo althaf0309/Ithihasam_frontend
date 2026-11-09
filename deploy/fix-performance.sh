@@ -62,7 +62,10 @@ log "1/4  Compression"
 # nginx gzips text/html by default and nothing else, which is why the JS bundle
 # and stylesheet were being sent raw. These belong in the http block so every
 # site gets them and the directives are not duplicated per server.
-if grep -q "gzip_types" "$MAIN_CONF" && grep -q "application/javascript" "$MAIN_CONF"; then
+# Ubuntu ships nginx.conf with gzip_types commented out. Matching the bare
+# string reported "already configured" while only text/html was compressed,
+# so the check now requires an uncommented directive.
+if grep -qE "^[[:space:]]*gzip_types" "$MAIN_CONF"; then
   ok "already configured"
 else
   backup "$MAIN_CONF"
@@ -288,7 +291,24 @@ conf = "".join(pieces)
 
 # www and non-www both answered 200, so every page existed at two URLs. The
 # canonical already names the non-www form; this makes the server agree.
-if "server_name www.ithihasam.in" not in conf:
+# A www server block may already exist from an earlier run or the original
+# setup. Adding a second makes nginx warn about a conflicting server name and
+# silently ignore one, so match any www.ithihasam.in in a server_name line.
+# Drop a redirect block this script appended earlier, so a rerun cannot stack
+# them up. Identified by its own comment marker, never a hand-written block.
+marker = "# Canonical host is the non-www form, matching every canonical tag."
+if marker in conf:
+    for start, end in list(server_blocks(conf)):
+        block = conf[start:end]
+        if "www.ithihasam.in" in block and "return 301" in block and "location" not in block:
+            lead = conf.rfind(marker, 0, start)
+            cut_from = lead if lead != -1 else start
+            conf = conf[:cut_from] + conf[end:]
+            changes.append("removed a duplicate www redirect block")
+            break
+
+has_www_block = re.search(r"server_name[^;]*www\.ithihasam\.in", conf)
+if not has_www_block:
     cert = re.search(r"ssl_certificate\s+([^;]+);", conf)
     key = re.search(r"ssl_certificate_key\s+([^;]+);", conf)
     if cert and key:
