@@ -14,17 +14,38 @@ import re
 import sys
 
 
+def _is_commented(text, index):
+    """True when `index` sits on a line whose first non-space char is '#'.
+
+    Without this, a block disabled by a previous run still parses as a live
+    server block, and the run comments it again as "# #". A script that
+    corrupts the config on its second run is worse than the bug it fixes.
+    """
+    line_start = text.rfind("\n", 0, index) + 1
+    return text[line_start:index].lstrip().startswith("#")
+
+
 def split_server_blocks(text):
     """Returns [(start, end, body)] for each top-level `server { ... }` block.
 
     Brace counting rather than a regex, because a server block contains nested
-    location blocks and a regex cannot match balanced braces.
+    location blocks and a regex cannot match balanced braces. Commented-out
+    blocks are skipped.
     """
     blocks = []
     for match in re.finditer(r"\bserver\s*\{", text):
+        if _is_commented(text, match.start()):
+            continue
         depth = 0
         i = match.start()
         while i < len(text):
+            # A brace inside a comment is not structure. Counting it would
+            # throw the depth off and swallow the rest of the file into one
+            # "block", which then gets rewritten wholesale.
+            if text[i] == "#":
+                newline = text.find("\n", i)
+                i = len(text) if newline == -1 else newline + 1
+                continue
             if text[i] == "{":
                 depth += 1
             elif text[i] == "}":
@@ -116,6 +137,19 @@ def main():
 
     # --- 2. Port 443, www -> non-www --------------------------------------
 
+    # Drop duplicates first. fix-performance.sh also adds a www redirect block,
+    # so running both scripts can leave two, and nginx warns "conflicting
+    # server name ... ignored" then honours only the first.
+    blocks = split_server_blocks(conf)
+    www_redirects = [
+        (start, end)
+        for start, end, body in blocks
+        if listens_on(body, 443) and is_redirect_only(body) and server_names(body) == [www]
+    ]
+    for start, end in reversed(www_redirects[1:]):
+        conf = conf[:start] + conf[end:]
+        changes.append("removed a duplicate " + www + " redirect block")
+
     blocks = split_server_blocks(conf)
     has_https_www = any(
         listens_on(b, 443) and is_redirect_only(b) and www in server_names(b)
@@ -146,19 +180,34 @@ def main():
     # If the main block lists both names, nginx matches www there and serves
     # the site directly, so the redirect block above never runs.
 
+    # Reversed so earlier offsets stay valid as later blocks are rewritten, and
+    # without a `break`: more than one content block can claim www, and nginx
+    # keeps only the FIRST and logs "conflicting server name ... ignored" for
+    # the rest. Stopping after one leaves the duplicate winning the match and
+    # the redirect never runs.
     blocks = split_server_blocks(conf)
     for start, end, body in reversed(blocks):
         if is_redirect_only(body) or not listens_on(body, 443):
             continue
         names = server_names(body)
-        if www in names and domain in names:
-            kept = " ".join(n for n in names if n != www)
+        if www not in names:
+            continue
+
+        kept = " ".join(n for n in names if n != www)
+        if not kept:
+            # A content block serving ONLY www. Dropping server_name entirely
+            # would make it the default server for port 443, so the block is
+            # commented out instead and the redirect block takes over.
+            commented = "\n".join("# " + line for line in body.splitlines())
+            conf = conf[:start] + (
+                "# Disabled: this block served www directly, which beat the\n"
+                "# www -> non-www redirect to the match.\n" + commented
+            ) + conf[end:]
+            changes.append("disabled a content block that served only " + www)
+        else:
             patched = re.sub(r"server_name([^;]*);", "server_name " + kept + ";", body, count=1)
             conf = conf[:start] + patched + conf[end:]
-            changes.append(
-                "removed " + www + " from the main server block so the redirect can match"
-            )
-            break
+            changes.append("removed " + www + " from a content block on port 443")
 
     if conf == original:
         print("  no changes needed, redirects already correct")
