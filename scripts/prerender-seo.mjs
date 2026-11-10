@@ -77,6 +77,9 @@ function serviceRoutes() {
     serviceName: service.name,
     intro: service.intro,
     items: service.items,
+    // Only roofing-fabrication defines these. Every other service leaves it
+    // undefined and renders exactly as before.
+    itemGroups: service.itemGroups,
     brands: service.brands,
     faqs: service.faqs,
     image: `/og/${service.slug}.jpg`,
@@ -154,6 +157,13 @@ function localRoutes() {
 
       routes.push({
         path: `/${prefix}-${area.slug}`,
+        // The parent service's grouped sub-services, on the location page too.
+        // Without this a visitor searching "gate fabrication Thalassery" lands
+        // on a page that never mentions gates by name, while the Kerala-wide
+        // page lists all nine trades. Only services that define itemGroups are
+        // affected, and synonym pages are excluded because they canonicalise
+        // elsewhere and do not need the extra weight.
+        itemGroups: primaryPrefix ? undefined : parent?.itemGroups,
         // Synonym pages keep their URL but point at the primary page, so the site
         // does not publish ~90 near-identical pages as independent candidates.
         canonicalOverride: primaryPrefix ? `/${primaryPrefix}-${area.slug}` : undefined,
@@ -1026,6 +1036,30 @@ function constructionSectionsHtml(route) {
   return parts.filter(Boolean).join("");
 }
 
+/**
+ * Grouped sub-services, rendered as a section each with its own image.
+ *
+ * Used where one service covers several distinct trades: the fabrication
+ * service carries nine, and a flat list of 118 items would be unreadable and
+ * would tell a search engine nothing about which trade a page is about.
+ */
+function itemGroupsHtml(groups) {
+  if (!groups?.length) return "";
+
+  return groups
+    .map(
+      (group) =>
+        `<section id="${escapeHtml(group.slug)}">` +
+        `<h3>${escapeHtml(group.name)}</h3>` +
+        `<img src="${escapeHtml(group.image)}" alt="${escapeHtml(group.name)} by Ithihasam" ` +
+        `width="480" height="360" loading="lazy" decoding="async">` +
+        `<p class="seo-citable">${escapeHtml(group.blurb)}</p>` +
+        `<ul>${group.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` +
+        `</section>`,
+    )
+    .join("");
+}
+
 function contentFor(route) {
   const items = route.items || [];
   const brands = route.brands || [];
@@ -1043,6 +1077,7 @@ function contentFor(route) {
       <p class="seo-answer-summary">${escapeHtml(route.intro || route.description)}</p>
       <p><strong>Quick answer:</strong> ${escapeHtml(answerSummary(route))}</p>
       ${items.length ? `<h2>${escapeHtml(route.isContact ? "Contact details" : "Services we cover")}</h2><ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : ""}
+      ${route.itemGroups?.length ? `<h2>What this covers</h2>${itemGroupsHtml(route.itemGroups)}` : ""}
       ${brands.length ? `<h2>Popular brands</h2><p>${brands.map(escapeHtml).join(", ")}</p>` : ""}
       ${route.districtServiceLinks?.length ? `<h2>Services in ${escapeHtml(route.areaName ?? "this district")}</h2><ul>${route.districtServiceLinks.map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul>` : ""}
       ${route.districtTownLinks?.length ? `<h2>Towns covered in ${escapeHtml(route.district)}</h2><ul>${route.districtTownLinks.map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul>` : route.districtTowns ? `<h2>Towns covered in ${escapeHtml(route.district)}</h2><ul>${route.districtTowns.map((town) => `<li>${escapeHtml(town)}</li>`).join("")}</ul>` : ""}

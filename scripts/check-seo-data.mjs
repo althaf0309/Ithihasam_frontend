@@ -266,6 +266,51 @@ if (fs.existsSync(ogDir)) {
 }
 
 
+// --- 5b. Grouped sub-services ------------------------------------------------
+//
+// itemGroups exist in two places: site-data.mjs drives the prerendered HTML,
+// and service-catalog.ts drives the React page. A group present in one and not
+// the other means a visitor and a crawler see different pages.
+{
+  const catalogSource = read("src/lib/service-catalog.ts");
+
+  // `services`, not `expectedServices` — the latter is a list of slug strings,
+  // so `service.itemGroups` was always undefined and this whole block passed
+  // without ever checking anything.
+  for (const service of services) {
+    if (!service.itemGroups?.length) continue;
+
+    for (const group of service.itemGroups) {
+      if (catalogSource && !catalogSource.includes(`slug: "${group.slug}"`)) {
+        problems.push(
+          `src/lib/service-catalog.ts: "${service.slug}" is missing the "${group.slug}" group, ` +
+            "so the React page would show less than the prerendered HTML",
+        );
+      }
+
+      // Every group image has to exist, or the section renders broken.
+      const imageFile = path.resolve("public", group.image.replace(/^\//, ""));
+      if (!fs.existsSync(imageFile)) {
+        problems.push(`missing image: ${group.image} is referenced by the "${group.slug}" group`);
+      }
+
+      if (!group.items?.length) {
+        problems.push(`site-data.mjs: group "${group.slug}" has no items`);
+      }
+    }
+  }
+
+  // The detail page must actually render them.
+  const detailPage = read("src/pages/ServiceDetail.tsx");
+  if (detailPage && !detailPage.includes("itemGroups")) {
+    problems.push(
+      "src/pages/ServiceDetail.tsx does not render itemGroups — the grouped sub-services " +
+        "would exist in the data and never be shown",
+    );
+  }
+}
+
+
 // --- 6. Construction section ------------------------------------------------
 const constructionSource = read("src/lib/construction-catalogue.ts");
 if (!constructionSource) {

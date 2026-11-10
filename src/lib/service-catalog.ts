@@ -28,6 +28,22 @@ interface LocalizedReview {
   rating: number;
 }
 
+/**
+ * A group of related sub-services within one service.
+ *
+ * Used where a single service covers several distinct trades. The fabrication
+ * service carries nine, and listing its 118 individual jobs as one flat list
+ * would be unreadable. Only services that need it define `itemGroups`.
+ */
+export interface ServiceItemGroup {
+  slug: string;
+  name: LocalizedText;
+  /** Path under /og/, served from public/. */
+  image: string;
+  blurb: LocalizedText;
+  items: LocalizedText[];
+}
+
 export interface ServiceCatalogEntry {
   slug: string;
   icon: LucideIcon;
@@ -37,6 +53,7 @@ export interface ServiceCatalogEntry {
   shortDescription: LocalizedText;
   detailDescription: LocalizedText;
   includes: LocalizedText[];
+  itemGroups?: ServiceItemGroup[];
   supportedBrands?: string[];
   faqs: LocalizedFaq[];
   reviews: LocalizedReview[];
@@ -371,6 +388,228 @@ export const serviceCatalog: ServiceCatalogEntry[] = [
       { en: "Shed Construction", ml: "ഷെഡ് നിർമാണം" },
       { en: "Welding Repairs", ml: "വെൽഡിംഗ് റിപെയറുകൾ" },
       { en: "Structural Steelwork", ml: "സ്ട്രക്ചറൽ സ്റ്റീൽവർക്ക്" },
+    ],
+    // The full scope, grouped by trade. Mirrors scripts/site-data.mjs, which
+    // the build uses to prerender the same sections; check-seo-data.mjs fails
+    // the build if the two drift apart.
+    itemGroups: [
+      {
+        slug: "welding",
+        name: { en: "Welding Services", ml: "വെൽഡിംഗ് സേവനങ്ങൾ" },
+        image: "/og/fabrication/welding.jpg",
+        blurb: {
+          en: "Arc, MIG, TIG and stainless steel welding, in the workshop or on site.",
+          ml: "ആർക്ക്, MIG, TIG, സ്റ്റെയിൻലെസ് സ്റ്റീൽ വെൽഡിംഗ് — വർക്ക്ഷോപ്പിലോ സൈറ്റിലോ.",
+        },
+        items: [
+          { en: "Arc welding", ml: "ആർക്ക് വെൽഡിംഗ്" },
+          { en: "MIG welding", ml: "MIG വെൽഡിംഗ്" },
+          { en: "TIG welding", ml: "TIG വെൽഡിംഗ്" },
+          { en: "Gas welding", ml: "ഗ്യാസ് വെൽഡിംഗ്" },
+          { en: "Spot welding", ml: "സ്പോട്ട് വെൽഡിംഗ്" },
+          { en: "Stainless steel welding", ml: "സ്റ്റെയിൻലെസ് സ്റ്റീൽ വെൽഡിംഗ്" },
+          { en: "Mild steel welding", ml: "മൈൽഡ് സ്റ്റീൽ വെൽഡിംഗ്" },
+          { en: "Aluminium welding", ml: "അലുമിനിയം വെൽഡിംഗ്" },
+          { en: "Structural welding", ml: "സ്ട്രക്ചറൽ വെൽഡിംഗ്" },
+          { en: "On-site welding", ml: "ഓൺ-സൈറ്റ് വെൽഡിംഗ്" },
+          { en: "Pipe welding", ml: "പൈപ്പ് വെൽഡിംഗ്" },
+          { en: "Metal repair welding", ml: "മെറ്റൽ റിപ്പയർ വെൽഡിംഗ്" },
+          { en: "Custom welding fabrication", ml: "കസ്റ്റം വെൽഡിംഗ് ഫാബ്രിക്കേഷൻ" },
+        ],
+      },
+      {
+        slug: "aluminium-fabrication",
+        name: { en: "Aluminium Fabrication", ml: "അലുമിനിയം ഫാബ്രിക്കേഷൻ" },
+        image: "/og/fabrication/aluminium-fabrication.jpg",
+        blurb: {
+          en: "Doors, windows, partitions and frames, made to the opening rather than to a standard size.",
+          ml: "വാതിലുകൾ, ജനലുകൾ, പാർട്ടീഷനുകൾ, ഫ്രെയിമുകൾ — സ്റ്റാൻഡേർഡ് അളവിലല്ല, ഓപ്പണിംഗിന് അനുസരിച്ച്.",
+        },
+        items: [
+          { en: "Aluminium doors", ml: "അലുമിനിയം വാതിലുകൾ" },
+          { en: "Aluminium windows", ml: "അലുമിനിയം ജനലുകൾ" },
+          { en: "Sliding doors and windows", ml: "സ്ലൈഡിംഗ് വാതിലുകളും ജനലുകളും" },
+          { en: "Office and room partitions", ml: "ഓഫീസ്, റൂം പാർട്ടീഷനുകൾ" },
+          { en: "Aluminium kitchen cabinets", ml: "അലുമിനിയം കിച്ചൻ കാബിനറ്റുകൾ" },
+          { en: "Wardrobe fabrication", ml: "വാർഡ്രോബ് ഫാബ്രിക്കേഷൻ" },
+          { en: "Glass doors and windows", ml: "ഗ്ലാസ് വാതിലുകളും ജനലുകളും" },
+          { en: "Aluminium railings", ml: "അലുമിനിയം റെയിലിംഗുകൾ" },
+          { en: "Ventilators", ml: "വെന്റിലേറ്ററുകൾ" },
+          { en: "Shopfront fabrication", ml: "ഷോപ്പ്ഫ്രണ്ട് ഫാബ്രിക്കേഷൻ" },
+          { en: "Facade fabrication", ml: "ഫസാഡ് ഫാബ്രിക്കേഷൻ" },
+          { en: "Pergolas and louvers", ml: "പെർഗോളകളും ലൂവറുകളും" },
+          { en: "Mosquito mesh doors", ml: "കൊതുകുവല വാതിലുകൾ" },
+          { en: "Repair and maintenance", ml: "റിപ്പയറും മെയിന്റനൻസും" },
+        ],
+      },
+      {
+        slug: "steel-iron-fabrication",
+        name: { en: "Steel & Iron Fabrication", ml: "സ്റ്റീൽ & അയൺ ഫാബ്രിക്കേഷൻ" },
+        image: "/og/fabrication/steel-iron-fabrication.jpg",
+        blurb: {
+          en: "Railings, grills, staircases and structural steel in mild steel, stainless or wrought iron.",
+          ml: "റെയിലിംഗ്, ഗ്രിൽ, സ്റ്റെയർകേസ്, സ്ട്രക്ചറൽ സ്റ്റീൽ — മൈൽഡ് സ്റ്റീൽ, സ്റ്റെയിൻലെസ്, റോട്ട് അയൺ.",
+        },
+        items: [
+          { en: "Mild steel fabrication", ml: "മൈൽഡ് സ്റ്റീൽ ഫാബ്രിക്കേഷൻ" },
+          { en: "Stainless steel fabrication", ml: "സ്റ്റെയിൻലെസ് സ്റ്റീൽ ഫാബ്രിക്കേഷൻ" },
+          { en: "Structural steel fabrication", ml: "സ്ട്രക്ചറൽ സ്റ്റീൽ ഫാബ്രിക്കേഷൻ" },
+          { en: "Steel and spiral staircases", ml: "സ്റ്റീൽ, സ്പൈറൽ സ്റ്റെയർകേസുകൾ" },
+          { en: "Balcony railings", ml: "ബാൽക്കണി റെയിലിംഗുകൾ" },
+          { en: "Staircase handrails", ml: "സ്റ്റെയർകേസ് ഹാൻഡ്‌റെയിലുകൾ" },
+          { en: "Safety grills", ml: "സേഫ്റ്റി ഗ്രില്ലുകൾ" },
+          { en: "Window grills", ml: "ജനൽ ഗ്രില്ലുകൾ" },
+          { en: "Security doors", ml: "സെക്യൂരിറ്റി വാതിലുകൾ" },
+          { en: "Metal partitions", ml: "മെറ്റൽ പാർട്ടീഷനുകൾ" },
+          { en: "Steel frames", ml: "സ്റ്റീൽ ഫ്രെയിമുകൾ" },
+          { en: "Metal storage racks", ml: "മെറ്റൽ സ്റ്റോറേജ് റാക്കുകൾ" },
+          { en: "Custom metal furniture", ml: "കസ്റ്റം മെറ്റൽ ഫർണിച്ചർ" },
+          { en: "Industrial fabrication and repair", ml: "ഇൻഡസ്ട്രിയൽ ഫാബ്രിക്കേഷനും റിപ്പയറും" },
+        ],
+      },
+      {
+        slug: "roofing-shed",
+        name: { en: "Roofing & Shed Works", ml: "റൂഫിംഗ് & ഷെഡ് വർക്കുകൾ" },
+        image: "/og/fabrication/roofing-shed.jpg",
+        blurb: {
+          en: "GI, colour-coated, UPVC and polycarbonate roofing, plus trusses and sheds.",
+          ml: "GI, കളർ-കോട്ടഡ്, UPVC, പോളികാർബണേറ്റ് റൂഫിംഗ്, ട്രസ്സുകളും ഷെഡുകളും.",
+        },
+        items: [
+          { en: "Residential and commercial roofing", ml: "വീടുകൾക്കും വാണിജ്യ കെട്ടിടങ്ങൾക്കും റൂഫിംഗ്" },
+          { en: "Industrial roofing", ml: "ഇൻഡസ്ട്രിയൽ റൂഫിംഗ്" },
+          { en: "GI sheet roofing", ml: "GI ഷീറ്റ് റൂഫിംഗ്" },
+          { en: "Colour-coated roofing sheets", ml: "കളർ-കോട്ടഡ് റൂഫിംഗ് ഷീറ്റുകൾ" },
+          { en: "Polycarbonate roofing", ml: "പോളികാർബണേറ്റ് റൂഫിംഗ്" },
+          { en: "UPVC roofing", ml: "UPVC റൂഫിംഗ്" },
+          { en: "Roofing tile installation", ml: "റൂഫിംഗ് ടൈൽ ഇൻസ്റ്റലേഷൻ" },
+          { en: "Roof truss fabrication", ml: "റൂഫ് ട്രസ് ഫാബ്രിക്കേഷൻ" },
+          { en: "Terrace roofing", ml: "ടെറസ് റൂഫിംഗ്" },
+          { en: "Car parking sheds", ml: "കാർ പാർക്കിംഗ് ഷെഡുകൾ" },
+          { en: "Garage and warehouse sheds", ml: "ഗാരേജ്, വെയർഹൗസ് ഷെഡുകൾ" },
+          { en: "Industrial sheds", ml: "ഇൻഡസ്ട്രിയൽ ഷെഡുകൾ" },
+          { en: "Roof waterproofing and repair", ml: "റൂഫ് വാട്ടർപ്രൂഫിംഗും റിപ്പയറും" },
+          { en: "Roof replacement", ml: "റൂഫ് മാറ്റിസ്ഥാപിക്കൽ" },
+          { en: "Rainwater gutter installation", ml: "മഴവെള്ള ഗട്ടർ ഇൻസ്റ്റലേഷൻ" },
+        ],
+      },
+      {
+        slug: "gate-fabrication",
+        name: { en: "Gate Fabrication", ml: "ഗേറ്റ് ഫാബ്രിക്കേഷൻ" },
+        image: "/og/fabrication/gate-fabrication.jpg",
+        blurb: {
+          en: "Sliding, swing and designer gates in steel, stainless or wrought iron.",
+          ml: "സ്ലൈഡിംഗ്, സ്വിംഗ്, ഡിസൈനർ ഗേറ്റുകൾ — സ്റ്റീൽ, സ്റ്റെയിൻലെസ്, റോട്ട് അയൺ.",
+        },
+        items: [
+          { en: "Main entrance gates", ml: "മെയിൻ എൻട്രൻസ് ഗേറ്റുകൾ" },
+          { en: "Sliding gates", ml: "സ്ലൈഡിംഗ് ഗേറ്റുകൾ" },
+          { en: "Swing gates", ml: "സ്വിംഗ് ഗേറ്റുകൾ" },
+          { en: "Double-leaf gates", ml: "ഡബിൾ-ലീഫ് ഗേറ്റുകൾ" },
+          { en: "Stainless steel gates", ml: "സ്റ്റെയിൻലെസ് സ്റ്റീൽ ഗേറ്റുകൾ" },
+          { en: "Mild steel gates", ml: "മൈൽഡ് സ്റ്റീൽ ഗേറ്റുകൾ" },
+          { en: "Wrought iron gates", ml: "റോട്ട് അയൺ ഗേറ്റുകൾ" },
+          { en: "Designer and villa gates", ml: "ഡിസൈനർ, വില്ല ഗേറ്റുകൾ" },
+          { en: "Compound wall gates", ml: "കോമ്പൗണ്ട് വാൾ ഗേറ്റുകൾ" },
+          { en: "Pedestrian gates", ml: "പെഡസ്ട്രിയൻ ഗേറ്റുകൾ" },
+          { en: "Folding and collapsible gates", ml: "ഫോൾഡിംഗ്, കൊളാപ്സിബിൾ ഗേറ്റുകൾ" },
+          { en: "Custom-designed gates", ml: "കസ്റ്റം ഡിസൈൻ ഗേറ്റുകൾ" },
+          { en: "Gate painting and polishing", ml: "ഗേറ്റ് പെയിന്റിംഗും പോളിഷിംഗും" },
+          { en: "Gate repair and maintenance", ml: "ഗേറ്റ് റിപ്പയറും മെയിന്റനൻസും" },
+        ],
+      },
+      {
+        slug: "automatic-gates",
+        name: { en: "Automatic & Smart Gate Systems", ml: "ഓട്ടോമാറ്റിക് & സ്മാർട്ട് ഗേറ്റ് സിസ്റ്റങ്ങൾ" },
+        image: "/og/fabrication/automatic-gates.jpg",
+        blurb: {
+          en: "Motorised gates with remote, app, RFID or sensor control, fitted to a new or an existing gate.",
+          ml: "റിമോട്ട്, ആപ്പ്, RFID, സെൻസർ നിയന്ത്രണമുള്ള മോട്ടോർ ഗേറ്റുകൾ — പുതിയതോ നിലവിലുള്ളതോ ആയ ഗേറ്റിൽ.",
+        },
+        items: [
+          { en: "Automatic sliding gates", ml: "ഓട്ടോമാറ്റിക് സ്ലൈഡിംഗ് ഗേറ്റുകൾ" },
+          { en: "Automatic swing gates", ml: "ഓട്ടോമാറ്റിക് സ്വിംഗ് ഗേറ്റുകൾ" },
+          { en: "Remote-controlled gates", ml: "റിമോട്ട് നിയന്ത്രിത ഗേറ്റുകൾ" },
+          { en: "Electric gate motors", ml: "ഇലക്ട്രിക് ഗേറ്റ് മോട്ടോറുകൾ" },
+          { en: "App-controlled gates", ml: "ആപ്പ് നിയന്ത്രിത ഗേറ്റുകൾ" },
+          { en: "RFID access control", ml: "RFID ആക്സസ് കൺട്രോൾ" },
+          { en: "Sensor-based automatic gates", ml: "സെൻസർ അധിഷ്ഠിത ഓട്ടോമാറ്റിക് ഗേറ്റുകൾ" },
+          { en: "Boom barriers", ml: "ബൂം ബാരിയറുകൾ" },
+          { en: "Automatic garage doors", ml: "ഓട്ടോമാറ്റിക് ഗാരേജ് വാതിലുകൾ" },
+          { en: "Gate motor replacement", ml: "ഗേറ്റ് മോട്ടോർ മാറ്റിസ്ഥാപിക്കൽ" },
+          { en: "Gate automation repair", ml: "ഗേറ്റ് ഓട്ടോമേഷൻ റിപ്പയർ" },
+          { en: "Safety sensor installation", ml: "സേഫ്റ്റി സെൻസർ ഇൻസ്റ്റലേഷൻ" },
+          { en: "Video intercom integration", ml: "വീഡിയോ ഇന്റർകോം ഇന്റഗ്രേഷൻ" },
+        ],
+      },
+      {
+        slug: "glass-acp",
+        name: { en: "Glass, ACP & Partition Works", ml: "ഗ്ലാസ്, ACP & പാർട്ടീഷൻ വർക്കുകൾ" },
+        image: "/og/fabrication/glass-acp.jpg",
+        blurb: {
+          en: "Toughened glass, frameless partitions, facades and aluminium composite cladding.",
+          ml: "ടഫൻഡ് ഗ്ലാസ്, ഫ്രെയിംലെസ് പാർട്ടീഷനുകൾ, ഫസാഡുകൾ, അലുമിനിയം കോമ്പോസിറ്റ് ക്ലാഡിംഗ്.",
+        },
+        items: [
+          { en: "Toughened glass installation", ml: "ടഫൻഡ് ഗ്ലാസ് ഇൻസ്റ്റലേഷൻ" },
+          { en: "Frameless glass partitions", ml: "ഫ്രെയിംലെസ് ഗ്ലാസ് പാർട്ടീഷനുകൾ" },
+          { en: "Glass office partitions", ml: "ഗ്ലാസ് ഓഫീസ് പാർട്ടീഷനുകൾ" },
+          { en: "Shower enclosures", ml: "ഷവർ എൻക്ലോഷറുകൾ" },
+          { en: "Glass balcony railings", ml: "ഗ്ലാസ് ബാൽക്കണി റെയിലിംഗുകൾ" },
+          { en: "Glass staircase railings", ml: "ഗ്ലാസ് സ്റ്റെയർകേസ് റെയിലിംഗുകൾ" },
+          { en: "Glass facade installation", ml: "ഗ്ലാസ് ഫസാഡ് ഇൻസ്റ്റലേഷൻ" },
+          { en: "Structural glazing", ml: "സ്ട്രക്ചറൽ ഗ്ലേസിംഗ്" },
+          { en: "Aluminium curtain walls", ml: "അലുമിനിയം കർട്ടൻ വാളുകൾ" },
+          { en: "Glass canopies", ml: "ഗ്ലാസ് കനോപ്പികൾ" },
+          { en: "Shopfront glass", ml: "ഷോപ്പ്ഫ്രണ്ട് ഗ്ലാസ്" },
+          { en: "ACP cladding", ml: "ACP ക്ലാഡിംഗ്" },
+          { en: "Glass repair and replacement", ml: "ഗ്ലാസ് റിപ്പയറും മാറ്റിസ്ഥാപിക്കലും" },
+        ],
+      },
+      {
+        slug: "rolling-shutters",
+        name: { en: "Rolling Shutters", ml: "റോളിംഗ് ഷട്ടറുകൾ" },
+        image: "/og/fabrication/rolling-shutters.jpg",
+        blurb: {
+          en: "Manual, motorised and industrial shutters, including motor fitting and repair.",
+          ml: "മാനുവൽ, മോട്ടോർ, ഇൻഡസ്ട്രിയൽ ഷട്ടറുകൾ — മോട്ടോർ ഫിറ്റിംഗും റിപ്പയറും ഉൾപ്പെടെ.",
+        },
+        items: [
+          { en: "Manual rolling shutters", ml: "മാനുവൽ റോളിംഗ് ഷട്ടറുകൾ" },
+          { en: "Automatic rolling shutters", ml: "ഓട്ടോമാറ്റിക് റോളിംഗ് ഷട്ടറുകൾ" },
+          { en: "Motorised shutters", ml: "മോട്ടോറൈസ്ഡ് ഷട്ടറുകൾ" },
+          { en: "Shop shutters", ml: "ഷോപ്പ് ഷട്ടറുകൾ" },
+          { en: "Industrial shutters", ml: "ഇൻഡസ്ട്രിയൽ ഷട്ടറുകൾ" },
+          { en: "Security grills", ml: "സെക്യൂരിറ്റി ഗ്രില്ലുകൾ" },
+          { en: "Collapsible shutters", ml: "കൊളാപ്സിബിൾ ഷട്ടറുകൾ" },
+          { en: "Garage shutters", ml: "ഗാരേജ് ഷട്ടറുകൾ" },
+          { en: "Shutter motor installation", ml: "ഷട്ടർ മോട്ടോർ ഇൻസ്റ്റലേഷൻ" },
+          { en: "Shutter repair and maintenance", ml: "ഷട്ടർ റിപ്പയറും മെയിന്റനൻസും" },
+        ],
+      },
+      {
+        slug: "outdoor-metal",
+        name: { en: "Fencing & Outdoor Metal Works", ml: "ഫെൻസിംഗ് & ഔട്ട്ഡോർ മെറ്റൽ വർക്കുകൾ" },
+        image: "/og/fabrication/outdoor-metal.jpg",
+        blurb: {
+          en: "Compound fencing, pergolas, car sheds and outdoor structures.",
+          ml: "കോമ്പൗണ്ട് ഫെൻസിംഗ്, പെർഗോളകൾ, കാർ ഷെഡുകൾ, ഔട്ട്ഡോർ സ്ട്രക്ചറുകൾ.",
+        },
+        items: [
+          { en: "Metal pergolas", ml: "മെറ്റൽ പെർഗോളകൾ" },
+          { en: "Garden metal structures", ml: "ഗാർഡൻ മെറ്റൽ സ്ട്രക്ചറുകൾ" },
+          { en: "Outdoor metal furniture", ml: "ഔട്ട്ഡോർ മെറ്റൽ ഫർണിച്ചർ" },
+          { en: "Compound fencing", ml: "കോമ്പൗണ്ട് ഫെൻസിംഗ്" },
+          { en: "Chain-link fencing", ml: "ചെയിൻ-ലിങ്ക് ഫെൻസിംഗ്" },
+          { en: "Barbed wire fencing", ml: "ബാർബഡ് വയർ ഫെൻസിംഗ്" },
+          { en: "Security fencing", ml: "സെക്യൂരിറ്റി ഫെൻസിംഗ്" },
+          { en: "Car parking structures", ml: "കാർ പാർക്കിംഗ് സ്ട്രക്ചറുകൾ" },
+          { en: "Steel balconies", ml: "സ്റ്റീൽ ബാൽക്കണികൾ" },
+          { en: "Metal canopies", ml: "മെറ്റൽ കനോപ്പികൾ" },
+          { en: "Decorative metal panels", ml: "ഡെക്കറേറ്റീവ് മെറ്റൽ പാനലുകൾ" },
+          { en: "Custom metal signage", ml: "കസ്റ്റം മെറ്റൽ സൈനേജ്" },
+        ],
+      },
     ],
     faqs: [
       {

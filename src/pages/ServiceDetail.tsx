@@ -287,6 +287,61 @@ export default function ServiceDetail() {
             </div>
           </motion.div>
 
+          {/* Grouped sub-services, for a service that covers several distinct
+              trades. Only the fabrication service defines these today; every
+              other service renders exactly as before. */}
+          {service.itemGroups?.length ? (
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mt-12"
+            >
+              <h2 className="mb-5 text-2xl font-bold text-foreground">
+                {lang === "ml" ? "ഞങ്ങൾ ചെയ്യുന്ന ജോലികൾ" : "What this covers"}
+              </h2>
+
+              <div className="grid gap-6 sm:grid-cols-2">
+                {service.itemGroups.map((group) => (
+                  <article
+                    key={group.slug}
+                    id={group.slug}
+                    className="overflow-hidden rounded-xl border bg-card"
+                  >
+                    <img
+                      src={group.image}
+                      alt={getLocalizedText(group.name, lang)}
+                      width={480}
+                      height={360}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-44 w-full object-cover"
+                    />
+                    <div className="p-4">
+                      <h3 className="font-bold text-foreground">
+                        {getLocalizedText(group.name, lang)}
+                      </h3>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {getLocalizedText(group.blurb, lang)}
+                      </p>
+                      <ul className="mt-3 grid gap-1.5">
+                        {group.items.map((item) => (
+                          <li
+                            key={item.en}
+                            className="flex items-start gap-2 text-sm text-muted-foreground"
+                          >
+                            <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-primary" />
+                            {getLocalizedText(item, lang)}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </motion.section>
+          ) : null}
+
           {service.supportedBrands?.length ? (
             <motion.section
               initial={{ opacity: 0, y: 20 }}
