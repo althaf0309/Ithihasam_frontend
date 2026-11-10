@@ -31,6 +31,8 @@ const CARD_BY_ICON = {
   delivery: "/og/construction-delivery.jpg",
   demolition: "/og/construction-demolition.jpg",
   excavation: "/og/construction-excavation.jpg",
+  steel: "/og/construction-steel.jpg",
+  aggregate: "/og/construction-aggregate.jpg",
 };
 
 function cardFor(service) {

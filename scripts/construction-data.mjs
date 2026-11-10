@@ -99,7 +99,7 @@ export const constructionCategories = [
     slug: "cement-steel-supply",
     name: "Cement & Steel Supply",
     kind: "material",
-    icon: "materials",
+    icon: "steel",
     keywords: ["cement supply", "tmt bar supply", "steel supply", "opc ppc cement"],
     intro:
       "Cement and reinforcement steel delivered to site in the grades your structural drawing specifies, scheduled against your pour dates rather than dumped early to sit in the rain.",
@@ -115,7 +115,7 @@ export const constructionCategories = [
     slug: "aggregate-quarry-supply",
     name: "Metal, Stone & Quarry Supply",
     kind: "material",
-    icon: "materials",
+    icon: "aggregate",
     keywords: ["blue metal supply", "crusher dust", "quarry dust", "aggregate supply", "boulder supply"],
     intro:
       "Graded aggregate and quarry material by the load: blue metal in 6, 12, 20 and 40 mm, crusher dust, rubble and boulders for foundation and filling work.",

@@ -162,7 +162,7 @@ export const constructionServices: ConstructionService[] = [
     "slug": "cement-steel-supply",
     "name": "Cement & Steel Supply",
     "kind": "material",
-    "icon": "materials",
+    "icon": "steel",
     "items": [
       "OPC, PPC and PSC cement",
       "TMT reinforcement bars",
@@ -176,7 +176,7 @@ export const constructionServices: ConstructionService[] = [
     "slug": "aggregate-quarry-supply",
     "name": "Metal, Stone & Quarry Supply",
     "kind": "material",
-    "icon": "materials",
+    "icon": "aggregate",
     "items": [
       "Blue metal and crushed stone (6, 12, 20 and 40 mm)",
       "Crusher dust and quarry dust",
