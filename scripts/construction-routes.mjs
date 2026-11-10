@@ -22,6 +22,7 @@ import {
   allConstructionServices,
 } from "./construction-data.mjs";
 import { allTowns, groundFor } from "./construction-towns.mjs";
+import { designCategories } from "./design-data.mjs";
 
 // Each category names its own icon, which also decides the card image, so a
 // demolition page does not show a stack of cement bags.
@@ -36,7 +37,9 @@ const CARD_BY_ICON = {
 };
 
 function cardFor(service) {
-  return CARD_BY_ICON[service.icon] ?? CARD_BY_ICON.materials;
+  // Design categories name their own image; construction categories map an
+  // icon to a shared card.
+  return service.image ?? CARD_BY_ICON[service.icon] ?? CARD_BY_ICON.materials;
 }
 
 function galleryFor(service) {
@@ -96,6 +99,18 @@ function baseFaqs(where, businessPhone) {
 // on to the other categories from there.
 const TOWN_ENTRY_SERVICE = "sand-supply";
 
+/**
+ * Every category that gets hub, district and town pages: the construction
+ * categories plus the design, interior, decoration and outdoor ones.
+ *
+ * Design categories are deliberately NOT duplicates of construction ones. The
+ * overlap in the source lists (house construction, renovation, MEP, demolition,
+ * earthmoving, material supply) was folded into the existing construction
+ * categories instead, because a second near-identical page competes with the
+ * first for the same search.
+ */
+const allCategories = [...allConstructionServices, ...designCategories];
+
 export function constructionRoutes({ businessPhone, siteUrl }) {
   const routes = [];
   const districtNames = constructionDistricts.map((d) => d.name).join(", ");
@@ -108,7 +123,7 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
     description: `Construction material supply and building services across ${districtNames}. M-sand, cement, steel, blocks, finishing materials, house and commercial construction.`,
     h1: "Construction Materials and Building Services in Kerala",
     intro: `${constructionBrand.tagline} Ithihasam supplies sand, aggregate, cement, steel, blocks and finishing materials by the load, and takes house, apartment and commercial construction across ${districtNames}.`,
-    items: allConstructionServices.map((s) => s.name),
+    items: allCategories.map((s) => s.name),
     image: "/og/construction-materials.jpg",
     gallery: galleryFor(),
     banner: { src: "/og/construction-site.jpg", alt: "Building work in progress on an Ithihasam project" },
@@ -119,6 +134,7 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
       ...materialCategories.map((s) => [s.name, `/construction/${s.slug}`]),
       ...siteworkCategories.map((s) => [s.name, `/construction/${s.slug}`]),
       ...buildingCategories.map((s) => [s.name, `/construction/${s.slug}`]),
+      ...designCategories.map((s) => [s.name, `/construction/${s.slug}`]),
     ],
     constructionDistrictLinks: constructionDistricts.map((d) => [
       `Construction in ${d.name}`,
@@ -129,7 +145,7 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
   });
 
   // ----------------------------------------------------------- service hubs
-  for (const service of allConstructionServices) {
+  for (const service of allCategories) {
     routes.push({
       path: `/construction/${service.slug}`,
       title: `${service.name} in Kerala | Ithihasam`,
@@ -169,7 +185,7 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
       // Each district leads with what actually shapes building work there, so
       // the six pages are not one page with the name swapped.
       intro: `Ithihasam supplies construction materials and takes building work across ${district.name} district — ${district.context}. Most local demand is for ${district.demand}.`,
-      items: allConstructionServices.map((s) => s.name),
+      items: allCategories.map((s) => s.name),
       image: "/og/construction-site.jpg",
       gallery: galleryFor(),
       banner: { src: "/og/construction-site.jpg", alt: `Construction work in ${district.name}` },
@@ -184,7 +200,7 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
           href: `/${TOWN_ENTRY_SERVICE}-${town.slug}`,
           note: town.note,
         })),
-      constructionLinks: allConstructionServices.map((s) => [
+      constructionLinks: allCategories.map((s) => [
         `${s.name} in ${district.name}`,
         `/${s.slug}-${district.slug}`,
       ]),
@@ -200,7 +216,7 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
   }
 
   // ------------------------------------------------- service x district
-  for (const service of allConstructionServices) {
+  for (const service of allCategories) {
     for (const district of constructionDistricts) {
       routes.push({
         path: `/${service.slug}-${district.slug}`,
@@ -252,7 +268,7 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
   // building mix, so "Sand Supply in Cherthala" talks about low-bearing sandy
   // soil and wider footings, while "Sand Supply in Ranni" talks about rock and
   // restricted hill access. Same category, genuinely different page.
-  for (const service of allConstructionServices) {
+  for (const service of allCategories) {
     for (const town of towns) {
       const district = town.district;
       const nearby = towns
@@ -337,16 +353,13 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
 
 export function constructionSummary() {
   const townCount = allTowns(constructionDistricts).length;
+  const count = allCategories.length;
 
   return {
     districts: constructionDistricts.length,
-    services: allConstructionServices.length,
+    services: count,
     towns: townCount,
     pages:
-      1 +
-      allConstructionServices.length +
-      constructionDistricts.length +
-      allConstructionServices.length * constructionDistricts.length +
-      allConstructionServices.length * townCount,
+      1 + count + constructionDistricts.length + count * constructionDistricts.length + count * townCount,
   };
 }

@@ -16,6 +16,7 @@ import {
   constructionCategories,
 } from "./construction-data.mjs";
 import { allTowns } from "./construction-towns.mjs";
+import { designCategories } from "./design-data.mjs";
 
 const target = path.resolve("src/lib/construction-catalogue.ts");
 
@@ -34,7 +35,15 @@ export interface ConstructionDistrict {
   demand: string;
 }
 
-export type ConstructionKind = "material" | "sitework" | "building";
+export type ConstructionKind =
+  | "material"
+  | "sitework"
+  | "building"
+  | "design"
+  | "interior"
+  | "exterior"
+  | "event"
+  | "consultancy";
 
 export interface ConstructionTown {
   slug: string;
@@ -62,6 +71,8 @@ export interface ConstructionService {
   compliance?: string;
   /** True where Ithihasam coordinates the work rather than performing it itself. */
   partner?: boolean;
+  /** Explicit card image; design categories set this, construction maps by icon. */
+  image?: string;
 }
 `;
 
@@ -71,7 +82,7 @@ export const constructionDistricts: ConstructionDistrict[] = ${JSON.stringify(co
 
 const services = `
 export const constructionServices: ConstructionService[] = ${JSON.stringify(
-  constructionCategories.map((c) => ({
+  [...constructionCategories, ...designCategories].map((c) => ({
     slug: c.slug,
     name: c.name,
     kind: c.kind,
@@ -80,6 +91,7 @@ export const constructionServices: ConstructionService[] = ${JSON.stringify(
     intro: c.intro,
     ...(c.compliance ? { compliance: c.compliance } : {}),
     ...(c.partner ? { partner: true } : {}),
+    ...(c.image ? { image: c.image } : {}),
   })),
   null,
   2,
@@ -111,6 +123,9 @@ const footer = `
 export const materialServices = constructionServices.filter((s) => s.kind === "material");
 export const siteworkServices = constructionServices.filter((s) => s.kind === "sitework");
 export const buildingServices = constructionServices.filter((s) => s.kind === "building");
+export const designServices = constructionServices.filter((s) =>
+  ["design", "interior", "exterior", "event", "consultancy"].includes(s.kind),
+);
 
 export const constructionDistrictBySlug = Object.fromEntries(
   constructionDistricts.map((d) => [d.slug, d]),
@@ -147,7 +162,7 @@ export const CONSTRUCTION_PARTNER_NOTE =
 fs.writeFileSync(target, header + districts + services + towns + footer, "utf8");
 
 console.log(
-  `Construction catalogue: ${constructionCategories.length} categories, ` +
+  `Construction catalogue: ${constructionCategories.length + designCategories.length} categories, ` +
     `${constructionDistricts.length} districts, ${allTowns(constructionDistricts).length} towns ` +
     `written to src/lib/construction-catalogue.ts`,
 );

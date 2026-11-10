@@ -13,7 +13,15 @@ export interface ConstructionDistrict {
   demand: string;
 }
 
-export type ConstructionKind = "material" | "sitework" | "building";
+export type ConstructionKind =
+  | "material"
+  | "sitework"
+  | "building"
+  | "design"
+  | "interior"
+  | "exterior"
+  | "event"
+  | "consultancy";
 
 export interface ConstructionTown {
   slug: string;
@@ -41,6 +49,8 @@ export interface ConstructionService {
   compliance?: string;
   /** True where Ithihasam coordinates the work rather than performing it itself. */
   partner?: boolean;
+  /** Explicit card image; design categories set this, construction maps by icon. */
+  image?: string;
 }
 
 export const constructionDistricts: ConstructionDistrict[] = [
@@ -421,6 +431,313 @@ export const constructionServices: ConstructionService[] = [
       "Project-based and stage-wise contracts"
     ],
     "intro": "Four ways to contract the same build. Which suits you depends on how much of the sourcing and supervision you want to handle yourself."
+  },
+  {
+    "slug": "architecture-planning",
+    "name": "Architecture & Building Planning",
+    "kind": "design",
+    "icon": "architecture",
+    "items": [
+      "Architectural design",
+      "House plan preparation",
+      "Flat and apartment layout planning",
+      "Commercial building planning",
+      "Site planning",
+      "Building elevation design",
+      "Front elevation design",
+      "2D floor plan design",
+      "3D house plan design",
+      "3D exterior visualisation",
+      "Space planning",
+      "Structural planning coordination",
+      "Landscape planning",
+      "Renovation planning",
+      "Vastu-based planning on request",
+      "Municipality and Panchayat submission drawings",
+      "Building permit drawing preparation"
+    ],
+    "intro": "Floor plans, elevations and the drawings a local body actually accepts. Plans are prepared against your plot's setbacks and the permitted coverage rather than drawn first and adjusted later.",
+    "compliance": "Building permit drawings must be signed by a licensed engineer or architect registered with the local body. We will tell you which approvals your plot needs before any drawing is prepared.",
+    "image": "/og/design/architecture-planning.jpg"
+  },
+  {
+    "slug": "structural-drafting",
+    "name": "Structural Engineering & Drafting",
+    "kind": "design",
+    "icon": "drafting",
+    "items": [
+      "Structural design and analysis",
+      "Foundation design",
+      "Column and beam design",
+      "RCC design",
+      "Slab design",
+      "Steel structure design",
+      "Reinforcement detailing",
+      "AutoCAD drafting",
+      "Civil and architectural drafting",
+      "Electrical layout drafting",
+      "Plumbing layout drafting",
+      "Working drawings",
+      "Construction detail drawings",
+      "As-built drawings",
+      "Quantity estimation",
+      "BOQ preparation",
+      "Material quantity calculation"
+    ],
+    "intro": "Structural design and working drawings, with reinforcement detailing and quantities. The output is what a site engineer can build from and what a quantity surveyor can price.",
+    "compliance": "Structural drawings are issued only under the seal of a qualified structural engineer. We will not supply unsigned structural designs for construction.",
+    "image": "/og/design/structural-drafting.jpg"
+  },
+  {
+    "slug": "interior-design",
+    "name": "Interior Design",
+    "kind": "interior",
+    "icon": "interior",
+    "items": [
+      "Full house interior design",
+      "Flat and villa interior design",
+      "Living room design",
+      "Bedroom and kids' bedroom design",
+      "Dining room design",
+      "Modular kitchen design",
+      "Bathroom interior design",
+      "Balcony and home office design",
+      "Wardrobe and TV unit design",
+      "False ceiling design",
+      "Lighting design",
+      "Furniture selection and placement",
+      "Office interior design",
+      "Retail shop and showroom design",
+      "Restaurant and cafe interior design",
+      "Hotel and salon interior design",
+      "Clinic interior design",
+      "Reception and corporate workspace design"
+    ],
+    "intro": "Interior design for homes, flats and commercial spaces, worked out as drawings and a material schedule before anything is ordered or cut.",
+    "image": "/og/design/interior-design.jpg"
+  },
+  {
+    "slug": "interior-execution",
+    "name": "Interior Execution & Installation",
+    "kind": "interior",
+    "icon": "interior",
+    "items": [
+      "Modular kitchen installation",
+      "Custom furniture manufacturing",
+      "Wardrobe installation",
+      "TV unit installation",
+      "False ceiling installation",
+      "Gypsum and POP ceiling works",
+      "Wooden ceiling installation",
+      "Wall panel installation",
+      "Wallpaper installation",
+      "Wall painting and texture painting",
+      "Interior electrical works",
+      "Decorative lighting installation",
+      "Flooring and tile installation",
+      "Marble and granite installation",
+      "Glass partition installation",
+      "Aluminium fabrication",
+      "Carpentry and woodwork",
+      "Curtain and blind installation"
+    ],
+    "intro": "The build phase of an interior: ceilings, kitchens, wardrobes, panelling and flooring, sequenced so the trades are not waiting on each other at the end.",
+    "image": "/og/design/interior-execution.jpg"
+  },
+  {
+    "slug": "interior-decoration",
+    "name": "Interior Decoration",
+    "kind": "interior",
+    "icon": "decoration",
+    "items": [
+      "Living room decoration and styling",
+      "Sofa and furniture arrangement",
+      "TV wall decoration",
+      "Decorative wall panels and 3D panels",
+      "Wall art, paintings and designer mirrors",
+      "Indoor plants and planters",
+      "Decorative lighting",
+      "Curtains and blinds",
+      "Master and kids' bedroom decoration",
+      "Headboard wall decoration",
+      "Wardrobe and bedside styling",
+      "Wallpaper and wall textures",
+      "Modular kitchen styling",
+      "Kitchen backsplash decoration",
+      "Dining area and table styling",
+      "Decorative pendant lights",
+      "Ceiling decoration and mouldings",
+      "Marble and granite feature walls"
+    ],
+    "intro": "Styling a space that is already built: furniture arrangement, wall treatments, lighting and the accessories that decide how a room reads.",
+    "image": "/og/design/interior-decoration.jpg"
+  },
+  {
+    "slug": "theme-decoration",
+    "name": "Luxury & Theme-Based Decoration",
+    "kind": "interior",
+    "icon": "decoration",
+    "items": [
+      "Luxury home decoration",
+      "Minimalist interior decoration",
+      "Modern contemporary decoration",
+      "Scandinavian decoration",
+      "Industrial-style decoration",
+      "Traditional Kerala interior decoration",
+      "Arabic-inspired interior decoration",
+      "Classic European decoration",
+      "Bohemian interior decoration",
+      "Vintage home decoration",
+      "Premium apartment decoration",
+      "Smart home decoration",
+      "Hotel-style bedroom decoration"
+    ],
+    "intro": "A single design language carried through a whole home, chosen before buying rather than assembled room by room.",
+    "image": "/og/design/theme-decoration.jpg"
+  },
+  {
+    "slug": "exterior-decoration",
+    "name": "Exterior Decoration",
+    "kind": "exterior",
+    "icon": "exterior",
+    "items": [
+      "House and villa exterior decoration",
+      "Apartment exterior beautification",
+      "Building facade decoration",
+      "Exterior wall cladding",
+      "Stone and wooden cladding",
+      "Exterior texture painting",
+      "Decorative elevation design",
+      "Exterior wall lighting",
+      "Architectural facade lighting",
+      "Decorative pillars",
+      "Entrance and main door decoration",
+      "Balcony and terrace decoration",
+      "Roof garden decoration",
+      "Exterior signage and nameplates",
+      "Gate and compound wall decoration"
+    ],
+    "intro": "Facade, elevation and entrance work. In Kerala's climate the finish matters as much as the look: what survives monsoon and salt air is the first question.",
+    "image": "/og/design/exterior-decoration.jpg"
+  },
+  {
+    "slug": "landscape-garden",
+    "name": "Landscape & Garden Design",
+    "kind": "exterior",
+    "icon": "landscape",
+    "items": [
+      "Landscape architecture",
+      "Garden design and maintenance",
+      "Front yard and backyard decoration",
+      "Terrace and balcony gardens",
+      "Vertical garden installation",
+      "Lawn installation and decoration",
+      "Flower and rock garden design",
+      "Water fountain installation",
+      "Decorative pond design",
+      "Outdoor sculpture installation",
+      "Garden pathway decoration",
+      "Pergola and gazebo decoration",
+      "Outdoor lighting",
+      "Interlock paving and driveways",
+      "Rainwater harvesting systems",
+      "Landscape maintenance"
+    ],
+    "intro": "Garden and outdoor design, planted for the local rainfall and soil rather than to a catalogue. Drainage is settled before anything is planted.",
+    "image": "/og/design/landscape-garden.jpg"
+  },
+  {
+    "slug": "outdoor-lifestyle",
+    "name": "Outdoor Lifestyle & Recreation",
+    "kind": "exterior",
+    "icon": "outdoor",
+    "items": [
+      "Outdoor dining area decoration",
+      "Poolside decoration",
+      "Swimming pool surroundings",
+      "Rooftop lounge decoration",
+      "Outdoor kitchen decoration",
+      "BBQ area decoration",
+      "Garden party setup",
+      "Outdoor cinema setup",
+      "Fire pit decoration",
+      "Patio decoration",
+      "Deck and wooden flooring",
+      "Outdoor furniture arrangement"
+    ],
+    "intro": "Outdoor living space: patios, decks, poolside and rooftop areas built to be used through the year, with shade and drainage planned for the monsoon.",
+    "image": "/og/design/outdoor-lifestyle.jpg"
+  },
+  {
+    "slug": "event-decoration",
+    "name": "Event & Festive Decoration",
+    "kind": "event",
+    "icon": "event",
+    "items": [
+      "Housewarming decoration",
+      "Wedding home decoration",
+      "Birthday and anniversary decoration",
+      "Festival decoration",
+      "Onam home decoration",
+      "Christmas decoration",
+      "Eid decoration",
+      "Office inauguration decoration",
+      "Shop opening decoration",
+      "Restaurant decoration",
+      "Hotel lobby decoration",
+      "Reception area decoration",
+      "Seasonal decoration"
+    ],
+    "intro": "Decoration for a date: housewarming, wedding, festival or a shop opening. Work is scheduled backwards from the event so the space is ready the evening before.",
+    "image": "/og/design/event-decoration.jpg"
+  },
+  {
+    "slug": "decor-products",
+    "name": "Decor Products & Installation",
+    "kind": "event",
+    "icon": "decoration",
+    "items": [
+      "Decorative lights and chandeliers",
+      "Designer curtains and blinds",
+      "Wallpapers",
+      "Wall paintings and frames",
+      "Decorative mirrors",
+      "Artificial flowers",
+      "Indoor and outdoor plants",
+      "Designer pots and planters",
+      "Decorative and outdoor furniture",
+      "Garden fountains",
+      "Statues and sculptures",
+      "Rugs and carpets",
+      "Outdoor lamps",
+      "Nameplates and signage"
+    ],
+    "intro": "Supply and fitting of the pieces a finished space needs, sourced against the design rather than picked off a shelf and made to fit afterwards.",
+    "image": "/og/construction-materials.jpg"
+  },
+  {
+    "slug": "property-consultancy",
+    "name": "Property & Project Consultancy",
+    "kind": "consultancy",
+    "icon": "consultancy",
+    "items": [
+      "Land surveying and measurement",
+      "Topographic surveying",
+      "Soil testing coordination",
+      "Construction cost estimation",
+      "Project management",
+      "Construction supervision",
+      "Contractor consultation",
+      "Building inspection",
+      "Property valuation",
+      "Construction quality inspection",
+      "Project scheduling",
+      "Contractor and supplier coordination",
+      "Building completion documentation"
+    ],
+    "intro": "Survey, estimate and supervision for people managing their own build. Independent of the contractor, so the advice is not tied to who is doing the work.",
+    "compliance": "Property valuation for a bank or a legal purpose must be carried out by a registered valuer. We will say plainly when a valuation needs one rather than issuing an informal figure.",
+    "image": "/og/construction-site.jpg"
   }
 ];
 
@@ -914,6 +1231,9 @@ export const constructionTownBySlug = Object.fromEntries(
 export const materialServices = constructionServices.filter((s) => s.kind === "material");
 export const siteworkServices = constructionServices.filter((s) => s.kind === "sitework");
 export const buildingServices = constructionServices.filter((s) => s.kind === "building");
+export const designServices = constructionServices.filter((s) =>
+  ["design", "interior", "exterior", "event", "consultancy"].includes(s.kind),
+);
 
 export const constructionDistrictBySlug = Object.fromEntries(
   constructionDistricts.map((d) => [d.slug, d]),

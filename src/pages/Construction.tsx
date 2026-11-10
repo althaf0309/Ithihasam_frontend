@@ -19,6 +19,7 @@ import {
   constructionServiceOptions,
   constructionTowns,
   constructionTownBySlug,
+  designServices,
   materialServices,
   siteworkServices,
   CONSTRUCTION_PARTNER_NOTE,
@@ -39,7 +40,9 @@ const CARD_BY_ICON: Record<string, string> = {
 };
 
 function cardFor(service?: ConstructionService) {
-  return (service && CARD_BY_ICON[service.icon]) || CARD_BY_ICON.materials;
+  // Design categories name their own image; construction categories map an
+  // icon to a shared card.
+  return service?.image ?? (service && CARD_BY_ICON[service.icon]) ?? CARD_BY_ICON.materials;
 }
 
 
@@ -188,6 +191,12 @@ const SERVICE_GROUPS: { heading: string; blurb: string; services: ConstructionSe
     blurb: "Houses, apartments, commercial buildings, renovation and civil works.",
     services: buildingServices,
   },
+  {
+    heading: "Design, interiors & decoration",
+    blurb:
+      "Architecture and structural drawings, interior design and execution, decoration, landscaping and project consultancy.",
+    services: designServices,
+  },
 ];
 
 function ServiceGrid({ districtSlug }: { districtSlug?: string }) {
@@ -245,6 +254,11 @@ const ITEM_HEADING: Record<ConstructionService["kind"], string> = {
   material: "What we supply",
   sitework: "Work we take on",
   building: "What this covers",
+  design: "What this covers",
+  interior: "What this covers",
+  exterior: "What this covers",
+  event: "What this covers",
+  consultancy: "What this covers",
 };
 
 function ItemList({ service }: { service: ConstructionService }) {
@@ -274,6 +288,11 @@ const BADGE: Record<ConstructionService["kind"], string> = {
   material: "Material supply",
   sitework: "Site work",
   building: "Building service",
+  design: "Design & drawings",
+  interior: "Interiors",
+  exterior: "Exterior & outdoor",
+  event: "Decoration",
+  consultancy: "Consultancy",
 };
 
 /** /construction */

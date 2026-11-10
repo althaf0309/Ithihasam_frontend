@@ -7,6 +7,7 @@ import {
   constructionTownBySlug,
   constructionServiceBySlug,
   constructionServices,
+  designServices,
   materialServices,
   siteworkServices,
   CONSTRUCTION_PARTNER_NOTE,
@@ -70,8 +71,16 @@ describe("construction catalogue", () => {
     expect(constructionServiceBySlug["demolition-services"].compliance).toMatch(/permission/i);
   });
 
-  it("groups every service into exactly one of the three kinds", () => {
-    const grouped = [...materialServices, ...siteworkServices, ...buildingServices];
+  it("groups every service into exactly one kind bucket", () => {
+    // Four buckets drive the hub page's sections. A service in none of them
+    // would exist as a page but never be listed, and one in two would be
+    // listed twice.
+    const grouped = [
+      ...materialServices,
+      ...siteworkServices,
+      ...buildingServices,
+      ...designServices,
+    ];
     expect(grouped).toHaveLength(constructionServices.length);
     expect(new Set(grouped.map((s) => s.slug)).size).toBe(constructionServices.length);
   });

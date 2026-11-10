@@ -21,6 +21,7 @@ import {
 } from "./site-data.mjs";
 import { constructionDistricts, allConstructionServices } from "./construction-data.mjs";
 import { allTowns, townDetail } from "./construction-towns.mjs";
+import { designCategories } from "./design-data.mjs";
 
 const problems = [];
 
@@ -338,7 +339,7 @@ if (!constructionSource) {
     }
   }
 
-  for (const service of allConstructionServices) {
+  for (const service of [...allConstructionServices, ...designCategories]) {
     if (!constructionSource.includes(`"slug": "${service.slug}"`)) {
       problems.push(
         `src/lib/construction-catalogue.ts is stale: category "${service.slug}" is missing. ` +
@@ -427,6 +428,21 @@ if (!constructionSource) {
             "data and never be shown to a customer",
         );
       }
+    }
+  }
+
+  // A design category names its image directly, so check the file exists.
+  for (const category of designCategories) {
+    if (!category.image) {
+      problems.push(`design-data.mjs: "${category.slug}" has no image`);
+      continue;
+    }
+    const file = path.resolve("public", category.image.replace(/^\//, ""));
+    if (!fs.existsSync(file)) {
+      problems.push(`missing image: ${category.image} is referenced by "${category.slug}"`);
+    }
+    if (!category.items?.length) {
+      problems.push(`design-data.mjs: "${category.slug}" has no items`);
     }
   }
 
