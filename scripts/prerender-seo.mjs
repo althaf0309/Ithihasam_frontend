@@ -387,6 +387,11 @@ function staticRoutes() {
       h1: "Home maintenance services for everyday residential needs",
       intro: `Browse every Ithihasam service in one place and choose the right support for repairs, upgrades, cleaning, fabrication, and smart home work across ${areaCoverageLine}.`,
       items: serviceNames,
+      // The fabrication trades are listed here too, so the services index
+      // names them. Without this the page lists "Roofing and Fabrication" and
+      // never mentions welding, shutters or glass, which are what people
+      // actually search for.
+      itemGroups: servicesBySlug["roofing-fabrication"]?.itemGroups,
       image: "/og/default.jpg",
       priority: "0.95",
       isServiceIndex: true,

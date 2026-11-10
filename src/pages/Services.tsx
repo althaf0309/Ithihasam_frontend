@@ -11,11 +11,18 @@ import { useLang } from "@/contexts/LangContext";
 import { createKeywordSet } from "@/lib/seo";
 import { serviceAreaCoverageLine, serviceAreaNames, serviceAreas } from "@/lib/service-areas";
 import { getLocalizedText, serviceCatalog } from "@/lib/service-catalog";
+import { Wrench } from "lucide-react";
 
 import bannerElectrical from "@/assets/banner-electrical.jpg";
 
+/** The service whose grouped trades are surfaced as cards below. */
+const FABRICATION_SLUG = "roofing-fabrication";
+
 export default function Services() {
   const { lang, t } = useLang();
+
+  const fabricationGroups =
+    serviceCatalog.find((service) => service.slug === FABRICATION_SLUG)?.itemGroups ?? [];
 
   const pageKeywords = createKeywordSet(
     serviceCatalog.map((service) => service.title.en),
@@ -137,6 +144,54 @@ export default function Services() {
           </div>
         </div>
       </section>
+
+      {/* The fabrication trades. These are sections of one service page rather
+          than pages of their own, so each card deep-links to its anchor. Built
+          from the catalogue, so a trade added to the data appears here without
+          a second edit. */}
+      {fabricationGroups.length > 0 && (
+        <section id="fabrication" className="scroll-mt-24 border-t border-border/50 py-16">
+          <div className="container">
+            <div className="mb-10 max-w-2xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+                {lang === "ml" ? "മെറ്റൽ & റൂഫിംഗ്" : "Metal & roofing"}
+              </p>
+              <h2 className="mt-3 text-3xl font-bold text-foreground">
+                {lang === "ml"
+                  ? "ഫാബ്രിക്കേഷൻ & റൂഫിംഗ് ജോലികൾ"
+                  : "Fabrication and roofing work"}
+              </h2>
+              <p className="mt-3 text-base leading-7 text-muted-foreground">
+                {lang === "ml"
+                  ? "വെൽഡിംഗ്, അലുമിനിയം, സ്റ്റീൽ, ഗേറ്റുകൾ, ഷട്ടറുകൾ, ഗ്ലാസ് എന്നിവയുൾപ്പെടെ ഒൻപത് വിഭാഗങ്ങൾ."
+                  : "Nine trades, from welding and aluminium work to gates, shutters and glass."}
+              </p>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {fabricationGroups.map((group, index) => (
+                <motion.div
+                  key={group.slug}
+                  initial={{ opacity: 0, y: 32 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <ServiceCard
+                    title={getLocalizedText(group.name, lang)}
+                    description={getLocalizedText(group.blurb, lang)}
+                    icon={Wrench}
+                    slug={FABRICATION_SLUG}
+                    image={group.image}
+                    href={`/services/${FABRICATION_SLUG}#${group.slug}`}
+                    ctaLabel={lang === "ml" ? "വിശദാംശങ്ങൾ" : "View details"}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section id="booking" className="scroll-mt-24 border-t border-border/50 py-16">
         <div className="container grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">

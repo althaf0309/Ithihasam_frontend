@@ -11,10 +11,19 @@ interface Props {
   icon: LucideIcon;
   slug: string;
   image?: string;
+  /**
+   * Where the card links, when it is not a top-level service page. Used by the
+   * fabrication trades, which are sections of one service page rather than
+   * pages of their own, so they link to an anchor instead of /services/<slug>.
+   */
+  href?: string;
+  /** Overrides the button label, e.g. "View details" for a section link. */
+  ctaLabel?: string;
 }
 
-export function ServiceCard({ title, description, icon: Icon, slug, image }: Props) {
+export function ServiceCard({ title, description, icon: Icon, slug, image, href, ctaLabel }: Props) {
   const { t } = useLang();
+  const target = href ?? `/services/${slug}`;
 
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-border/50 bg-card shadow-[var(--card-shadow)] transition-all hover:border-primary/30 hover:shadow-[var(--card-shadow-hover)]">
@@ -43,8 +52,8 @@ export function ServiceCard({ title, description, icon: Icon, slug, image }: Pro
         <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{description}</p>
         <div className="flex flex-wrap gap-2">
           <Button asChild size="sm" className="bg-gradient-to-r from-primary to-primary/80 hover:opacity-90">
-            <Link to={`/services/${slug}`}>
-              {t("nav.bookNow")} <ArrowRight size={14} className="ml-1" />
+            <Link to={target}>
+              {ctaLabel ?? t("nav.bookNow")} <ArrowRight size={14} className="ml-1" />
             </Link>
           </Button>
           <Button size="sm" variant="outline" asChild className="border-secondary/50 text-secondary hover:bg-secondary hover:text-secondary-foreground">
