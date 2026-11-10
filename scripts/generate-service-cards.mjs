@@ -9,10 +9,38 @@
 // Replace any of these with a real photo of the same filename and the build
 // will use the photo instead: generation skips a file it did not create.
 
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
 import sharp from "sharp";
+
+/**
+ * Files git tracks, as a set of absolute paths.
+ *
+ * Computed once. Outside a git checkout this is empty, and generation falls
+ * back to the EXIF marker alone.
+ */
+const trackedFiles = (() => {
+  try {
+    const out = execFileSync("git", ["ls-files", "public/og"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    return new Set(
+      out
+        .split(/\r?\n/)
+        .filter(Boolean)
+        .map((f) => path.resolve(f)),
+    );
+  } catch {
+    return new Set();
+  }
+})();
+
+function isTrackedByGit(target) {
+  return trackedFiles.has(path.resolve(target));
+}
 
 const outputDir = path.resolve("public/og");
 const WIDTH = 1200;
@@ -152,6 +180,13 @@ const CARDS = [
 /** True when the file is absent or was produced by a previous run. */
 async function isReplaceable(target) {
   if (!fs.existsSync(target)) return true;
+
+  // A file git is tracking came from the repository, so it is a real photo
+  // somebody committed deliberately. Regenerating it rewrites a tracked file,
+  // and the next `git pull` on the server then refuses to merge with
+  // "local changes would be overwritten" — which is exactly what happened on
+  // production and blocked three deploys in a row.
+  if (isTrackedByGit(target)) return false;
 
   try {
     // The marker is written to EXIF ImageDescription, so the raw EXIF buffer is
