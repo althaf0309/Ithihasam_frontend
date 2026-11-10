@@ -20,6 +20,7 @@ import {
   districtLandings,
 } from "./site-data.mjs";
 import { constructionDistricts, allConstructionServices } from "./construction-data.mjs";
+import { allTowns, townDetail } from "./construction-towns.mjs";
 
 const problems = [];
 
@@ -298,6 +299,43 @@ if (!constructionSource) {
         `src/lib/construction-catalogue.ts is stale: category "${service.slug}" is missing. ` +
           "Run node scripts/generate-construction-catalogue.mjs",
       );
+    }
+  }
+
+  // Every town named by a district must have its detail written, or its pages
+  // fall back to generic copy and become the duplicates these pages exist to
+  // avoid.
+  for (const district of constructionDistricts) {
+    for (const name of district.towns) {
+      if (!townDetail[name]) {
+        problems.push(
+          `scripts/construction-towns.mjs: "${name}" (${district.name}) has no detail. ` +
+            "Every town needs terrain, access, building and note, or its 18 pages are near-identical.",
+        );
+      }
+    }
+  }
+
+  // A town slug that ends with a district slug, or with another town slug,
+  // would be resolved to the wrong place by the suffix matcher in
+  // ConstructionServiceDistrict, and the page would show the wrong location.
+  const townList = allTowns(constructionDistricts);
+  const districtSlugs = constructionDistricts.map((d) => d.slug);
+
+  for (const town of townList) {
+    if (districtSlugs.some((ds) => town.slug === ds || town.slug.endsWith(`-${ds}`))) {
+      problems.push(
+        `construction-towns.mjs: town slug "${town.slug}" collides with a district slug, ` +
+          "so its pages would resolve to the district instead",
+      );
+    }
+    for (const other of townList) {
+      if (other.slug !== town.slug && other.slug.endsWith(`-${town.slug}`)) {
+        problems.push(
+          `construction-towns.mjs: "${other.slug}" ends with "${town.slug}", which the suffix ` +
+            "matcher cannot tell apart",
+        );
+      }
     }
   }
 

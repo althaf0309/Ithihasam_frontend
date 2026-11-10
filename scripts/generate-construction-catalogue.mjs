@@ -15,6 +15,7 @@ import {
   constructionDistricts,
   constructionCategories,
 } from "./construction-data.mjs";
+import { allTowns } from "./construction-towns.mjs";
 
 const target = path.resolve("src/lib/construction-catalogue.ts");
 
@@ -34,6 +35,21 @@ export interface ConstructionDistrict {
 }
 
 export type ConstructionKind = "material" | "sitework" | "building";
+
+export interface ConstructionTown {
+  slug: string;
+  name: string;
+  districtSlug: string;
+  districtName: string;
+  /** What the ground does to a foundation or a delivery. */
+  terrain: string;
+  /** What a loaded tipper has to get through to reach site. */
+  access: string;
+  /** What is actually being built there. */
+  building: string;
+  /** One concrete local detail, used verbatim in the page copy. */
+  note: string;
+}
 
 export interface ConstructionService {
   slug: string;
@@ -68,6 +84,27 @@ export const constructionServices: ConstructionService[] = ${JSON.stringify(
   null,
   2,
 )};
+`;
+
+const towns = `
+export const constructionTowns: ConstructionTown[] = ${JSON.stringify(
+  allTowns(constructionDistricts).map((town) => ({
+    slug: town.slug,
+    name: town.name,
+    districtSlug: town.district.slug,
+    districtName: town.district.name,
+    terrain: town.terrain,
+    access: town.access,
+    building: town.building,
+    note: town.note,
+  })),
+  null,
+  2,
+)};
+
+export const constructionTownBySlug = Object.fromEntries(
+  constructionTowns.map((t) => [t.slug, t]),
+) as Record<string, ConstructionTown>;
 `;
 
 const footer = `
@@ -107,8 +144,10 @@ export const CONSTRUCTION_PARTNER_NOTE =
   "Ithihasam coordinates the hire, the scheduling and the rate; the machine and operator come from that partner.";
 `;
 
-fs.writeFileSync(target, header + districts + services + footer, "utf8");
+fs.writeFileSync(target, header + districts + services + towns + footer, "utf8");
 
 console.log(
-  `Construction catalogue: ${constructionCategories.length} categories, ${constructionDistricts.length} districts written to src/lib/construction-catalogue.ts`,
+  `Construction catalogue: ${constructionCategories.length} categories, ` +
+    `${constructionDistricts.length} districts, ${allTowns(constructionDistricts).length} towns ` +
+    `written to src/lib/construction-catalogue.ts`,
 );

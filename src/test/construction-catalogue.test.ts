@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   buildingServices,
   constructionDistricts,
+  constructionTowns,
+  constructionTownBySlug,
   constructionServiceBySlug,
   constructionServices,
   materialServices,
@@ -72,6 +74,60 @@ describe("construction catalogue", () => {
     const grouped = [...materialServices, ...siteworkServices, ...buildingServices];
     expect(grouped).toHaveLength(constructionServices.length);
     expect(new Set(grouped.map((s) => s.slug)).size).toBe(constructionServices.length);
+  });
+
+  it("resolves every service-town slug to the right pair", () => {
+    // ConstructionServiceDistrict matches the town by suffix. A town slug that
+    // ended with a district slug, or with another town slug, would silently
+    // resolve to the wrong place and show the wrong location on the page.
+    for (const service of constructionServices) {
+      for (const town of constructionTowns) {
+        const slug = `${service.slug}-${town.slug}`;
+
+        const matched = constructionTowns.find((t) => slug.endsWith(`-${t.slug}`));
+        expect(matched?.slug, `no town matched ${slug}`).toBe(town.slug);
+
+        const resolved = constructionServiceBySlug[slug.slice(0, -(town.slug.length + 1))];
+        expect(resolved?.slug, `${slug} resolved to the wrong service`).toBe(service.slug);
+      }
+    }
+  });
+
+  it("keeps town slugs unambiguous against districts and each other", () => {
+    const districtSlugs = constructionDistricts.map((d) => d.slug);
+
+    for (const town of constructionTowns) {
+      expect(
+        districtSlugs.some((ds) => town.slug === ds || town.slug.endsWith(`-${ds}`)),
+        `town ${town.slug} collides with a district slug`,
+      ).toBe(false);
+
+      for (const other of constructionTowns) {
+        if (other.slug === town.slug) continue;
+        expect(
+          other.slug.endsWith(`-${town.slug}`),
+          `${other.slug} ends with ${town.slug}`,
+        ).toBe(false);
+      }
+    }
+  });
+
+  it("gives every town the detail its page depends on", () => {
+    // A town missing these renders generic copy, which is what makes 864 pages
+    // read as duplicates rather than as distinct places.
+    expect(constructionTowns.length).toBe(48);
+
+    for (const town of constructionTowns) {
+      expect(town.terrain.length, `${town.slug} has no terrain`).toBeGreaterThan(15);
+      expect(town.access.length, `${town.slug} has no access detail`).toBeGreaterThan(15);
+      expect(town.building.length, `${town.slug} has no building mix`).toBeGreaterThan(15);
+      expect(town.note.length, `${town.slug} has no local note`).toBeGreaterThan(40);
+      expect(constructionTownBySlug[town.slug]?.name).toBe(town.name);
+      expect(
+        constructionDistricts.some((d) => d.slug === town.districtSlug),
+        `${town.slug} points at an unknown district`,
+      ).toBe(true);
+    }
   });
 
   it("gives every service a non-empty item list and a unique slug", () => {

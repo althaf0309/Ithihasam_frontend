@@ -4,12 +4,14 @@
 //   /construction/<service>            service hub      "m sand supply Kerala"
 //   /construction/<district>           district hub     "construction Kochi"
 //   /<service>-<district>              service + place  "m sand supply kochi"
+//   /<service>-<town>                  service + town   "m sand supply cherthala"
 //
-// Deliberately no service x town pages. The site already carries 1,102 URLs
-// built from templates, and 10 services x 48 towns would add 480 more
-// near-identical pages to a domain that cannot yet support the ones it has.
-// District level captures the search volume that matters for materials, which
-// are bought by the lorry load across a district rather than by street.
+// Town pages are 18 categories x 48 towns = 864 URLs, so each one has to earn
+// its place. Every town in construction-towns.mjs carries its own terrain,
+// access, building mix and a concrete local note, and those drive the intro,
+// the FAQs and a section that exists on no other page. A page that differed
+// only by place name would land in the same "Duplicate, Google chose different
+// canonical" bucket that already holds 1,004 of this domain's URLs.
 
 import {
   constructionBrand,
@@ -19,6 +21,7 @@ import {
   buildingCategories,
   allConstructionServices,
 } from "./construction-data.mjs";
+import { allTowns, groundFor } from "./construction-towns.mjs";
 
 // Each category names its own icon, which also decides the card image, so a
 // demolition page does not show a stack of cement bags.
@@ -221,14 +224,109 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
     }
   }
 
+  // ----------------------------------------------------- service x town
+  //
+  // The deepest level. Each page leans on the town's own terrain, access and
+  // building mix, so "Sand Supply in Cherthala" talks about low-bearing sandy
+  // soil and wider footings, while "Sand Supply in Ranni" talks about rock and
+  // restricted hill access. Same category, genuinely different page.
+  const towns = allTowns(constructionDistricts);
+
+  for (const service of allConstructionServices) {
+    for (const town of towns) {
+      const district = town.district;
+      const nearby = towns
+        .filter((other) => other.district.slug === district.slug && other.slug !== town.slug)
+        .slice(0, 5);
+
+      // The ground profile changes what the page says about the WORK, not just
+      // about the place, and it differs by category: a material page talks
+      // about quantities, a machinery page about what the machine can stand on.
+      const ground = groundFor(town.terrain);
+      const kindNote = service.kind === "material" ? ground.materialNote : ground.machineNote;
+
+      routes.push({
+        path: `/${service.slug}-${town.slug}`,
+        title: `${service.name} in ${town.name}, ${district.name} | Ithihasam`,
+        description:
+          `${service.name} in ${town.name}. ${town.note} ` +
+          `Delivered rate quoted before you confirm.`,
+        h1: `${service.name} in ${town.name}`,
+        serviceName: service.name,
+        areaName: town.name,
+        district: `${district.name} district`,
+        intro:
+          `${service.intro} ${town.name} sits on ${town.terrain}, and ${town.access}. ` +
+          `Local building is mostly ${town.building}.`,
+        items: service.items,
+        image: cardFor(service),
+        gallery: galleryFor(service),
+        banner: { src: cardFor(service), alt: `${service.name} in ${town.name}` },
+        priority: "0.7",
+        isConstruction: true,
+        constructionSteps: howItWorks,
+        constructionCompliance: service.compliance,
+        constructionPartnerNote: service.partner ? PARTNER_NOTE : undefined,
+
+        // The facts that belong to this town and no other page.
+        constructionLocalNote: town.note,
+        constructionTerrain: town.terrain,
+        constructionAccess: town.access,
+        constructionGroundLabel: ground.label,
+        constructionGroundImplication: ground.implication,
+        constructionKindNote: kindNote,
+
+        constructionParent: [
+          `${service.name} across ${district.name}`,
+          `/${service.slug}-${district.slug}`,
+        ],
+        constructionLinks: nearby.map((other) => [
+          `${service.name} in ${other.name}`,
+          `/${service.slug}-${other.slug}`,
+        ]),
+        breadcrumbs: [
+          ["Home", "/"],
+          ["Construction", "/construction"],
+          [service.name, `/construction/${service.slug}`],
+          [district.name, `/${service.slug}-${district.slug}`],
+          [town.name, `/${service.slug}-${town.slug}`],
+        ],
+        faqs: [
+          [
+            `Do you deliver ${service.name.toLowerCase()} to ${town.name}?`,
+            `Yes. ${town.name} is covered as part of our ${district.name} district service. ` +
+              `${town.note} Share your exact site location when enquiring so the delivery charge can be quoted accurately.`,
+          ],
+          [
+            `What affects the cost in ${town.name}?`,
+            `Two things beyond the rate itself: the ground and the access. ${town.name} sits on ${town.terrain}, ` +
+              `and ${town.access}. ${kindNote}`,
+          ],
+          [
+            `What should I check before ordering for a site in ${town.name}?`,
+            `${ground.implication} ${town.note}`,
+          ],
+          ...baseFaqs(`${town.name} and the surrounding ${district.name} area`, businessPhone),
+        ],
+      });
+    }
+  }
+
   return routes;
 }
 
 export function constructionSummary() {
+  const townCount = allTowns(constructionDistricts).length;
+
   return {
     districts: constructionDistricts.length,
     services: allConstructionServices.length,
-    pages: 1 + allConstructionServices.length + constructionDistricts.length +
-      allConstructionServices.length * constructionDistricts.length,
+    towns: townCount,
+    pages:
+      1 +
+      allConstructionServices.length +
+      constructionDistricts.length +
+      allConstructionServices.length * constructionDistricts.length +
+      allConstructionServices.length * townCount,
   };
 }

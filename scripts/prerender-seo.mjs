@@ -950,6 +950,22 @@ function constructionSectionsHtml(route) {
     );
   }
 
+  // Town pages only. This is the section that makes 864 of them worth
+  // publishing instead of being 864 copies with the place name swapped.
+  if (route.constructionLocalNote) {
+    parts.push(
+      `<h2>Working in ${escapeHtml(route.areaName)}</h2>` +
+        `<p class="seo-citable">${escapeHtml(route.constructionLocalNote)}</p>` +
+        `<ul>` +
+        `<li><strong>Ground:</strong> ${escapeHtml(route.constructionTerrain)}</li>` +
+        `<li><strong>Site access:</strong> ${escapeHtml(route.constructionAccess)}</li>` +
+        `</ul>` +
+        `<h2>What ${escapeHtml(route.constructionGroundLabel)} means for this job</h2>` +
+        `<p class="seo-citable">${escapeHtml(route.constructionGroundImplication)}</p>` +
+        `<p>${escapeHtml(route.constructionKindNote)}</p>`,
+    );
+  }
+
   if (route.gallery?.length) {
     parts.push(
       `<h2>Photos</h2><div class="seo-gallery">` +

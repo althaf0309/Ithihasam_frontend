@@ -15,6 +15,21 @@ export interface ConstructionDistrict {
 
 export type ConstructionKind = "material" | "sitework" | "building";
 
+export interface ConstructionTown {
+  slug: string;
+  name: string;
+  districtSlug: string;
+  districtName: string;
+  /** What the ground does to a foundation or a delivery. */
+  terrain: string;
+  /** What a loaded tipper has to get through to reach site. */
+  access: string;
+  /** What is actually being built there. */
+  building: string;
+  /** One concrete local detail, used verbatim in the page copy. */
+  note: string;
+}
+
 export interface ConstructionService {
   slug: string;
   name: string;
@@ -408,6 +423,493 @@ export const constructionServices: ConstructionService[] = [
     "intro": "Four ways to contract the same build. Which suits you depends on how much of the sourcing and supervision you want to handle yourself."
   }
 ];
+
+export const constructionTowns: ConstructionTown[] = [
+  {
+    "slug": "thalassery",
+    "name": "Thalassery",
+    "districtSlug": "kannur",
+    "districtName": "Kannur",
+    "terrain": "coastal laterite with a firm base close to the surface",
+    "access": "narrow older town roads near the fort and beach side, which decide tipper size more than distance does",
+    "building": "individual houses, shop buildings and renovation of older tiled-roof homes",
+    "note": "Laterite blocks cut locally are still common here, so a build often mixes laterite walls with concrete framing."
+  },
+  {
+    "slug": "taliparamba",
+    "name": "Taliparamba",
+    "districtSlug": "kannur",
+    "districtName": "Kannur",
+    "terrain": "midland laterite, mostly level plots with firm bearing",
+    "access": "good highway access off NH-66, so full loads reach most sites",
+    "building": "independent houses on family plots and commercial buildings along the highway",
+    "note": "Highway frontage means full 10-wheel loads are practical, which brings the per-unit rate down on larger orders."
+  },
+  {
+    "slug": "payyannur",
+    "name": "Payyannur",
+    "districtSlug": "kannur",
+    "districtName": "Kannur",
+    "terrain": "coastal belt with sandy topsoil over laterite",
+    "access": "town roads are workable but coastal lanes can limit a loaded lorry",
+    "building": "houses, compound walls and small commercial units",
+    "note": "Salt-laden air near the coast is the reason colour-coated roofing outlasts plain GI here by years."
+  },
+  {
+    "slug": "mattannur",
+    "name": "Mattannur",
+    "districtSlug": "kannur",
+    "districtName": "Kannur",
+    "terrain": "midland with gentle slopes and firm laterite",
+    "access": "improved roads around the airport corridor take full loads",
+    "building": "new houses and commercial plots, with airport-corridor activity",
+    "note": "Plot development around the airport road has made levelling and compound-wall work steady demand."
+  },
+  {
+    "slug": "iritty",
+    "name": "Iritty",
+    "districtSlug": "kannur",
+    "districtName": "Kannur",
+    "terrain": "hill-edge terrain with sloped plots and rocky sections",
+    "access": "ghat-side approaches, where gradient and turning room cap vehicle size",
+    "building": "hillside houses, retaining walls and site levelling",
+    "note": "Sloped plots here usually need retaining work and filling before the foundation can be set out."
+  },
+  {
+    "slug": "kuthuparamba",
+    "name": "Kuthuparamba",
+    "districtSlug": "kannur",
+    "districtName": "Kannur",
+    "terrain": "midland laterite with mixed level and sloped plots",
+    "access": "town roads are adequate; interior lanes may need a smaller tipper",
+    "building": "residential construction and renovation",
+    "note": "A mix of level and sloped plots means the filling quantity varies widely from site to site."
+  },
+  {
+    "slug": "panoor",
+    "name": "Panoor",
+    "districtSlug": "kannur",
+    "districtName": "Kannur",
+    "terrain": "midland laterite, generally firm",
+    "access": "narrow interior roads in parts of the town",
+    "building": "houses and small commercial buildings",
+    "note": "Interior lanes often mean part-load delivery, which is charged at the full trip rate."
+  },
+  {
+    "slug": "chakkarakkal",
+    "name": "Chakkarakkal",
+    "districtSlug": "kannur",
+    "districtName": "Kannur",
+    "terrain": "laterite midland with level plots",
+    "access": "reasonable road access for standard tippers",
+    "building": "residential building and compound work",
+    "note": "Level plots keep excavation modest, so material cost dominates the budget here."
+  },
+  {
+    "slug": "kozhikode-city",
+    "name": "Kozhikode City",
+    "districtSlug": "kozhikode",
+    "districtName": "Kozhikode",
+    "terrain": "coastal plain with made-up ground in parts of the old town",
+    "access": "city traffic restrictions make delivery timing matter as much as distance",
+    "building": "commercial buildings, apartments and shop fit-outs",
+    "note": "City deliveries are usually scheduled early morning, because loading restrictions apply through the day."
+  },
+  {
+    "slug": "ramanattukara",
+    "name": "Ramanattukara",
+    "districtSlug": "kozhikode",
+    "districtName": "Kozhikode",
+    "terrain": "level midland with firm bearing",
+    "access": "junction location with strong highway access for full loads",
+    "building": "commercial units, warehouses and houses",
+    "note": "The highway junction makes this one of the easier places in the district for bulk delivery."
+  },
+  {
+    "slug": "feroke",
+    "name": "Feroke",
+    "districtSlug": "kozhikode",
+    "districtName": "Kozhikode",
+    "terrain": "riverside flats with clay-bearing soil in places",
+    "access": "river-side roads and bridge approaches limit some routes",
+    "building": "houses and small industrial units",
+    "note": "Feroke's tile-making history reflects the clay in the ground, which matters for foundation design."
+  },
+  {
+    "slug": "koyilandy",
+    "name": "Koyilandy",
+    "districtSlug": "kozhikode",
+    "districtName": "Kozhikode",
+    "terrain": "coastal belt with sandy soil near the shore",
+    "access": "coastal road access is workable for standard loads",
+    "building": "residential construction and commercial frontage",
+    "note": "Sandy coastal soil usually calls for a wider footing than the same house inland would need."
+  },
+  {
+    "slug": "vadakara",
+    "name": "Vadakara",
+    "districtSlug": "kozhikode",
+    "districtName": "Kozhikode",
+    "terrain": "coastal and midland mix with varied bearing",
+    "access": "good main-road access, narrower interior lanes",
+    "building": "houses, shops and renovation work",
+    "note": "Bearing varies noticeably between coastal and inland plots, so soil condition is worth checking first."
+  },
+  {
+    "slug": "kunnamangalam",
+    "name": "Kunnamangalam",
+    "districtSlug": "kozhikode",
+    "districtName": "Kozhikode",
+    "terrain": "midland with gentle slopes and firm laterite",
+    "access": "good access on the main corridor",
+    "building": "houses, hostels and institutional buildings",
+    "note": "Institutional and rental-housing demand near the campuses keeps multi-room construction steady."
+  },
+  {
+    "slug": "thamarassery",
+    "name": "Thamarassery",
+    "districtSlug": "kozhikode",
+    "districtName": "Kozhikode",
+    "terrain": "hill-approach terrain, sloped and rocky in parts",
+    "access": "ghat road approaches restrict vehicle size on the climb",
+    "building": "hillside houses and retaining structures",
+    "note": "On the ghat approach, gradient decides the vehicle, so loads are often split into smaller trips."
+  },
+  {
+    "slug": "balussery",
+    "name": "Balussery",
+    "districtSlug": "kozhikode",
+    "districtName": "Kozhikode",
+    "terrain": "midland with undulating plots",
+    "access": "adequate road access for standard tippers",
+    "building": "residential construction and compound walls",
+    "note": "Undulating plots here usually need levelling before the plinth can be set out."
+  },
+  {
+    "slug": "kochi",
+    "name": "Kochi",
+    "districtSlug": "ernakulam",
+    "districtName": "Ernakulam",
+    "terrain": "coastal and reclaimed ground with a high water table",
+    "access": "city congestion and timing restrictions govern delivery windows",
+    "building": "apartments, commercial buildings and villa projects",
+    "note": "A high water table and made-up ground are why pile or raft foundations are common rather than exceptional."
+  },
+  {
+    "slug": "kakkanad",
+    "name": "Kakkanad",
+    "districtSlug": "ernakulam",
+    "districtName": "Ernakulam",
+    "terrain": "midland with firmer bearing than the island side",
+    "access": "good access on the IT-corridor roads",
+    "building": "apartments, offices and villa developments",
+    "note": "IT-corridor work runs to tighter programmes, so material scheduling matters more than unit rate."
+  },
+  {
+    "slug": "aluva",
+    "name": "Aluva",
+    "districtSlug": "ernakulam",
+    "districtName": "Ernakulam",
+    "terrain": "riverside flats with sandy and alluvial soil",
+    "access": "good road and rail-corridor access",
+    "building": "apartments, houses and commercial buildings",
+    "note": "Riverside plots near the Periyar need the flood level checked before plinth height is fixed."
+  },
+  {
+    "slug": "perumbavoor",
+    "name": "Perumbavoor",
+    "districtSlug": "ernakulam",
+    "districtName": "Ernakulam",
+    "terrain": "midland with firm bearing",
+    "access": "strong lorry access, being a timber and trade hub",
+    "building": "houses, commercial units and industrial sheds",
+    "note": "As a long-standing timber trade centre, heavy-vehicle access here is better than most towns of its size."
+  },
+  {
+    "slug": "angamaly",
+    "name": "Angamaly",
+    "districtSlug": "ernakulam",
+    "districtName": "Ernakulam",
+    "terrain": "level midland, firm plots",
+    "access": "excellent highway access on NH-544",
+    "building": "houses, commercial buildings and warehouses",
+    "note": "Highway access makes full-load delivery straightforward, which helps on large concreting orders."
+  },
+  {
+    "slug": "muvattupuzha",
+    "name": "Muvattupuzha",
+    "districtSlug": "ernakulam",
+    "districtName": "Ernakulam",
+    "terrain": "midland with river-adjacent low ground in parts",
+    "access": "good main-road access, narrower interior roads",
+    "building": "houses and commercial buildings",
+    "note": "River-adjacent plots need plinth height set against the known flood line, not just the road level."
+  },
+  {
+    "slug": "tripunithura",
+    "name": "Tripunithura",
+    "districtSlug": "ernakulam",
+    "districtName": "Ernakulam",
+    "terrain": "midland with moderate water table",
+    "access": "older town roads in the heritage area restrict larger vehicles",
+    "building": "houses, apartments and renovation",
+    "note": "Heritage-area streets often cap vehicle size, so part loads are more common here than elsewhere in the district."
+  },
+  {
+    "slug": "kothamangalam",
+    "name": "Kothamangalam",
+    "districtSlug": "ernakulam",
+    "districtName": "Ernakulam",
+    "terrain": "hill-edge midland, sloped in parts",
+    "access": "reasonable access, with gradient limits on the hill side",
+    "building": "houses and small commercial buildings",
+    "note": "Hill-side plots here usually need retaining walls before the main build starts."
+  },
+  {
+    "slug": "alappuzha-town",
+    "name": "Alappuzha Town",
+    "districtSlug": "alappuzha",
+    "districtName": "Alappuzha",
+    "terrain": "backwater belt with soft soil and a high water table",
+    "access": "canal-side and narrow town roads restrict vehicle size",
+    "building": "houses on raised plinths and commercial frontage",
+    "note": "A high water table makes plinth height and filling quantity the two numbers that decide the budget."
+  },
+  {
+    "slug": "cherthala",
+    "name": "Cherthala",
+    "districtSlug": "alappuzha",
+    "districtName": "Alappuzha",
+    "terrain": "coastal sandy soil with low bearing",
+    "access": "reasonable main-road access, narrower interior lanes",
+    "building": "houses, compound walls and small commercial units",
+    "note": "Low-bearing sandy soil usually means wider footings and more filling than an inland plot of the same size."
+  },
+  {
+    "slug": "kayamkulam",
+    "name": "Kayamkulam",
+    "districtSlug": "alappuzha",
+    "districtName": "Alappuzha",
+    "terrain": "coastal and backwater mix with soft ground",
+    "access": "good highway access, narrower approaches near the backwaters",
+    "building": "houses and commercial buildings",
+    "note": "Filling material is often the single largest delivery on a plot here, ahead of sand or metal."
+  },
+  {
+    "slug": "mavelikara",
+    "name": "Mavelikara",
+    "districtSlug": "alappuzha",
+    "districtName": "Alappuzha",
+    "terrain": "midland with firmer bearing than the coastal belt",
+    "access": "good road access for standard loads",
+    "building": "houses and renovation work",
+    "note": "Firmer ground inland means less filling, so budgets here run closer to a standard midland build."
+  },
+  {
+    "slug": "chengannur",
+    "name": "Chengannur",
+    "districtSlug": "alappuzha",
+    "districtName": "Alappuzha",
+    "terrain": "midland near the Pamba with flood-prone low ground",
+    "access": "good access on main roads",
+    "building": "houses built with flood level in mind",
+    "note": "After the 2018 floods, plinth heights here are commonly set well above the old road-level practice."
+  },
+  {
+    "slug": "haripad",
+    "name": "Haripad",
+    "districtSlug": "alappuzha",
+    "districtName": "Alappuzha",
+    "terrain": "coastal plain with soft topsoil",
+    "access": "adequate main-road access",
+    "building": "houses and compound walls",
+    "note": "Soft topsoil usually has to be cut back to firm ground before the foundation is laid."
+  },
+  {
+    "slug": "ambalappuzha",
+    "name": "Ambalappuzha",
+    "districtSlug": "alappuzha",
+    "districtName": "Alappuzha",
+    "terrain": "coastal and paddy-belt ground with a very high water table",
+    "access": "narrow roads through paddy areas limit loaded vehicles",
+    "building": "raised-plinth houses and small buildings",
+    "note": "Paddy-belt plots often need substantial filling and a waiting period before construction starts."
+  },
+  {
+    "slug": "arookutty",
+    "name": "Arookutty",
+    "districtSlug": "alappuzha",
+    "districtName": "Alappuzha",
+    "terrain": "backwater edge with waterlogged ground",
+    "access": "narrow approaches, often needing smaller vehicles or part loads",
+    "building": "raised houses and waterfront structures",
+    "note": "Waterlogged ground here makes foundation design, not material choice, the decisive cost factor."
+  },
+  {
+    "slug": "pathanamthitta-town",
+    "name": "Pathanamthitta Town",
+    "districtSlug": "pathanamthitta",
+    "districtName": "Pathanamthitta",
+    "terrain": "midland and hill-edge with sloped plots",
+    "access": "town road access is workable; gradient limits some approaches",
+    "building": "houses, often NRI-funded, and commercial buildings",
+    "note": "Sloped plots mean levelling and retaining work are usually priced before the building itself."
+  },
+  {
+    "slug": "adoor",
+    "name": "Adoor",
+    "districtSlug": "pathanamthitta",
+    "districtName": "Pathanamthitta",
+    "terrain": "midland with firm laterite",
+    "access": "good highway access for full loads",
+    "building": "houses and commercial units",
+    "note": "Firm laterite and good access make this one of the more straightforward towns in the district to build in."
+  },
+  {
+    "slug": "thiruvalla",
+    "name": "Thiruvalla",
+    "districtSlug": "pathanamthitta",
+    "districtName": "Pathanamthitta",
+    "terrain": "midland with low-lying ground near the river",
+    "access": "good road access for standard and full loads",
+    "building": "houses, apartments and commercial buildings",
+    "note": "Low-lying river-side plots need plinth level checked against flood history before design is finalised."
+  },
+  {
+    "slug": "pandalam",
+    "name": "Pandalam",
+    "districtSlug": "pathanamthitta",
+    "districtName": "Pathanamthitta",
+    "terrain": "midland with mixed level and sloped plots",
+    "access": "reasonable access on main roads",
+    "building": "houses and renovation",
+    "note": "Plot-to-plot variation here is wide, so a site visit changes the estimate more than it would elsewhere."
+  },
+  {
+    "slug": "ranni",
+    "name": "Ranni",
+    "districtSlug": "pathanamthitta",
+    "districtName": "Pathanamthitta",
+    "terrain": "hill terrain with rocky and steeply sloped plots",
+    "access": "hill roads restrict vehicle size; part loads are common",
+    "building": "hillside houses and retaining structures",
+    "note": "Rock is often met during excavation here, which can need breaking rather than ordinary digging."
+  },
+  {
+    "slug": "konni",
+    "name": "Konni",
+    "districtSlug": "pathanamthitta",
+    "districtName": "Pathanamthitta",
+    "terrain": "forest-edge hill terrain, sloped and rocky",
+    "access": "narrow hill approaches cap vehicle size",
+    "building": "houses and site development work",
+    "note": "Access is usually the binding constraint here, not material availability."
+  },
+  {
+    "slug": "mallappally",
+    "name": "Mallappally",
+    "districtSlug": "pathanamthitta",
+    "districtName": "Pathanamthitta",
+    "terrain": "midland with undulating plots",
+    "access": "adequate road access, narrower interior lanes",
+    "building": "houses, many NRI-funded",
+    "note": "Undulating plots typically need levelling and a retaining section on at least one boundary."
+  },
+  {
+    "slug": "kozhencherry",
+    "name": "Kozhencherry",
+    "districtSlug": "pathanamthitta",
+    "districtName": "Pathanamthitta",
+    "terrain": "midland near the Pamba with low-lying sections",
+    "access": "good main-road access",
+    "building": "houses and small commercial buildings",
+    "note": "Proximity to the Pamba makes flood level a standard check before plinth height is set."
+  },
+  {
+    "slug": "kollam-city",
+    "name": "Kollam City",
+    "districtSlug": "kollam",
+    "districtName": "Kollam",
+    "terrain": "coastal plain with a moderate to high water table",
+    "access": "city roads with timing constraints on larger vehicles",
+    "building": "houses, commercial buildings and apartments",
+    "note": "City-centre deliveries are usually scheduled outside peak hours to avoid vehicle restrictions."
+  },
+  {
+    "slug": "karunagappally",
+    "name": "Karunagappally",
+    "districtSlug": "kollam",
+    "districtName": "Kollam",
+    "terrain": "coastal belt with sandy soil",
+    "access": "good highway access, narrower coastal lanes",
+    "building": "houses and commercial units",
+    "note": "Sandy coastal ground generally needs a wider footing than the same design inland."
+  },
+  {
+    "slug": "punalur",
+    "name": "Punalur",
+    "districtSlug": "kollam",
+    "districtName": "Kollam",
+    "terrain": "hill-edge terrain with rocky sections",
+    "access": "hill road approaches limit vehicle size on some routes",
+    "building": "houses and small commercial buildings",
+    "note": "Rock in the ground can turn a routine excavation into breaking work, which is priced separately."
+  },
+  {
+    "slug": "kottarakkara",
+    "name": "Kottarakkara",
+    "districtSlug": "kollam",
+    "districtName": "Kollam",
+    "terrain": "midland with firm laterite",
+    "access": "good junction access for full loads",
+    "building": "houses, shops and commercial buildings",
+    "note": "Being a junction town, material reaches site here with fewer access constraints than most of the district."
+  },
+  {
+    "slug": "paravur",
+    "name": "Paravur",
+    "districtSlug": "kollam",
+    "districtName": "Kollam",
+    "terrain": "coastal and backwater edge with soft ground",
+    "access": "narrow approaches near the backwaters",
+    "building": "houses and compound work",
+    "note": "Backwater-edge plots often need filling and a raised plinth before anything else is costed."
+  },
+  {
+    "slug": "chathannoor",
+    "name": "Chathannoor",
+    "districtSlug": "kollam",
+    "districtName": "Kollam",
+    "terrain": "midland with generally firm bearing",
+    "access": "good highway access",
+    "building": "houses and commercial frontage",
+    "note": "Firm ground and highway access keep both excavation and delivery costs predictable here."
+  },
+  {
+    "slug": "anchal",
+    "name": "Anchal",
+    "districtSlug": "kollam",
+    "districtName": "Kollam",
+    "terrain": "midland with undulating and partly rocky plots",
+    "access": "adequate access, narrower interior roads",
+    "building": "houses and renovation work",
+    "note": "Undulating plots usually need levelling, and rock is met often enough to be worth checking early."
+  },
+  {
+    "slug": "kundara",
+    "name": "Kundara",
+    "districtSlug": "kollam",
+    "districtName": "Kollam",
+    "terrain": "midland with firm bearing",
+    "access": "reasonable road access for standard loads",
+    "building": "houses and small industrial units",
+    "note": "Firm midland ground keeps foundation work straightforward on most plots here."
+  }
+];
+
+export const constructionTownBySlug = Object.fromEntries(
+  constructionTowns.map((t) => [t.slug, t]),
+) as Record<string, ConstructionTown>;
 
 export const materialServices = constructionServices.filter((s) => s.kind === "material");
 export const siteworkServices = constructionServices.filter((s) => s.kind === "sitework");

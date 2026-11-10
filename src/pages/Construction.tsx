@@ -17,18 +17,29 @@ import {
   constructionHowItWorks,
   constructionServiceBySlug,
   constructionServiceOptions,
+  constructionTowns,
+  constructionTownBySlug,
   materialServices,
   siteworkServices,
   CONSTRUCTION_PARTNER_NOTE,
   type ConstructionService,
 } from "@/lib/construction-catalogue";
-import bannerFabrication from "@/assets/banner-fabrication.jpg";
-import heroProfessionals from "@/assets/hero-professionals.jpg";
+// Each category has its own card, so a sand page does not show a welder. The
+// page previously hardcoded a fabrication banner and a stock team photo on all
+// 997 construction pages, with alt text that said "construction materials"
+// over a picture of someone welding.
+const CARD_BY_ICON: Record<string, string> = {
+  materials: "/og/construction-materials.jpg",
+  building: "/og/construction-site.jpg",
+  delivery: "/og/construction-delivery.jpg",
+  demolition: "/og/construction-demolition.jpg",
+  excavation: "/og/construction-excavation.jpg",
+};
 
-const GALLERY = [
-  { src: bannerFabrication, alt: "Construction materials supplied to site by Ithihasam" },
-  { src: heroProfessionals, alt: "Ithihasam team on a building project" },
-];
+function cardFor(service?: ConstructionService) {
+  return (service && CARD_BY_ICON[service.icon]) || CARD_BY_ICON.materials;
+}
+
 
 function Shell({
   title,
@@ -41,6 +52,7 @@ function Shell({
   intro,
   compliance,
   partner,
+  image,
   children,
 }: {
   title: string;
@@ -54,16 +66,24 @@ function Shell({
   compliance?: string;
   /** True where the work is coordinated through partners rather than performed in-house. */
   partner?: boolean;
+  /** The category card for this page. Falls back to the materials card. */
+  image?: string;
   children: React.ReactNode;
 }) {
+  const banner = image ?? CARD_BY_ICON.materials;
+  const galleryImages = [
+    { src: banner, alt: h1 },
+    { src: CARD_BY_ICON.building, alt: "Building work on an Ithihasam project" },
+    { src: CARD_BY_ICON.delivery, alt: "Bulk material delivery across Kerala" },
+  ].filter((img, i, all) => all.findIndex((o) => o.src === img.src) === i);
   return (
     <div className="min-h-screen bg-background">
-      <SeoMeta title={title} description={description} keywords={keywords} canonicalPath={canonicalPath} image="/og/construction-site.jpg" />
+      <SeoMeta title={title} description={description} keywords={keywords} canonicalPath={canonicalPath} image={banner} />
       <Header />
 
       <div className="relative h-[280px] w-full overflow-hidden md:h-[360px]">
         <ResponsiveImage
-          src={bannerFabrication}
+          src={banner}
           alt={h1}
           className="absolute inset-0 h-full w-full object-cover"
           priority
@@ -118,7 +138,7 @@ function Shell({
 
       <section className="container grid gap-10 py-12 lg:grid-cols-[1fr_380px]">
         <div>
-          <RentalGallery images={GALLERY} className="mb-10" />
+          <RentalGallery images={galleryImages} className="mb-10" />
           {children}
 
           <h2 className="mt-12 text-2xl font-bold text-foreground">How it works</h2>
@@ -287,6 +307,7 @@ export function ConstructionDetail() {
         intro={service.intro}
         compliance={service.compliance}
         partner={service.partner}
+        image={cardFor(service)}
       >
         <ItemList service={service} />
         <DistrictGrid serviceSlug={service.slug} />
@@ -333,11 +354,101 @@ export function ConstructionServiceDistrict() {
   const { pathname } = useLocation();
   const slug = pathname.replace(/^\/|\/$/g, "");
 
-  const district = constructionDistricts.find((d) => slug.endsWith(`-${d.slug}`));
-  const service = district ? constructionServiceBySlug[slug.slice(0, -(district.slug.length + 1))] : undefined;
+  // Towns are checked first. A district slug is never the suffix of a town
+  // slug (asserted in the catalogue test), so the two cannot be confused, but
+  // matching towns first keeps the intent obvious.
+  const town = constructionTowns.find((t) => slug.endsWith(`-${t.slug}`));
+  const district = town
+    ? constructionDistrictBySlug[town.districtSlug]
+    : constructionDistricts.find((d) => slug.endsWith(`-${d.slug}`));
+
+  const placeSlug = town ? town.slug : district?.slug;
+  const service = placeSlug
+    ? constructionServiceBySlug[slug.slice(0, -(placeSlug.length + 1))]
+    : undefined;
 
   if (!district || !service) {
     return <Navigate to="/404" replace />;
+  }
+
+  // ---------------------------------------------------------- town page
+  if (town) {
+    const nearby = constructionTowns
+      .filter((other) => other.districtSlug === town.districtSlug && other.slug !== town.slug)
+      .slice(0, 5);
+
+    return (
+      <Shell
+        title={`${service.name} in ${town.name}, ${district.name} | Ithihasam`}
+        description={`${service.name} in ${town.name}. ${town.note}`}
+        keywords={createKeywordSet(
+          `${service.name.toLowerCase()} ${town.name}`,
+          `${service.name.toLowerCase()} in ${town.name}`,
+          `${service.name.toLowerCase()} ${district.name}`,
+        )}
+        canonicalPath={`/${service.slug}-${town.slug}`}
+        crumbs={[
+          { label: "Home", to: "/" },
+          { label: "Construction", to: "/construction" },
+          { label: service.name, to: `/construction/${service.slug}` },
+          { label: district.name, to: `/${service.slug}-${district.slug}` },
+          { label: town.name },
+        ]}
+        badge={`${town.name}, ${district.name}`}
+        h1={`${service.name} in ${town.name}`}
+        intro={`${service.intro} ${town.name} sits on ${town.terrain}, and ${town.access}. Local building is mostly ${town.building}.`}
+        compliance={service.compliance}
+        partner={service.partner}
+        image={cardFor(service)}
+      >
+        <ItemList service={service} />
+
+        {/* The section that makes this page worth having rather than being the
+            district page with a different name at the top. */}
+        <h2 className="mt-12 text-2xl font-bold text-foreground">Working in {town.name}</h2>
+        <p className="mt-3 leading-relaxed text-muted-foreground">{town.note}</p>
+
+        <dl className="mt-5 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-xl border bg-card p-4">
+            <dt className="text-sm font-semibold text-foreground">Ground</dt>
+            <dd className="mt-1 text-sm text-muted-foreground">{town.terrain}</dd>
+          </div>
+          <div className="rounded-xl border bg-card p-4">
+            <dt className="text-sm font-semibold text-foreground">Site access</dt>
+            <dd className="mt-1 text-sm text-muted-foreground">{town.access}</dd>
+          </div>
+        </dl>
+
+        {nearby.length > 0 && (
+          <>
+            <h2 className="mt-12 text-2xl font-bold text-foreground">
+              Nearby in {district.name}
+            </h2>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {nearby.map((other) => (
+                <Link
+                  key={other.slug}
+                  to={`/${service.slug}-${other.slug}`}
+                  className="rounded-xl border bg-card p-4 transition-colors hover:border-primary"
+                >
+                  <p className="flex items-center gap-1.5 font-semibold text-foreground">
+                    <MapPin size={15} className="text-primary" />
+                    {service.name} in {other.name}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">{other.building}</p>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
+
+        <p className="mt-8">
+          <Link to={`/${service.slug}-${district.slug}`} className="text-primary underline">
+            {service.name} across {district.name} district
+          </Link>
+        </p>
+      </Shell>
+    );
   }
 
   return (
@@ -361,6 +472,7 @@ export function ConstructionServiceDistrict() {
       intro={`${service.intro} In ${district.name} district this mostly serves ${district.demand}, where ${district.context}.`}
       compliance={service.compliance}
       partner={service.partner}
+      image={cardFor(service)}
     >
       <ItemList service={service} />
 

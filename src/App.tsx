@@ -7,7 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 import { ScrollToRouteTarget } from "@/components/ScrollToRouteTarget";
 import { LangProvider } from "@/contexts/LangContext";
-import { constructionDistricts, constructionServices } from "@/lib/construction-catalogue";
+import { constructionDistricts, constructionServices, constructionTowns } from "@/lib/construction-catalogue";
 import Index from "./pages/Index.tsx";
 
 // Only the landing page is in the initial bundle. Every other route is split, so
@@ -37,13 +37,15 @@ const LocalServiceLanding = lazy(() => import("./pages/LocalServiceLanding.tsx")
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 // Built from the catalogue so a new category or district cannot be added to the
-// data without its route existing: 18 categories x 6 districts = 108 paths.
-// Counting them here rather than listing them is what kept the rentals 404 bug
-// from repeating — a prerendered page with no React route returns 200 to curl
-// and then replaces itself with the 404 as soon as React mounts.
-const CONSTRUCTION_SERVICE_DISTRICT_PATHS = constructionServices.flatMap((service) =>
-  constructionDistricts.map((district) => `/${service.slug}-${district.slug}`),
-);
+// data without its route existing: 18 categories x (6 districts + 48 towns)
+// = 972 paths. Counting them here rather than listing them is what kept the
+// rentals 404 bug from repeating — a prerendered page with no React route
+// returns 200 to curl and then replaces itself with the 404 as soon as React
+// mounts, which curl can never see.
+const CONSTRUCTION_SERVICE_DISTRICT_PATHS = constructionServices.flatMap((service) => [
+  ...constructionDistricts.map((district) => `/${service.slug}-${district.slug}`),
+  ...constructionTowns.map((town) => `/${service.slug}-${town.slug}`),
+]);
 
 const queryClient = new QueryClient({
   defaultOptions: {
