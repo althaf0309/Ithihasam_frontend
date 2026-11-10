@@ -988,9 +988,21 @@ function constructionSectionsHtml(route) {
   }
 
   if (route.constructionTowns?.length) {
+    // A town is linked when the route supplies a path for it. These were plain
+    // text, which left all 864 town pages orphaned — reachable only from the
+    // sitemap, with no internal link telling Google they matter.
     parts.push(
-      `<h2>Towns we deliver to</h2><ul>` +
-        route.constructionTowns.map((town) => `<li>${escapeHtml(town)}</li>`).join("") +
+      `<h2>${escapeHtml(route.constructionTownsHeading ?? "Towns we deliver to")}</h2><ul>` +
+        route.constructionTowns
+          .map((town) => {
+            if (typeof town === "string") return `<li>${escapeHtml(town)}</li>`;
+            return (
+              `<li><a href="${escapeHtml(town.href)}">${escapeHtml(town.label)}</a>` +
+              (town.note ? ` — ${escapeHtml(town.note)}` : "") +
+              `</li>`
+            );
+          })
+          .join("") +
         `</ul>`,
     );
   }

@@ -89,9 +89,15 @@ function baseFaqs(where, businessPhone) {
   ];
 }
 
+// A district hub covers every category, so its town links need one to point at.
+// Sand is the highest-volume search of the eighteen, and each town page links
+// on to the other categories from there.
+const TOWN_ENTRY_SERVICE = "sand-supply";
+
 export function constructionRoutes({ businessPhone, siteUrl }) {
   const routes = [];
   const districtNames = constructionDistricts.map((d) => d.name).join(", ");
+  const towns = allTowns(constructionDistricts);
 
   // ------------------------------------------------------------ section hub
   routes.push({
@@ -168,7 +174,14 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
       priority: "0.9",
       isConstruction: true,
       constructionSteps: howItWorks,
-      constructionTowns: district.towns,
+      constructionTownsHeading: `Towns we cover in ${district.name}`,
+      constructionTowns: towns
+        .filter((town) => town.district.slug === district.slug)
+        .map((town) => ({
+          label: town.name,
+          href: `/${TOWN_ENTRY_SERVICE}-${town.slug}`,
+          note: town.note,
+        })),
       constructionLinks: allConstructionServices.map((s) => [
         `${s.name} in ${district.name}`,
         `/${s.slug}-${district.slug}`,
@@ -205,7 +218,14 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
         constructionSteps: howItWorks,
         constructionCompliance: service.compliance,
         constructionPartnerNote: service.partner ? PARTNER_NOTE : undefined,
-        constructionTowns: district.towns,
+        constructionTownsHeading: `${service.name} by town in ${district.name}`,
+        constructionTowns: towns
+          .filter((town) => town.district.slug === district.slug)
+          .map((town) => ({
+            label: `${service.name} in ${town.name}`,
+            href: `/${service.slug}-${town.slug}`,
+            note: town.note,
+          })),
         constructionParent: [`All ${service.name.toLowerCase()}`, `/construction/${service.slug}`],
         breadcrumbs: [
           ["Home", "/"],
@@ -230,8 +250,6 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
   // building mix, so "Sand Supply in Cherthala" talks about low-bearing sandy
   // soil and wider footings, while "Sand Supply in Ranni" talks about rock and
   // restricted hill access. Same category, genuinely different page.
-  const towns = allTowns(constructionDistricts);
-
   for (const service of allConstructionServices) {
     for (const town of towns) {
       const district = town.district;

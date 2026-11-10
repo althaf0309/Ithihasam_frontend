@@ -263,6 +263,11 @@ function ItemList({ service }: { service: ConstructionService }) {
 
 const DISTRICT_NAMES = constructionDistricts.map((d) => d.name).join(", ");
 
+// A district hub covers every category, so its town links need one to point at.
+// Sand is the highest-volume search of the eighteen, and every town page links
+// on to the rest of the categories from there.
+const TOWN_ENTRY_SERVICE = "sand-supply";
+
 const BADGE: Record<ConstructionService["kind"], string> = {
   material: "Material supply",
   sitework: "Site work",
@@ -329,13 +334,26 @@ export function ConstructionDetail() {
       >
         <ServiceGrid districtSlug={district.slug} />
 
-        <h2 className="mt-12 text-2xl font-bold text-foreground">Towns we deliver to</h2>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {district.towns.map((town) => (
-            <span key={town} className="rounded-full border bg-card px-3 py-1.5 text-sm text-foreground">
-              {town}
-            </span>
-          ))}
+        <h2 className="mt-12 text-2xl font-bold text-foreground">Towns we cover in {district.name}</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          What the ground and the access do to a job, town by town.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {constructionTowns
+            .filter((town) => town.districtSlug === district.slug)
+            .map((town) => (
+              <Link
+                key={town.slug}
+                to={`/${TOWN_ENTRY_SERVICE}-${town.slug}`}
+                className="rounded-xl border bg-card p-4 transition-colors hover:border-primary"
+              >
+                <p className="flex items-center gap-1.5 font-semibold text-foreground">
+                  <MapPin size={15} className="text-primary" />
+                  {town.name}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">{town.note}</p>
+              </Link>
+            ))}
         </div>
       </Shell>
     );
@@ -476,13 +494,28 @@ export function ConstructionServiceDistrict() {
     >
       <ItemList service={service} />
 
-      <h2 className="mt-12 text-2xl font-bold text-foreground">Towns we deliver to in {district.name}</h2>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {district.towns.map((town) => (
-          <span key={town} className="rounded-full border bg-card px-3 py-1.5 text-sm text-foreground">
-            {town}
-          </span>
-        ))}
+      {/* These link to the town pages. They were plain <span> text, which left
+          all 864 town pages orphaned: nothing on the site pointed at them, so
+          the only route in was the sitemap. */}
+      <h2 className="mt-12 text-2xl font-bold text-foreground">
+        {service.name} by town in {district.name}
+      </h2>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        {constructionTowns
+          .filter((town) => town.districtSlug === district.slug)
+          .map((town) => (
+            <Link
+              key={town.slug}
+              to={`/${service.slug}-${town.slug}`}
+              className="rounded-xl border bg-card p-4 transition-colors hover:border-primary"
+            >
+              <p className="flex items-center gap-1.5 font-semibold text-foreground">
+                <MapPin size={15} className="text-primary" />
+                {service.name} in {town.name}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">{town.note}</p>
+            </Link>
+          ))}
       </div>
 
       <DistrictGrid serviceSlug={service.slug} />

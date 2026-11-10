@@ -358,9 +358,22 @@ if (!constructionSource) {
     }
   }
 
+  const constructionPage = read("src/pages/Construction.tsx");
+
+  // Town pages must be linked from the district and service-district pages.
+  // 864 pages reachable only from the sitemap is 864 pages Google has little
+  // reason to crawl, and the links were plain <span> text until this check.
+  if (constructionPage) {
+    if (!/constructionTowns[\s\S]{0,400}?<Link/.test(constructionPage)) {
+      problems.push(
+        "src/pages/Construction.tsx renders towns without linking them — the town pages " +
+          "would be orphaned, reachable only from the sitemap",
+      );
+    }
+  }
+
   // A compliance obligation is only useful if it reaches the page, so the
   // component must render the field rather than merely carry the data.
-  const constructionPage = read("src/pages/Construction.tsx");
   if (constructionPage) {
     for (const field of ["compliance", "partner"]) {
       if (!constructionPage.includes(field)) {
