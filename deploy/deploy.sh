@@ -106,9 +106,12 @@ if [ -n "$DIRTY_IMAGES" ]; then
   git checkout -- $DIRTY_IMAGES
 fi
 
-OTHER_DIRTY=$(git status --porcelain -- . ':!public/og' | head -5)
+# Only MODIFIED TRACKED files can block a pull. Untracked files (??) cannot:
+# the server legitimately holds .env.production and deploy/__pycache__/, and
+# failing the deploy over those stopped a deploy that had nothing wrong.
+OTHER_DIRTY=$(git status --porcelain -- . ':!public/og' | grep -E '^( M|M |MM|A |D |R |C )' | head -5)
 if [ -n "$OTHER_DIRTY" ]; then
-  fail "The frontend checkout has uncommitted changes outside public/og:
+  fail "The frontend checkout has modified tracked files outside public/og:
 $OTHER_DIRTY
   Commit or stash them, then re-run. Nothing was discarded."
 fi
