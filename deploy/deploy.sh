@@ -109,7 +109,10 @@ fi
 # Only MODIFIED TRACKED files can block a pull. Untracked files (??) cannot:
 # the server legitimately holds .env.production and deploy/__pycache__/, and
 # failing the deploy over those stopped a deploy that had nothing wrong.
-OTHER_DIRTY=$(git status --porcelain -- . ':!public/og' | grep -E '^( M|M |MM|A |D |R |C )' | head -5)
+# `|| true` matters: the script runs under `set -e`, and grep exits 1 when it
+# finds nothing. On a clean checkout — the normal case — that killed the deploy
+# silently at this line, with no error and no "Deploy OK".
+OTHER_DIRTY=$(git status --porcelain -- . ':!public/og' | grep -E '^( M|M |MM|A |D |R |C )' | head -5 || true)
 if [ -n "$OTHER_DIRTY" ]; then
   fail "The frontend checkout has modified tracked files outside public/og:
 $OTHER_DIRTY
