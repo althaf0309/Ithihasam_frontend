@@ -1,4 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+/* Plus Jakarta Sans has no Malayalam glyphs, so every Malayalam string on the
+   site rendered as tofu boxes once the language toggle was switched. Noto Sans
+   Malayalam covers U+0D00-U+0D7F and is listed after the Latin face, so Latin
+   text is unaffected and only Malayalam falls through to it. */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -126,10 +131,10 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Malayalam', system-ui, sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Malayalam', system-ui, sans-serif;
   }
 }
 
