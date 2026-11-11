@@ -86,6 +86,33 @@ python manage.py collectstatic --noinput
 log "Frontend: pull, build"
 
 cd "$FRONTEND_DIR"
+
+# `npm run build` writes generated card images into public/og/. When one of
+# those files is tracked, the build dirties the working tree and the NEXT
+# deploy's `git pull` aborts with "local changes would be overwritten",
+# leaving the site on old code. That blocked three deploys in a row.
+#
+# generate-service-cards.mjs now skips tracked files, so this should no longer
+# happen, but a checkout dirtied before that fix shipped still needs clearing.
+# Only generated images are discarded, and only when they differ from the
+# committed version; any other local change still stops the deploy, because
+# throwing away an edit nobody asked about would be worse than failing.
+DIRTY_IMAGES=$(git status --porcelain -- public/og | awk '$1 == "M" { print $2 }')
+
+if [ -n "$DIRTY_IMAGES" ]; then
+  echo "  discarding build-regenerated images so the pull can proceed:"
+  echo "$DIRTY_IMAGES" | sed 's/^/    /'
+  # shellcheck disable=SC2086
+  git checkout -- $DIRTY_IMAGES
+fi
+
+OTHER_DIRTY=$(git status --porcelain -- . ':!public/og' | head -5)
+if [ -n "$OTHER_DIRTY" ]; then
+  fail "The frontend checkout has uncommitted changes outside public/og:
+$OTHER_DIRTY
+  Commit or stash them, then re-run. Nothing was discarded."
+fi
+
 git pull origin main
 npm ci
 
