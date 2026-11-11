@@ -37,6 +37,12 @@ const CARD_BY_ICON: Record<string, string> = {
   excavation: "/og/construction-excavation.jpg",
   steel: "/og/construction-steel.jpg",
   aggregate: "/og/construction-aggregate.jpg",
+  roofing: "/og/construction-roofing.jpg",
+  mep: "/og/construction-mep.jpg",
+  quarry: "/og/construction-quarry.jpg",
+  equipment: "/og/construction-equipment.jpg",
+  house: "/og/construction-house.jpg",
+  finishing: "/og/construction-finishing.jpg",
 };
 
 function cardFor(service?: ConstructionService) {

@@ -17,6 +17,9 @@ export const designCategories = [
   {
     slug: "architecture-planning",
     name: "Architecture & Building Planning",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Architecture & Planning",
     kind: "design",
     icon: "architecture",
     image: "/og/design/architecture-planning.jpg",
@@ -48,6 +51,9 @@ export const designCategories = [
   {
     slug: "structural-drafting",
     name: "Structural Engineering & Drafting",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Structural Drafting",
     kind: "design",
     icon: "drafting",
     image: "/og/design/structural-drafting.jpg",
@@ -111,6 +117,9 @@ export const designCategories = [
   {
     slug: "interior-execution",
     name: "Interior Execution & Installation",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Interior Execution",
     kind: "interior",
     icon: "interior",
     image: "/og/design/interior-execution.jpg",
@@ -141,6 +150,9 @@ export const designCategories = [
   {
     slug: "interior-decoration",
     name: "Interior Decoration",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Interior Decoration",
     kind: "interior",
     icon: "decoration",
     image: "/og/design/interior-decoration.jpg",
@@ -171,6 +183,9 @@ export const designCategories = [
   {
     slug: "theme-decoration",
     name: "Luxury & Theme-Based Decoration",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Theme Decoration",
     kind: "interior",
     icon: "decoration",
     image: "/og/design/theme-decoration.jpg",
@@ -198,6 +213,9 @@ export const designCategories = [
   {
     slug: "exterior-decoration",
     name: "Exterior Decoration",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Exterior Decoration",
     kind: "exterior",
     icon: "exterior",
     image: "/og/design/exterior-decoration.jpg",
@@ -225,6 +243,9 @@ export const designCategories = [
   {
     slug: "landscape-garden",
     name: "Landscape & Garden Design",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Landscape & Garden",
     kind: "exterior",
     icon: "landscape",
     image: "/og/design/landscape-garden.jpg",
@@ -253,6 +274,9 @@ export const designCategories = [
   {
     slug: "outdoor-lifestyle",
     name: "Outdoor Lifestyle & Recreation",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Outdoor Lifestyle",
     kind: "exterior",
     icon: "outdoor",
     image: "/og/design/outdoor-lifestyle.jpg",
@@ -279,6 +303,9 @@ export const designCategories = [
   {
     slug: "event-decoration",
     name: "Event & Festive Decoration",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Event Decoration",
     kind: "event",
     icon: "event",
     image: "/og/design/event-decoration.jpg",
@@ -304,9 +331,12 @@ export const designCategories = [
   {
     slug: "decor-products",
     name: "Decor Products & Installation",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Decor Products",
     kind: "event",
     icon: "decoration",
-    image: "/og/construction-materials.jpg",
+    image: "/og/design/decor-products.jpg",
     keywords: ["decorative lights kerala", "designer curtains", "wallpaper supply", "outdoor furniture"],
     intro:
       "Supply and fitting of the pieces a finished space needs, sourced against the design rather than picked off a shelf and made to fit afterwards.",
@@ -332,9 +362,12 @@ export const designCategories = [
   {
     slug: "property-consultancy",
     name: "Property & Project Consultancy",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Project Consultancy",
     kind: "consultancy",
     icon: "consultancy",
-    image: "/og/construction-site.jpg",
+    image: "/og/design/property-consultancy.jpg",
     keywords: ["land surveying kerala", "construction cost estimation", "project management", "building inspection"],
     intro:
       "Survey, estimate and supervision for people managing their own build. Independent of the contractor, so the advice is not tied to who is doing the work.",

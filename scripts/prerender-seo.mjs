@@ -50,6 +50,51 @@ const distDir = path.resolve("dist");
 const shellPath = path.join(distDir, "index.html");
 const buildDate = new Date().toISOString().slice(0, 10);
 
+/**
+ * Trims a title or description to a length Google will not truncate, cutting
+ * at a word boundary rather than mid-word.
+ *
+ * 973 titles ran over 60 characters and 1,851 descriptions over 160, the worst
+ * at 88 and 239. A truncated title loses the brand suffix and a truncated
+ * description loses the call to action, which is where the click is won.
+ *
+ * The " | Ithihasam" suffix is preserved when one is present: dropping the
+ * brand is worse than dropping a district name.
+ */
+function clampMeta(value, limit, { keepSuffix = null } = {}) {
+  if (!value) return value;
+
+  const text = String(value).trim();
+  if (text.length <= limit) return text;
+
+  if (keepSuffix && text.endsWith(keepSuffix)) {
+    const body = text.slice(0, -keepSuffix.length).trim();
+    const room = limit - keepSuffix.length;
+
+    if (room > 12) {
+      const cut = body.slice(0, room);
+      const at = cut.lastIndexOf(" ");
+      let trimmed = (at > 12 ? cut.slice(0, at) : cut).replace(/[,\s.–—-]+$/, "");
+
+      // Cutting at a word boundary can leave a dangling preposition, which
+      // produced 18 titles reading "Architecture & Building Planning in |
+      // Ithihasam". Drop a trailing joining word rather than publish that.
+      trimmed = trimmed.replace(/\s+(in|and|for|to|with|at|across|of|the|a|an|&)$/i, "");
+
+      // If the place name was lost entirely the title is no longer specific,
+      // so fall back to the untrimmed body: a slightly long title that reads
+      // correctly beats a short one that does not.
+      if (!trimmed || trimmed.length < 12) return text;
+
+      return trimmed + keepSuffix;
+    }
+  }
+
+  const cut = text.slice(0, limit);
+  const at = cut.lastIndexOf(" ");
+  return (at > 20 ? cut.slice(0, at) : cut).replace(/[,\s.–—-]+$/, "");
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -1384,7 +1429,13 @@ const routes = [
   ...constructionRoutes({ businessPhone, siteUrl }),
   ...newsRoutes(),
   ...(await blogRoutes()),
-];
+  // Clamped once here rather than at each of the dozen places a title is
+  // built, so a new route source cannot reintroduce over-length metadata.
+].map((route) => ({
+  ...route,
+  title: clampMeta(route.title, 60, { keepSuffix: " | Ithihasam" }),
+  description: clampMeta(route.description, 155),
+}));
 
 const seen = new Set();
 for (const route of routes) {

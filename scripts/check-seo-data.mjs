@@ -487,6 +487,35 @@ if (!constructionSource) {
 }
 
 
+// --- 8. Metadata lengths -----------------------------------------------------
+//
+// Titles over ~60 characters and descriptions over ~160 are truncated in the
+// SERP, which loses the brand suffix and the call to action. clampMeta in
+// prerender-seo.mjs trims both; this fails the build if that clamp is removed.
+{
+  const prerenderScript = read("scripts/prerender-seo.mjs");
+
+  if (prerenderScript && !prerenderScript.includes("clampMeta")) {
+    problems.push(
+      "scripts/prerender-seo.mjs: clampMeta is gone, so titles and descriptions are no " +
+        "longer trimmed and will be truncated in search results",
+    );
+  }
+
+  // Long category names need a shortName or their title overflows once the
+  // place name and " | Ithihasam" are appended.
+  for (const category of [...allConstructionServices, ...designCategories]) {
+    const used = category.shortName ?? category.name;
+    if (used.length > 26) {
+      problems.push(
+        `"${category.slug}": name "${used}" is ${used.length} characters, which overflows a ` +
+          "60-character title once the place name and brand suffix are added. Add a shortName.",
+      );
+    }
+  }
+}
+
+
 if (problems.length) {
   console.error("\nSEO route data is out of sync:\n");
   for (const problem of problems) console.error(`  - ${problem}`);

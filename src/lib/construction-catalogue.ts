@@ -186,7 +186,7 @@ export const constructionServices: ConstructionService[] = [
     "slug": "aggregate-quarry-supply",
     "name": "Metal, Stone & Quarry Supply",
     "kind": "material",
-    "icon": "aggregate",
+    "icon": "quarry",
     "items": [
       "Blue metal and crushed stone (6, 12, 20 and 40 mm)",
       "Crusher dust and quarry dust",
@@ -216,7 +216,7 @@ export const constructionServices: ConstructionService[] = [
     "slug": "roofing-materials-supply",
     "name": "Roofing Materials Supply",
     "kind": "material",
-    "icon": "materials",
+    "icon": "roofing",
     "items": [
       "GI roofing sheets",
       "Colour-coated roofing sheets",
@@ -230,7 +230,7 @@ export const constructionServices: ConstructionService[] = [
     "slug": "plumbing-electrical-supply",
     "name": "Plumbing & Electrical Materials",
     "kind": "material",
-    "icon": "materials",
+    "icon": "mep",
     "items": [
       "PVC, CPVC and UPVC pipes and fittings",
       "Electrical wires, cables and conduits",
@@ -244,7 +244,7 @@ export const constructionServices: ConstructionService[] = [
     "slug": "finishing-materials-supply",
     "name": "Flooring & Finishing Materials",
     "kind": "material",
-    "icon": "materials",
+    "icon": "finishing",
     "items": [
       "Tiles, granite and marble",
       "Paving blocks and wall cladding",
@@ -331,7 +331,7 @@ export const constructionServices: ConstructionService[] = [
     "slug": "equipment-rental",
     "name": "Equipment & Machinery Rental",
     "kind": "sitework",
-    "icon": "excavation",
+    "icon": "equipment",
     "items": [
       "JCB and backhoe loader — hourly or daily",
       "Excavator and mini-excavator — hourly or daily",
@@ -349,7 +349,7 @@ export const constructionServices: ConstructionService[] = [
     "slug": "house-construction",
     "name": "House Construction",
     "kind": "building",
-    "icon": "building",
+    "icon": "house",
     "items": [
       "Individual house construction",
       "Budget and standard house construction",
@@ -364,7 +364,7 @@ export const constructionServices: ConstructionService[] = [
     "slug": "flat-construction",
     "name": "Apartment & Flat Construction",
     "kind": "building",
-    "icon": "building",
+    "icon": "house",
     "items": [
       "Apartment and flat construction",
       "Multi-storey residential buildings",
@@ -713,7 +713,7 @@ export const constructionServices: ConstructionService[] = [
       "Nameplates and signage"
     ],
     "intro": "Supply and fitting of the pieces a finished space needs, sourced against the design rather than picked off a shelf and made to fit afterwards.",
-    "image": "/og/construction-materials.jpg"
+    "image": "/og/design/decor-products.jpg"
   },
   {
     "slug": "property-consultancy",
@@ -737,7 +737,7 @@ export const constructionServices: ConstructionService[] = [
     ],
     "intro": "Survey, estimate and supervision for people managing their own build. Independent of the contractor, so the advice is not tied to who is doing the work.",
     "compliance": "Property valuation for a bank or a legal purpose must be carried out by a registered valuer. We will say plainly when a valuation needs one rather than issuing an informal figure.",
-    "image": "/og/construction-site.jpg"
+    "image": "/og/design/property-consultancy.jpg"
   }
 ];
 

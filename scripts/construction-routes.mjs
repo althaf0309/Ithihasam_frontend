@@ -34,6 +34,12 @@ const CARD_BY_ICON = {
   excavation: "/og/construction-excavation.jpg",
   steel: "/og/construction-steel.jpg",
   aggregate: "/og/construction-aggregate.jpg",
+  roofing: "/og/construction-roofing.jpg",
+  mep: "/og/construction-mep.jpg",
+  quarry: "/og/construction-quarry.jpg",
+  equipment: "/og/construction-equipment.jpg",
+  house: "/og/construction-house.jpg",
+  finishing: "/og/construction-finishing.jpg",
 };
 
 function cardFor(service) {
@@ -148,7 +154,7 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
   for (const service of allCategories) {
     routes.push({
       path: `/construction/${service.slug}`,
-      title: `${service.name} in Kerala | Ithihasam`,
+      title: `${service.shortName ?? service.name} in Kerala | Ithihasam`,
       description: `${service.intro.slice(0, 130)}`,
       h1: `${service.name} in Kerala`,
       serviceName: service.name,
@@ -220,7 +226,7 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
     for (const district of constructionDistricts) {
       routes.push({
         path: `/${service.slug}-${district.slug}`,
-        title: `${service.name} in ${district.name} | Ithihasam`,
+        title: `${service.shortName ?? service.name} in ${district.name} District | Ithihasam`,
         description: `${service.name} across ${district.name} district. ${service.items.slice(0, 3).join(", ")}. Delivered rate quoted before you confirm.`,
         h1: `${service.name} in ${district.name}`,
         serviceName: service.name,
@@ -283,7 +289,7 @@ export function constructionRoutes({ businessPhone, siteUrl }) {
 
       routes.push({
         path: `/${service.slug}-${town.slug}`,
-        title: `${service.name} in ${town.name}, ${district.name} | Ithihasam`,
+        title: `${service.shortName ?? service.name} in ${town.name} | Ithihasam`,
         description:
           `${service.name} in ${town.name}. ${town.note} ` +
           `Delivered rate quoted before you confirm.`,

@@ -98,6 +98,9 @@ export const constructionCategories = [
   {
     slug: "cement-steel-supply",
     name: "Cement & Steel Supply",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Cement & Steel",
     kind: "material",
     icon: "steel",
     keywords: ["cement supply", "tmt bar supply", "steel supply", "opc ppc cement"],
@@ -114,8 +117,11 @@ export const constructionCategories = [
   {
     slug: "aggregate-quarry-supply",
     name: "Metal, Stone & Quarry Supply",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Metal & Quarry Supply",
     kind: "material",
-    icon: "aggregate",
+    icon: "quarry",
     keywords: ["blue metal supply", "crusher dust", "quarry dust", "aggregate supply", "boulder supply"],
     intro:
       "Graded aggregate and quarry material by the load: blue metal in 6, 12, 20 and 40 mm, crusher dust, rubble and boulders for foundation and filling work.",
@@ -131,6 +137,9 @@ export const constructionCategories = [
   {
     slug: "bricks-blocks-supply",
     name: "Bricks & Blocks Supply",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Bricks & Blocks",
     kind: "material",
     icon: "materials",
     keywords: ["aac block supply", "concrete block", "red bricks", "hollow blocks", "laterite stone"],
@@ -148,8 +157,11 @@ export const constructionCategories = [
   {
     slug: "roofing-materials-supply",
     name: "Roofing Materials Supply",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Roofing Materials",
     kind: "material",
-    icon: "materials",
+    icon: "roofing",
     keywords: ["roofing sheet supply", "gi sheet", "roofing tiles", "colour coated sheets"],
     intro:
       "Roofing sheets and tiles supplied to site. Colour-coated resists rust far longer than plain GI near the coast, which is worth the difference in most of Kerala.",
@@ -164,8 +176,11 @@ export const constructionCategories = [
   {
     slug: "plumbing-electrical-supply",
     name: "Plumbing & Electrical Materials",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Plumbing & Electrical",
     kind: "material",
-    icon: "materials",
+    icon: "mep",
     keywords: ["pvc pipe supply", "cpvc pipes", "electrical cable supply", "sanitaryware"],
     intro:
       "Plumbing and electrical materials supplied against your MEP layout, so sizes and fittings match the drawing instead of needing return trips mid-work.",
@@ -180,8 +195,11 @@ export const constructionCategories = [
   {
     slug: "finishing-materials-supply",
     name: "Flooring & Finishing Materials",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Finishing Materials",
     kind: "material",
-    icon: "materials",
+    icon: "finishing",
     keywords: ["tile supply", "granite supply", "plywood supply", "paint supply", "waterproofing chemicals"],
     intro:
       "Finishing materials for the final stages of a build, sourced to the specification and finish agreed rather than substituted on site.",
@@ -197,6 +215,9 @@ export const constructionCategories = [
   {
     slug: "ready-mix-concrete",
     name: "Ready-Mix Concrete & Precast",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Ready-Mix Concrete",
     kind: "material",
     icon: "materials",
     keywords: ["ready mix concrete", "rmc supply", "precast products"],
@@ -215,6 +236,9 @@ export const constructionCategories = [
   {
     slug: "demolition-services",
     name: "Demolition Services",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Demolition Services",
     kind: "sitework",
     icon: "demolition",
     keywords: ["building demolition", "house demolition", "rcc demolition", "wall demolition", "site clearance"],
@@ -238,6 +262,9 @@ export const constructionCategories = [
   {
     slug: "earthmoving-excavation",
     name: "Earthmoving & Excavation",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Earthmoving & Excavation",
     kind: "sitework",
     icon: "excavation",
     keywords: ["jcb rental", "excavator rental", "land levelling", "foundation digging", "plot cleaning"],
@@ -260,6 +287,9 @@ export const constructionCategories = [
   {
     slug: "construction-transport",
     name: "Construction Transportation",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Construction Transport",
     kind: "sitework",
     icon: "delivery",
     keywords: ["tipper lorry rental", "sand transportation", "bulk material delivery", "construction waste removal"],
@@ -280,8 +310,11 @@ export const constructionCategories = [
   {
     slug: "equipment-rental",
     name: "Equipment & Machinery Rental",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Equipment Rental",
     kind: "sitework",
-    icon: "excavation",
+    icon: "equipment",
     keywords: ["jcb rental", "excavator hire", "tipper rental", "road roller rental", "concrete mixer rental"],
     intro:
       "Site machinery arranged with operators we work with regularly across the district, hourly, daily or for the project depending on the machine.",
@@ -303,7 +336,7 @@ export const constructionCategories = [
     slug: "house-construction",
     name: "House Construction",
     kind: "building",
-    icon: "building",
+    icon: "house",
     keywords: ["house construction", "home builders", "villa construction", "budget house construction"],
     intro:
       "House construction from foundation to handover, with scope, materials and stage payments agreed in writing before anything starts.",
@@ -319,8 +352,11 @@ export const constructionCategories = [
   {
     slug: "flat-construction",
     name: "Apartment & Flat Construction",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Flat Construction",
     kind: "building",
-    icon: "building",
+    icon: "house",
     keywords: ["apartment construction", "flat construction", "multi storey building"],
     intro:
       "Apartment and multi-storey residential construction, coordinated with your structural consultant and the local body's approval process.",
@@ -335,6 +371,9 @@ export const constructionCategories = [
   {
     slug: "commercial-construction",
     name: "Commercial Construction",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Commercial Construction",
     kind: "building",
     icon: "building",
     keywords: ["commercial building construction", "shop construction", "warehouse construction"],
@@ -370,6 +409,9 @@ export const constructionCategories = [
   {
     slug: "building-renovation",
     name: "Renovation & Repair",
+    // Used in <title> only, so the tag stays under 60 characters with the
+    // place name and brand suffix attached. The full name is used on the page.
+    shortName: "Renovation & Repair",
     kind: "building",
     icon: "building",
     keywords: ["house renovation", "building renovation", "structural repair", "building extension"],
