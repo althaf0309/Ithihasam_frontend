@@ -458,6 +458,35 @@ if (!constructionSource) {
   }
 }
 
+// --- 7. Prerendered internal linking -----------------------------------------
+//
+// A page reachable only from the sitemap gives Google little reason to crawl
+// it. Before this check, a crawl from the prerendered homepage reached 364 of
+// 2,759 pages: the homepage linked to neither /services nor /construction,
+// because the header nav only exists after React mounts.
+{
+  const prerenderScript = read("scripts/prerender-seo.mjs");
+
+  if (prerenderScript) {
+    if (!prerenderScript.includes("sectionLinks")) {
+      problems.push(
+        "scripts/prerender-seo.mjs: the homepage route has no sectionLinks, so a crawler " +
+          "that does not run JavaScript cannot reach /services or /construction",
+      );
+    }
+
+    // The location pages are the only prerendered link into the 36 local
+    // template landings. Without them, 738 pages are sitemap-only.
+    if (!/localTemplates\s*\.filter/.test(prerenderScript)) {
+      problems.push(
+        "scripts/prerender-seo.mjs: location pages no longer link the local template " +
+          "landings, which orphans ~738 pages",
+      );
+    }
+  }
+}
+
+
 if (problems.length) {
   console.error("\nSEO route data is out of sync:\n");
   for (const problem of problems) console.error(`  - ${problem}`);

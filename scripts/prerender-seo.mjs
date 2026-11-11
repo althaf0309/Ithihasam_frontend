@@ -33,6 +33,9 @@ import {
 } from "./site-data.mjs";
 import { rentalRoutes, rentalSummary } from "./rental-routes.mjs";
 import { constructionRoutes, constructionSummary } from "./construction-routes.mjs";
+import { constructionCategories, constructionDistricts } from "./construction-data.mjs";
+import { designCategories } from "./design-data.mjs";
+import { allTowns } from "./construction-towns.mjs";
 import { rentalCities, rentalCatalogue, rentalPackages } from "./rental-data.mjs";
 
 // The districts marketed as separate service areas. Mirrors serviceDistricts in
@@ -230,10 +233,24 @@ function locationRoutes() {
     // Listing the services as text left these pages with four internal links.
     // Linking each one gives the visitor a route to their service in their
     // town, and passes authority down to the page that can actually rank.
-    districtServiceLinks: services.map((service) => [
-      `${service.name} in ${area.name}`,
-      `/${service.slug}-${area.slug}`,
-    ]),
+    districtServiceLinks: [
+      ...services.map((service) => [`${service.name} in ${area.name}`, `/${service.slug}-${area.slug}`]),
+      // The 36 local templates (ac-repair, tv-repair, geyser-repair and the
+      // rest) had no internal link anywhere on the site: a crawl from the
+      // homepage reached none of them, so 738 landing pages were sitemap-only.
+      // Synonym prefixes are skipped because they canonicalise to a primary
+      // and do not need the link equity.
+      ...localTemplates
+        .filter(([prefix]) => !duplicateTemplateCanonicals[prefix])
+        .map(([prefix, templateName]) => [
+          `${templateName} in ${area.name}`,
+          `/${prefix}-${area.slug}`,
+        ]),
+    ].filter(
+      // A template prefix can equal a service slug, which would emit the same
+      // href twice.
+      ([, href], index, all) => all.findIndex(([, other]) => other === href) === index,
+    ),
     image: "/og/default.jpg",
     priority: "0.85",
     isLocation: true,
@@ -370,6 +387,29 @@ function staticRoutes() {
       image: "/og/default.jpg",
       priority: "1.0",
       isHome: true,
+      // The prerendered homepage previously linked only to location pages, so
+      // a crawler that does not run JavaScript never reached /services or
+      // /construction — the header nav only exists after React mounts. A crawl
+      // from the homepage plateaued at 364 of 2,759 pages, leaving 87% of the
+      // site sitemap-only. These links open the path to every section.
+      sectionLinks: [
+        ["All home maintenance services", "/services"],
+        ["Construction materials and building services", "/construction"],
+        ["Furniture and appliance rental", "/rentals"],
+        ["About Ithihasam", "/about"],
+        ["Contact us", "/contact"],
+        ["Blog", "/blog"],
+        ["News", "/news"],
+        // The three district landing pages. These are the marketing URLs and
+        // win the canonical over /locations/<area>, so they need a link.
+        ...districtLandings.map((landing) => [`Services in ${landing.name}`, `/${landing.slug}`]),
+        // Every category hub, so the crawl reaches each section's subtree in
+        // two hops from the homepage rather than not at all.
+        ...[...constructionCategories, ...designCategories].map((category) => [
+          category.name,
+          `/construction/${category.slug}`,
+        ]),
+      ],
       breadcrumbs: [["Home", "/"]],
       faqs: [
         ["How do I book a service?", "You can book through the website form, call us directly, or message us on WhatsApp. We confirm your booking and coordinate a technician for your area."],
@@ -1091,6 +1131,7 @@ function contentFor(route) {
       ${route.neighbours?.length ? `<h2>Nearby areas we also cover</h2><ul>${route.neighbours.map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul>` : ""}
       ${route.areaHubPath ? `<p><a href="${escapeHtml(route.areaHubPath)}">All Ithihasam services in ${escapeHtml(route.areaName ?? "this area")}</a></p>` : ""}
       ${route.isRental ? rentalSectionsHtml(route) : ""}
+      ${route.sectionLinks?.length ? `<h2>Explore Ithihasam</h2><ul>${route.sectionLinks.map(([label, href]) => `<li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a></li>`).join("")}</ul>` : ""}
       ${route.isConstruction ? constructionSectionsHtml(route) : ""}
       ${route.isRental || route.isConstruction ? "" : `<h2>Service areas</h2>`}
       ${route.isRental || route.isConstruction ? "" : `<p>${route.areaName ? `Ithihasam also covers nearby towns across ${escapeHtml(route.district ?? "Kerala")}.` : `Book Ithihasam services across ${escapeHtml(areaCoverageLine)}.`}</p>`}
@@ -1281,10 +1322,45 @@ rent items rather than booking a repair, and the rental cities are different.
 
 ${rentalCities.map((city) => `- [Furniture rental in ${city.name}](${siteUrl}/rentals/${city.slug}) — ${city.district}`).join("\n")}
 
+## Construction, materials and building services
+
+Ithihasam supplies construction material and takes building work across six
+Kerala districts. This is a separate offering from the home maintenance
+services above: it is sold by the lorry load or by contract rather than as a
+booked visit, and it covers a wider area.
+
+- Construction hub: ${siteUrl}/construction
+- Districts covered: ${constructionDistricts.map((d) => d.name).join(", ")}
+- Towns covered: ${allTowns(constructionDistricts).length} towns across those districts
+- Material supply, site work and machinery are arranged with suppliers and
+  operators in the district; Ithihasam coordinates the hire, the scheduling
+  and the rate.
+- River sand is supplied only from legally authorised sources with transit
+  documentation. Demolition needs local-body permission. Projects requiring
+  RERA registration are advertised for sale only once registered.
+
+${constructionCategories.map((c) => `- [${c.name}](${siteUrl}/construction/${c.slug}): ${c.intro}`).join("\n")}
+
+## Design, interiors and decoration
+
+Design and finishing work, sold by the room, the project or the event rather
+than by the load. Same six districts and towns as the construction section.
+
+${designCategories.map((c) => `- [${c.name}](${siteUrl}/construction/${c.slug}): ${c.intro}`).join("\n")}
+
+- Building permit drawings must be signed by a licensed engineer or architect
+  registered with the local body.
+- Structural drawings are issued only under a qualified structural engineer's seal.
+- Property valuation for a bank or legal purpose requires a registered valuer.
+
 ## Notes for summarisation
 
-- Ithihasam serves two Kerala districts: Kannur and Thrissur. Each has its own
-  location and service pages; they are separate service areas, not one combined region.
+- Ithihasam has two service footprints, and they are different sizes. Home
+  maintenance (electrical, plumbing, painting, appliance, carpentry, roofing,
+  cleaning, pest control, smart home) covers Kannur and Thrissur districts.
+  Construction, materials, interiors and decoration cover six districts:
+  ${constructionDistricts.map((d) => d.name).join(", ")}. Do not merge the two
+  into one coverage claim.
 - Pricing is quoted per job after the scope is confirmed; no fixed public price list exists.
 - Sitemap: ${siteUrl}/sitemap.xml
 - Feed: ${siteUrl}/feed.xml
