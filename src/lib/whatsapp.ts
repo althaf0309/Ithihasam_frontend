@@ -1,9 +1,9 @@
 import { BUSINESS_WHATSAPP } from "@/lib/site";
 
 /**
- * Builds a wa.me link that arrives with the enquiry already written out.
+ * Builds a click-to-chat link that arrives with the enquiry already written out.
  *
- * A bare wa.me link opens an empty chat, so the customer has to type what they
+ * A bare link opens an empty chat, so the customer has to type what they
  * want and we have no idea which page they came from. Prefilling the message
  * means the first thing we see is the service and the location, which is most
  * of what is needed to quote.
@@ -60,11 +60,18 @@ export function whatsappMessage({ service, place, path }: WhatsAppEnquiry = {}) 
 }
 
 /**
- * A wa.me URL with the message prefilled.
+ * A click-to-chat URL with the message prefilled.
+ *
+ * Uses api.whatsapp.com/send rather than wa.me. Both work on the mobile app,
+ * but wa.me frequently drops the ?text= payload on WhatsApp Web and the
+ * desktop client, which opened an empty chat even though the link was correct.
+ * api.whatsapp.com is the documented click-to-chat endpoint and carries the
+ * text through on all three.
  *
  * Passing no enquiry gives the generic greeting, so a header or footer button
  * still opens a chat with something in it rather than a blank box.
  */
 export function whatsappLink(enquiry: WhatsAppEnquiry = {}) {
-  return `https://wa.me/${BUSINESS_WHATSAPP}?text=${encodeURIComponent(whatsappMessage(enquiry))}`;
+  const text = encodeURIComponent(whatsappMessage(enquiry));
+  return `https://api.whatsapp.com/send?phone=${BUSINESS_WHATSAPP}&text=${text}`;
 }

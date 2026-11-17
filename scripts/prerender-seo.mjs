@@ -124,8 +124,15 @@ function whatsappHref(route, phonePlain) {
   const lines = [malayalam, english];
   if (route.path && route.path !== "/") lines.push("", `(ithihasam.in${route.path})`);
 
+  // api.whatsapp.com/send rather than wa.me: both work in the mobile app, but
+  // wa.me frequently drops ?text= on WhatsApp Web and the desktop client, so
+  // the chat opened empty even though the link was correct.
   const text = lines.join(String.fromCharCode(10));
-  return `https://wa.me/${phonePlain.replace("+", "")}?text=${encodeURIComponent(text)}`;
+  const number = phonePlain.replace("+", "");
+  // A plain "&" here: the caller passes this through escapeHtml, which turns
+  // it into &amp;. Writing &amp; here produced &amp;amp; and the text param
+  // was lost.
+  return `https://api.whatsapp.com/send?phone=${number}&text=${encodeURIComponent(text)}`;
 }
 
 function escapeHtml(value) {

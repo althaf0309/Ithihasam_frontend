@@ -38,20 +38,34 @@ describe("whatsapp enquiry link", () => {
     expect(whatsappMessage({ service: "x", path: "/" })).not.toContain("ithihasam.in/");
   });
 
-  it("builds a wa.me url with the text encoded", () => {
+  it("uses the click-to-chat endpoint that works on web and desktop", () => {
+    // wa.me drops ?text= on WhatsApp Web and the desktop client, which opened
+    // an empty chat even though the link itself was correct.
     const url = whatsappLink({ service: "Sand Supply", place: "Cherthala" });
 
-    expect(url.startsWith("https://wa.me/")).toBe(true);
-    expect(url).toContain("?text=");
+    expect(url.startsWith("https://api.whatsapp.com/send?")).toBe(true);
+    expect(url).not.toContain("wa.me");
+    expect(url).toContain("&text=");
 
     // A raw newline or space in a URL breaks the link in some clients.
-    const query = url.slice(url.indexOf("?text=") + 6);
+    const query = url.slice(url.indexOf("&text=") + 6);
     expect(query).not.toMatch(/[\s\n]/);
 
     // And it must decode back to the message the customer should see.
     expect(decodeURIComponent(query)).toBe(
       whatsappMessage({ service: "Sand Supply", place: "Cherthala" }),
     );
+  });
+
+  it("survives a service name containing an ampersand", () => {
+    // "Cement & Steel Supply" is a real category. An unencoded & would end the
+    // text parameter early and the message would arrive truncated or empty.
+    const url = whatsappLink({ service: "Cement & Steel Supply" });
+    const parsed = new URL(url);
+
+    expect(parsed.searchParams.get("phone")).toBeTruthy();
+    expect(parsed.searchParams.get("text")).toContain("Cement & Steel Supply");
+    expect(url).not.toContain("&amp;");
   });
 
   it("never produces a link without a message", () => {
@@ -63,7 +77,7 @@ describe("whatsapp enquiry link", () => {
       { service: "Demolition Services", place: "Ranni", path: "/demolition-services-ranni" },
     ]) {
       const url = whatsappLink(enquiry);
-      const text = decodeURIComponent(url.split("?text=")[1] ?? "");
+      const text = new URL(url).searchParams.get("text") ?? "";
       expect(text.length, `empty message for ${JSON.stringify(enquiry)}`).toBeGreaterThan(20);
     }
   });
