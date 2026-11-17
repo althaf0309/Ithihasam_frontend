@@ -2,7 +2,8 @@ import { ArrowRight, MessageCircle, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import type { LucideIcon } from "lucide-react";
-import { BUSINESS_PHONE, BUSINESS_WHATSAPP } from "@/lib/site";
+import { BUSINESS_PHONE } from "@/lib/site";
+import { whatsappLink } from "@/lib/whatsapp";
 import { useLang } from "@/contexts/LangContext";
 
 interface Props {
@@ -60,7 +61,7 @@ export function ServiceCard({ title, description, icon: Icon, slug, image, href,
             <a href={`tel:${BUSINESS_PHONE}`}><Phone size={14} /></a>
           </Button>
           <Button size="sm" asChild className="bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90">
-            <a href={`https://wa.me/${BUSINESS_WHATSAPP}`} target="_blank" rel="noopener noreferrer"><MessageCircle size={14} /></a>
+            <a href={whatsappLink({ service: title })} target="_blank" rel="noopener noreferrer"><MessageCircle size={14} /></a>
           </Button>
         </div>
       </div>

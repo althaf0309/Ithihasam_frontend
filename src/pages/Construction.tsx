@@ -64,6 +64,8 @@ function Shell({
   compliance,
   partner,
   image,
+  waService,
+  waPlace,
   children,
 }: {
   title: string;
@@ -79,6 +81,10 @@ function Shell({
   partner?: boolean;
   /** The category card for this page. Falls back to the materials card. */
   image?: string;
+  /** Service name put into the prefilled WhatsApp message. */
+  waService?: string;
+  /** Town or district put into the prefilled WhatsApp message. */
+  waPlace?: string;
   children: React.ReactNode;
 }) {
   const banner = image ?? CARD_BY_ICON.materials;
@@ -142,7 +148,7 @@ function Shell({
           )}
 
           <div className="mt-6">
-            <ContactCTAButtons size="lg" showLabels />
+            <ContactCTAButtons size="lg" showLabels service={waService} place={waPlace} />
           </div>
         </div>
       </section>
@@ -313,6 +319,7 @@ export function ConstructionHub() {
       badge="Materials & building"
       h1="Construction Materials and Building Services in Kerala"
       intro={`Ithihasam supplies sand, aggregate, cement, steel, blocks and finishing materials by the load, and takes house, apartment and commercial construction across ${DISTRICT_NAMES}.`}
+      waService="construction materials and building services"
     >
       <ServiceGrid />
       <DistrictGrid />
@@ -340,6 +347,7 @@ export function ConstructionDetail() {
         compliance={service.compliance}
         partner={service.partner}
         image={cardFor(service)}
+        waService={service.name}
       >
         <ItemList service={service} />
         <DistrictGrid serviceSlug={service.slug} />
@@ -358,6 +366,8 @@ export function ConstructionDetail() {
         badge={`${district.name} district`}
         h1={`Construction Materials and Building Services in ${district.name}`}
         intro={`Ithihasam supplies construction materials and takes building work across ${district.name} district — ${district.context}. Most local demand is for ${district.demand}.`}
+        waService="construction materials and building services"
+        waPlace={district.name}
       >
         <ServiceGrid districtSlug={district.slug} />
 
@@ -445,6 +455,8 @@ export function ConstructionServiceDistrict() {
         compliance={service.compliance}
         partner={service.partner}
         image={cardFor(service)}
+        waService={service.name}
+        waPlace={town.name}
       >
         <ItemList service={service} />
 
@@ -518,6 +530,8 @@ export function ConstructionServiceDistrict() {
       compliance={service.compliance}
       partner={service.partner}
       image={cardFor(service)}
+      waService={service.name}
+      waPlace={district.name}
     >
       <ItemList service={service} />
 

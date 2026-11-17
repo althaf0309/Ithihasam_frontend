@@ -123,7 +123,7 @@ export default function LocationDetail() {
               </span>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ContactCTAButtons size="lg" showLabels />
+              <ContactCTAButtons size="lg" showLabels place={area.name} />
             </div>
           </div>
         </div>

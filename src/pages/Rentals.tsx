@@ -35,6 +35,7 @@ function Shell({
   intro,
   gallery,
   banner,
+  waPlace,
   children,
 }: {
   title: string;
@@ -47,6 +48,8 @@ function Shell({
   intro: string;
   gallery: { src: string; alt: string }[];
   banner: { src: string; alt: string };
+  /** City or locality put into the prefilled WhatsApp message. */
+  waPlace?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -88,7 +91,7 @@ function Shell({
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
             <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">{intro}</p>
             <div className="mt-6">
-              <ContactCTAButtons size="lg" showLabels />
+              <ContactCTAButtons size="lg" showLabels service="furniture and appliance rental" place={waPlace} />
             </div>
           </motion.div>
         </div>
@@ -121,7 +124,7 @@ function Shell({
               before you book — call or WhatsApp us and we will quote for your exact requirement.
             </p>
             <div className="mt-4">
-              <ContactCTAButtons showLabels />
+              <ContactCTAButtons showLabels service="furniture and appliance rental" place={waPlace} />
             </div>
           </div>
         </div>
@@ -271,6 +274,7 @@ export function RentalCityPage() {
       crumbs={[{ label: "Home", to: "/" }, { label: "Rentals", to: "/rentals" }, { label: city.name }]}
       badge={city.district}
       h1={`Furniture and Appliance Rental in ${city.name}`}
+      waPlace={city.name}
       intro={`Ithihasam rents furniture and appliances on a monthly subscription across ${city.name} (${city.aka}). Demand here comes from ${city.demandDriver}. Most of our ${city.name} rentals go into ${city.propertyMix}.`}
       gallery={gallery()}
       banner={RENTAL_IMAGES.appliance}
@@ -302,6 +306,7 @@ export function RentalLocalityPage() {
 
   return (
     <Shell
+      waPlace={locality.name}
       title={`Furniture Rental in ${locality.name}, ${city.name} | Ithihasam`}
       description={`Monthly furniture and appliance rental in ${locality.name}, ${city.name}. Beds, sofas, wardrobes and appliances delivered and installed.`}
       keywords={createKeywordSet(`furniture rental ${locality.name}`, `furniture on rent ${locality.name}`, `furniture rental ${city.name}`, `appliance rental ${locality.name}`)}

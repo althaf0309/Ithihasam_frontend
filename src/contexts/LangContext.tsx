@@ -84,6 +84,7 @@ const translations: Record<string, Record<Lang, string>> = {
   "booking.submitting": { en: "Submitting...", ml: "സമർപ്പിക്കുന്നു..." },
   "booking.success": { en: "Booking submitted successfully. We'll contact you shortly.", ml: "ബുക്കിംഗ് വിജയകരമായി സമർപ്പിച്ചു. ഉടൻ തന്നെ ഞങ്ങൾ നിങ്ങളെ ബന്ധപ്പെടും." },
   "booking.error": { en: "We couldn't submit your booking right now. Please try again.", ml: "ഇപ്പോൾ ബുക്കിംഗ് സമർപ്പിക്കാൻ കഴിഞ്ഞില്ല. ദയവായി വീണ്ടും ശ്രമിക്കൂ." },
+  "booking.incomplete": { en: "Please complete the highlighted fields before submitting.", ml: "സമർപ്പിക്കുന്നതിന് മുൻപ് അടയാളപ്പെടുത്തിയ വിവരങ്ങൾ പൂരിപ്പിക്കുക." },
 
   "contact.callNow": { en: "Call Now", ml: "ഇപ്പോൾ വിളിക്കൂ" },
   "contact.whatsapp": { en: "WhatsApp", ml: "വാട്ട്സ്ആപ്പ്" },

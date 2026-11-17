@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useLang } from "@/contexts/LangContext";
 import { footerServiceSlugs, getLocalizedText, serviceCatalogBySlug } from "@/lib/service-catalog";
-import { BUSINESS_EMAIL, BUSINESS_LOCATION, BUSINESS_PHONE, BUSINESS_PHONE_DISPLAY, BUSINESS_WHATSAPP } from "@/lib/site";
+import { BUSINESS_EMAIL, BUSINESS_LOCATION, BUSINESS_PHONE, BUSINESS_PHONE_DISPLAY } from "@/lib/site";
+import { whatsappLink } from "@/lib/whatsapp";
 
 export function Footer() {
   const { lang, t } = useLang();
@@ -64,7 +65,7 @@ export function Footer() {
             </li>
             <li className="flex items-center gap-2">
               <MessageCircle size={14} className="text-whatsapp" />
-              <a href={`https://wa.me/${BUSINESS_WHATSAPP}`} target="_blank" rel="noopener noreferrer" className="hover:text-whatsapp">
+              <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="hover:text-whatsapp">
                 {t("footer.whatsappUs")}
               </a>
             </li>

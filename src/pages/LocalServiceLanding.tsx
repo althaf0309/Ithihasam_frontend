@@ -95,7 +95,7 @@ export default function LocalServiceLanding() {
               {page.metaDescription}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ContactCTAButtons size="lg" showLabels />
+              <ContactCTAButtons size="lg" showLabels service={page.template.serviceName} place={page.area.name} />
               <Link
                 to="#booking"
                 className="inline-flex items-center rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"

@@ -168,7 +168,22 @@ export function QuickBookingForm({
 
     const firstInvalid = Object.keys(nextErrors)[0];
     if (firstInvalid) {
-      document.getElementById(`${fieldId}-${firstInvalid}`)?.focus();
+      // Inline messages alone were easy to miss: if the first invalid field
+      // was scrolled out of view, pressing Submit appeared to do nothing at
+      // all. The toast says something happened, and the scroll puts the field
+      // on screen before it takes focus.
+      // Scrolling is a convenience, so it must not be able to throw: an
+      // exception here would skip the toast below and the submit would once
+      // again look like it did nothing. jsdom has no scrollIntoView at all.
+      const field = document.getElementById(`${fieldId}-${firstInvalid}`);
+      try {
+        field?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+      } catch {
+        // Ignore: the focus call below still brings the field into view.
+      }
+      field?.focus({ preventScroll: true });
+
+      toast.error(t("booking.incomplete"));
       return;
     }
 

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { whatsappLink } from "@/lib/whatsapp";
 import { Clock3, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -10,7 +11,6 @@ import {
   BUSINESS_LOCATION,
   BUSINESS_PHONE,
   BUSINESS_PHONE_DISPLAY,
-  BUSINESS_WHATSAPP,
 } from "@/lib/site";
 
 const contactHighlights = [
@@ -132,7 +132,7 @@ export default function Contact() {
                 <p>
                   <span className="font-semibold text-foreground">WhatsApp:</span>{" "}
                   <a
-                    href={`https://wa.me/${BUSINESS_WHATSAPP}`}
+                    href={whatsappLink()}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-whatsapp"

@@ -68,6 +68,27 @@ describe("QuickBookingForm", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
+  it("warns with a toast when required fields are empty", async () => {
+    // Inline errors alone were easy to miss: if the first invalid field was
+    // scrolled out of view, pressing Submit looked like it did nothing.
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+    const user = userEvent.setup({ advanceTimers: () => {} });
+
+    renderForm();
+
+    vi.spyOn(Date, "now").mockReturnValue(1_010_000);
+    await user.click(screen.getByRole("button", { name: /submit booking/i }));
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalled());
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    // And every empty required field is still reported inline. An empty form
+    // has several, so this asserts on the set rather than a single alert.
+    const alerts = await screen.findAllByRole("alert");
+    expect(alerts.length).toBeGreaterThan(1);
+  });
+
   it("posts to the Django API, which is the system of record for leads", async () => {
     const fetchSpy = vi.fn().mockResolvedValue({
       ok: true,

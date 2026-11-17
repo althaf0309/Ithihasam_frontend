@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLang } from "@/contexts/LangContext";
-import { BUSINESS_WHATSAPP } from "@/lib/site";
+import { whatsappLink } from "@/lib/whatsapp";
 import { ResponsiveImage, heroPreloadHref } from "@/components/ResponsiveImage";
 
 import bannerElectrical from "@/assets/banner-electrical.jpg";
@@ -153,7 +153,7 @@ export function HeroSection() {
               asChild
               className="border-whatsapp/50 bg-whatsapp/10 text-whatsapp backdrop-blur-sm hover:bg-whatsapp hover:text-whatsapp-foreground"
             >
-              <a href={`https://wa.me/${BUSINESS_WHATSAPP}`} target="_blank" rel="noopener noreferrer">
+              <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
                 <MessageCircle size={18} className="mr-2" />
                 {t("hero.whatsapp")}
               </a>

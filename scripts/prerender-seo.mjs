@@ -95,6 +95,39 @@ function clampMeta(value, limit, { keepSuffix = null } = {}) {
   return (at > 20 ? cut.slice(0, at) : cut).replace(/[,\s.–—-]+$/, "");
 }
 
+/**
+ * A wa.me link carrying the enquiry, matching src/lib/whatsapp.ts.
+ *
+ * The prerendered HTML is what a visitor sees before React mounts and what a
+ * crawler indexes, so a bare link here would still open an empty chat for
+ * anyone who tapped before hydration.
+ *
+ * Both languages are sent because whoever answers may not be the person who
+ * set the page language.
+ */
+function whatsappHref(route, phonePlain) {
+  const service = route.serviceName;
+  const place = route.areaName;
+
+  const malayalam = service && place
+    ? `എനിക്ക് ${place}-ൽ ${service} വേണം.`
+    : service
+      ? `എനിക്ക് ${service} സംബന്ധിച്ച് അന്വേഷിക്കണം.`
+      : "എനിക്ക് ഇത്തിഹാസത്തിന്റെ സേവനങ്ങളെക്കുറിച്ച് അറിയണം.";
+
+  const english = service && place
+    ? `I need ${service} in ${place}.`
+    : service
+      ? `I would like to enquire about ${service}.`
+      : "I would like to know more about Ithihasam services.";
+
+  const lines = [malayalam, english];
+  if (route.path && route.path !== "/") lines.push("", `(ithihasam.in${route.path})`);
+
+  const text = lines.join(String.fromCharCode(10));
+  return `https://wa.me/${phonePlain.replace("+", "")}?text=${encodeURIComponent(text)}`;
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -1192,7 +1225,7 @@ function contentFor(route) {
       <h2>Contact Ithihasam</h2>
       <p>
         <a href="tel:${escapeHtml(businessPhonePlain)}">${escapeHtml(businessPhone)}</a> &middot;
-        <a href="https://wa.me/${escapeHtml(businessPhonePlain.replace("+", ""))}">WhatsApp</a> &middot;
+        <a href="${escapeHtml(whatsappHref(route, businessPhonePlain))}">WhatsApp</a> &middot;
         <a href="mailto:${escapeHtml(businessEmail)}">${escapeHtml(businessEmail)}</a>
       </p>
       <address>${escapeHtml(businessAddress)}, ${escapeHtml(businessRegion)}, India</address>

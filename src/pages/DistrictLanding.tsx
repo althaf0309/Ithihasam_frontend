@@ -82,7 +82,7 @@ export default function DistrictLanding() {
             </p>
 
             <div className="mt-6">
-              <ContactCTAButtons size="lg" showLabels />
+              <ContactCTAButtons size="lg" showLabels place={entry.name} />
             </div>
           </motion.div>
         </div>

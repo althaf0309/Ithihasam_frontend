@@ -2,15 +2,22 @@ import { MessageCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trackContactClick } from "@/lib/analytics";
 import { useLang } from "@/contexts/LangContext";
-import { BUSINESS_PHONE, BUSINESS_WHATSAPP } from "@/lib/site";
+import { useLocation } from "react-router-dom";
+import { BUSINESS_PHONE } from "@/lib/site";
+import { whatsappLink } from "@/lib/whatsapp";
 
 interface Props {
   size?: "sm" | "default" | "lg";
   showLabels?: boolean;
+  /** Service or category name, so the WhatsApp message says what is wanted. */
+  service?: string;
+  /** Town or district, when the page is location-specific. */
+  place?: string;
 }
 
-export function ContactCTAButtons({ size = "default", showLabels = false }: Props) {
+export function ContactCTAButtons({ size = "default", showLabels = false, service, place }: Props) {
   const { t } = useLang();
+  const { pathname } = useLocation();
 
   return (
     <div className="flex items-center gap-2">
@@ -31,7 +38,7 @@ export function ContactCTAButtons({ size = "default", showLabels = false }: Prop
         className="bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90"
       >
         <a
-          href={`https://wa.me/${BUSINESS_WHATSAPP}`}
+          href={whatsappLink({ service, place, path: pathname })}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackContactClick("whatsapp")}
