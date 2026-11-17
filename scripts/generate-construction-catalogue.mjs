@@ -73,6 +73,8 @@ export interface ConstructionService {
   partner?: boolean;
   /** Explicit card image; design categories set this, construction maps by icon. */
   image?: string;
+  /** Malayalam name, used in the prefilled WhatsApp message. */
+  nameMl?: string;
 }
 `;
 
@@ -92,6 +94,7 @@ export const constructionServices: ConstructionService[] = ${JSON.stringify(
     ...(c.compliance ? { compliance: c.compliance } : {}),
     ...(c.partner ? { partner: true } : {}),
     ...(c.image ? { image: c.image } : {}),
+    ...(c.nameMl ? { nameMl: c.nameMl } : {}),
   })),
   null,
   2,

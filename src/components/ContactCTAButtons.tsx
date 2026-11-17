@@ -11,11 +11,13 @@ interface Props {
   showLabels?: boolean;
   /** Service or category name, so the WhatsApp message says what is wanted. */
   service?: string;
+  /** The same name in Malayalam, for the Malayalam half of that message. */
+  serviceMl?: string;
   /** Town or district, when the page is location-specific. */
   place?: string;
 }
 
-export function ContactCTAButtons({ size = "default", showLabels = false, service, place }: Props) {
+export function ContactCTAButtons({ size = "default", showLabels = false, service, serviceMl, place }: Props) {
   const { t } = useLang();
   const { pathname } = useLocation();
 
@@ -38,7 +40,7 @@ export function ContactCTAButtons({ size = "default", showLabels = false, servic
         className="bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp/90"
       >
         <a
-          href={whatsappLink({ service, place, path: pathname })}
+          href={whatsappLink({ service, serviceMl, place, path: pathname })}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackContactClick("whatsapp")}

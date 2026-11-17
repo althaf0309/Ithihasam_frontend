@@ -13,6 +13,30 @@ describe("whatsapp enquiry link", () => {
     expect(message).toContain("I need furniture rental in Kochi.");
   });
 
+  it("uses the Malayalam name in the Malayalam line, English in the English one", () => {
+    // Without serviceMl the Malayalam sentence embedded an English category
+    // name and read as half-translated.
+    const message = whatsappMessage({
+      service: "Cement & Steel Supply",
+      serviceMl: "സിമന്റ് & സ്റ്റീൽ വിതരണം",
+    });
+
+    const [malayalamLine, englishLine] = message.split(String.fromCharCode(10));
+
+    expect(malayalamLine).toContain("സിമന്റ് & സ്റ്റീൽ വിതരണം");
+    expect(malayalamLine).not.toContain("Cement");
+    expect(englishLine).toContain("Cement & Steel Supply");
+    expect(englishLine).not.toMatch(/[ഀ-ൿ]/);
+  });
+
+  it("falls back to the English name when no Malayalam one exists", () => {
+    const message = whatsappMessage({ service: "Ready-Mix Concrete" });
+
+    // Still bilingual in sentence structure, just with the English noun.
+    expect(message.split(String.fromCharCode(10))[0]).toMatch(/[ഀ-ൿ]/);
+    expect(message).toContain("Ready-Mix Concrete");
+  });
+
   it("still says something useful with no service or place", () => {
     // The header and footer buttons have no page context. An empty chat is
     // what this change exists to avoid, so the generic case must not be blank.

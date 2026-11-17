@@ -80,6 +80,9 @@ export const constructionCategories = [
   {
     slug: "sand-supply",
     name: "Sand Supply",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "മണൽ വിതരണം",
     kind: "material",
     icon: "materials",
     keywords: ["m sand supply", "p sand supply", "river sand", "sand delivery"],
@@ -98,6 +101,9 @@ export const constructionCategories = [
   {
     slug: "cement-steel-supply",
     name: "Cement & Steel Supply",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "സിമന്റ് & സ്റ്റീൽ വിതരണം",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Cement & Steel",
@@ -117,6 +123,9 @@ export const constructionCategories = [
   {
     slug: "aggregate-quarry-supply",
     name: "Metal, Stone & Quarry Supply",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "മെറ്റൽ, കല്ല് & ക്വാറി വിതരണം",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Metal & Quarry Supply",
@@ -137,6 +146,9 @@ export const constructionCategories = [
   {
     slug: "bricks-blocks-supply",
     name: "Bricks & Blocks Supply",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ഇഷ്ടിക & ബ്ലോക്ക് വിതരണം",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Bricks & Blocks",
@@ -157,6 +169,9 @@ export const constructionCategories = [
   {
     slug: "roofing-materials-supply",
     name: "Roofing Materials Supply",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "മേൽക്കൂര സാമഗ്രികൾ",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Roofing Materials",
@@ -176,6 +191,9 @@ export const constructionCategories = [
   {
     slug: "plumbing-electrical-supply",
     name: "Plumbing & Electrical Materials",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "പ്ലമ്പിംഗ് & ഇലക്ട്രിക്കൽ സാമഗ്രികൾ",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Plumbing & Electrical",
@@ -195,6 +213,9 @@ export const constructionCategories = [
   {
     slug: "finishing-materials-supply",
     name: "Flooring & Finishing Materials",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ഫ്ലോറിംഗ് & ഫിനിഷിംഗ് സാമഗ്രികൾ",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Finishing Materials",
@@ -215,6 +236,9 @@ export const constructionCategories = [
   {
     slug: "ready-mix-concrete",
     name: "Ready-Mix Concrete & Precast",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "റെഡി-മിക്സ് കോൺക്രീറ്റ്",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Ready-Mix Concrete",
@@ -236,6 +260,9 @@ export const constructionCategories = [
   {
     slug: "demolition-services",
     name: "Demolition Services",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "പൊളിക്കൽ സേവനങ്ങൾ",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Demolition Services",
@@ -262,6 +289,9 @@ export const constructionCategories = [
   {
     slug: "earthmoving-excavation",
     name: "Earthmoving & Excavation",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "മണ്ണുമാറ്റലും കുഴിയെടുക്കലും",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Earthmoving & Excavation",
@@ -287,6 +317,9 @@ export const constructionCategories = [
   {
     slug: "construction-transport",
     name: "Construction Transportation",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "നിർമാണ ഗതാഗതം",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Construction Transport",
@@ -310,6 +343,9 @@ export const constructionCategories = [
   {
     slug: "equipment-rental",
     name: "Equipment & Machinery Rental",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "യന്ത്രസാമഗ്രി വാടകയ്ക്ക്",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Equipment Rental",
@@ -335,6 +371,9 @@ export const constructionCategories = [
   {
     slug: "house-construction",
     name: "House Construction",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "വീട് നിർമാണം",
     kind: "building",
     icon: "house",
     keywords: ["house construction", "home builders", "villa construction", "budget house construction"],
@@ -352,6 +391,9 @@ export const constructionCategories = [
   {
     slug: "flat-construction",
     name: "Apartment & Flat Construction",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ഫ്ലാറ്റ് നിർമാണം",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Flat Construction",
@@ -371,6 +413,9 @@ export const constructionCategories = [
   {
     slug: "commercial-construction",
     name: "Commercial Construction",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "വാണിജ്യ കെട്ടിട നിർമാണം",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Commercial Construction",
@@ -391,6 +436,9 @@ export const constructionCategories = [
   {
     slug: "civil-works",
     name: "Civil & Site Works",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "സിവിൽ & സൈറ്റ് വർക്കുകൾ",
     kind: "building",
     icon: "building",
     keywords: ["compound wall construction", "retaining wall", "interlocking tile", "drainage construction", "paving works"],
@@ -409,6 +457,9 @@ export const constructionCategories = [
   {
     slug: "building-renovation",
     name: "Renovation & Repair",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "നവീകരണവും അറ്റകുറ്റപ്പണിയും",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Renovation & Repair",
@@ -429,6 +480,9 @@ export const constructionCategories = [
   {
     slug: "construction-contracts",
     name: "Contract Options",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "കരാർ ഓപ്ഷനുകൾ",
     kind: "building",
     icon: "building",
     keywords: ["turnkey construction", "labour contract", "material and labour contract"],

@@ -51,6 +51,8 @@ export interface ConstructionService {
   partner?: boolean;
   /** Explicit card image; design categories set this, construction maps by icon. */
   image?: string;
+  /** Malayalam name, used in the prefilled WhatsApp message. */
+  nameMl?: string;
 }
 
 export const constructionDistricts: ConstructionDistrict[] = [
@@ -166,7 +168,8 @@ export const constructionServices: ConstructionService[] = [
       "Part-load supply for small works"
     ],
     "intro": "M-sand, P-sand and river sand supplied by the load, with the grade matched to the work rather than whatever is nearest. M-sand for concreting, P-sand for plastering.",
-    "compliance": "River sand is supplied only from legally authorised sources with the required transit documentation. We will not quote for sand without it."
+    "compliance": "River sand is supplied only from legally authorised sources with the required transit documentation. We will not quote for sand without it.",
+    "nameMl": "മണൽ വിതരണം"
   },
   {
     "slug": "cement-steel-supply",
@@ -180,7 +183,8 @@ export const constructionServices: ConstructionService[] = [
       "Structural steel sections",
       "MS plates, angles, channels and pipes"
     ],
-    "intro": "Cement and reinforcement steel delivered to site in the grades your structural drawing specifies, scheduled against your pour dates rather than dumped early to sit in the rain."
+    "intro": "Cement and reinforcement steel delivered to site in the grades your structural drawing specifies, scheduled against your pour dates rather than dumped early to sit in the rain.",
+    "nameMl": "സിമന്റ് & സ്റ്റീൽ വിതരണം"
   },
   {
     "slug": "aggregate-quarry-supply",
@@ -195,7 +199,8 @@ export const constructionServices: ConstructionService[] = [
       "Bulk aggregate delivery"
     ],
     "intro": "Graded aggregate and quarry material by the load: blue metal in 6, 12, 20 and 40 mm, crusher dust, rubble and boulders for foundation and filling work.",
-    "partner": true
+    "partner": true,
+    "nameMl": "മെറ്റൽ, കല്ല് & ക്വാറി വിതരണം"
   },
   {
     "slug": "bricks-blocks-supply",
@@ -210,7 +215,8 @@ export const constructionServices: ConstructionService[] = [
       "Laterite and foundation stones",
       "Interlocking pavers"
     ],
-    "intro": "Masonry materials by the load, including laterite still widely used across north Kerala and AAC blocks where weight and insulation matter more than cost per unit."
+    "intro": "Masonry materials by the load, including laterite still widely used across north Kerala and AAC blocks where weight and insulation matter more than cost per unit.",
+    "nameMl": "ഇഷ്ടിക & ബ്ലോക്ക് വിതരണം"
   },
   {
     "slug": "roofing-materials-supply",
@@ -224,7 +230,8 @@ export const constructionServices: ConstructionService[] = [
       "Polycarbonate and UPVC sheets",
       "Ridge, flashing and fixing accessories"
     ],
-    "intro": "Roofing sheets and tiles supplied to site. Colour-coated resists rust far longer than plain GI near the coast, which is worth the difference in most of Kerala."
+    "intro": "Roofing sheets and tiles supplied to site. Colour-coated resists rust far longer than plain GI near the coast, which is worth the difference in most of Kerala.",
+    "nameMl": "മേൽക്കൂര സാമഗ്രികൾ"
   },
   {
     "slug": "plumbing-electrical-supply",
@@ -238,7 +245,8 @@ export const constructionServices: ConstructionService[] = [
       "Plumbing fixtures and sanitaryware",
       "Water tanks and drainage products"
     ],
-    "intro": "Plumbing and electrical materials supplied against your MEP layout, so sizes and fittings match the drawing instead of needing return trips mid-work."
+    "intro": "Plumbing and electrical materials supplied against your MEP layout, so sizes and fittings match the drawing instead of needing return trips mid-work.",
+    "nameMl": "പ്ലമ്പിംഗ് & ഇലക്ട്രിക്കൽ സാമഗ്രികൾ"
   },
   {
     "slug": "finishing-materials-supply",
@@ -253,7 +261,8 @@ export const constructionServices: ConstructionService[] = [
       "Waterproofing chemicals",
       "Gypsum boards and ceiling materials"
     ],
-    "intro": "Finishing materials for the final stages of a build, sourced to the specification and finish agreed rather than substituted on site."
+    "intro": "Finishing materials for the final stages of a build, sourced to the specification and finish agreed rather than substituted on site.",
+    "nameMl": "ഫ്ലോറിംഗ് & ഫിനിഷിംഗ് സാമഗ്രികൾ"
   },
   {
     "slug": "ready-mix-concrete",
@@ -267,7 +276,8 @@ export const constructionServices: ConstructionService[] = [
       "Scheduled delivery against pour timing"
     ],
     "intro": "Ready-mix concrete delivered to the grade and slump your engineer specifies, plus precast products where casting on site is impractical.",
-    "partner": true
+    "partner": true,
+    "nameMl": "റെഡി-മിക്സ് കോൺക്രീറ്റ്"
   },
   {
     "slug": "demolition-services",
@@ -287,7 +297,8 @@ export const constructionServices: ConstructionService[] = [
       "Scrap segregation and recovery"
     ],
     "intro": "Demolition of buildings and structures, with debris removal and site clearance included so the plot is left ready to build on rather than piled with rubble.",
-    "compliance": "Demolition needs local-body permission, and adjoining structures must be assessed first. We will tell you which approvals your site requires before any work is scheduled."
+    "compliance": "Demolition needs local-body permission, and adjoining structures must be assessed first. We will tell you which approvals your site requires before any work is scheduled.",
+    "nameMl": "പൊളിക്കൽ സേവനങ്ങൾ"
   },
   {
     "slug": "earthmoving-excavation",
@@ -307,7 +318,8 @@ export const constructionServices: ConstructionService[] = [
       "Agricultural land clearing"
     ],
     "intro": "Excavation and land preparation with machine and operator: foundations, levelling, plot cleaning and site formation before construction begins.",
-    "partner": true
+    "partner": true,
+    "nameMl": "മണ്ണുമാറ്റലും കുഴിയെടുക്കലും"
   },
   {
     "slug": "construction-transport",
@@ -325,7 +337,8 @@ export const constructionServices: ConstructionService[] = [
       "Tractor transportation for small loads"
     ],
     "intro": "Material and debris moved by the load. Tipper, truck and tractor transport arranged for deliveries in and waste out, charged per trip against distance.",
-    "partner": true
+    "partner": true,
+    "nameMl": "നിർമാണ ഗതാഗതം"
   },
   {
     "slug": "equipment-rental",
@@ -343,7 +356,8 @@ export const constructionServices: ConstructionService[] = [
       "Scaffolding and shuttering systems"
     ],
     "intro": "Site machinery arranged with operators we work with regularly across the district, hourly, daily or for the project depending on the machine.",
-    "partner": true
+    "partner": true,
+    "nameMl": "യന്ത്രസാമഗ്രി വാടകയ്ക്ക്"
   },
   {
     "slug": "house-construction",
@@ -358,7 +372,8 @@ export const constructionServices: ConstructionService[] = [
       "Foundation and basement work",
       "Additional floors on an existing building"
     ],
-    "intro": "House construction from foundation to handover, with scope, materials and stage payments agreed in writing before anything starts."
+    "intro": "House construction from foundation to handover, with scope, materials and stage payments agreed in writing before anything starts.",
+    "nameMl": "വീട് നിർമാണം"
   },
   {
     "slug": "flat-construction",
@@ -371,7 +386,8 @@ export const constructionServices: ConstructionService[] = [
       "Additional floors on existing buildings"
     ],
     "intro": "Apartment and multi-storey residential construction, coordinated with your structural consultant and the local body's approval process.",
-    "compliance": "Projects requiring RERA registration are advertised for sale only once that registration is in place. We will tell you plainly which approvals your project needs."
+    "compliance": "Projects requiring RERA registration are advertised for sale only once that registration is in place. We will tell you plainly which approvals your project needs.",
+    "nameMl": "ഫ്ലാറ്റ് നിർമാണം"
   },
   {
     "slug": "commercial-construction",
@@ -386,7 +402,8 @@ export const constructionServices: ConstructionService[] = [
       "Warehouses and industrial buildings",
       "Workshops and factory buildings"
     ],
-    "intro": "Commercial construction built around your opening date, sequenced so fit-out trades are not waiting on each other at the end."
+    "intro": "Commercial construction built around your opening date, sequenced so fit-out trades are not waiting on each other at the end.",
+    "nameMl": "വാണിജ്യ കെട്ടിട നിർമാണം"
   },
   {
     "slug": "civil-works",
@@ -402,7 +419,8 @@ export const constructionServices: ConstructionService[] = [
       "Paving and hardscape works",
       "Waterproofing"
     ],
-    "intro": "The work around a building rather than the building itself: walls, drainage, paving and the levelling that holds a sloped plot in place."
+    "intro": "The work around a building rather than the building itself: walls, drainage, paving and the levelling that holds a sloped plot in place.",
+    "nameMl": "സിവിൽ & സൈറ്റ് വർക്കുകൾ"
   },
   {
     "slug": "building-renovation",
@@ -417,7 +435,8 @@ export const constructionServices: ConstructionService[] = [
       "Structural crack repair and assessment",
       "Roof and exterior renovation"
     ],
-    "intro": "Renovation and repair of existing buildings, starting with a condition check so the structure is assessed before anything is committed to."
+    "intro": "Renovation and repair of existing buildings, starting with a condition check so the structure is assessed before anything is committed to.",
+    "nameMl": "നവീകരണവും അറ്റകുറ്റപ്പണിയും"
   },
   {
     "slug": "construction-contracts",
@@ -430,7 +449,8 @@ export const constructionServices: ConstructionService[] = [
       "Labour-only, where you supply materials",
       "Project-based and stage-wise contracts"
     ],
-    "intro": "Four ways to contract the same build. Which suits you depends on how much of the sourcing and supervision you want to handle yourself."
+    "intro": "Four ways to contract the same build. Which suits you depends on how much of the sourcing and supervision you want to handle yourself.",
+    "nameMl": "കരാർ ഓപ്ഷനുകൾ"
   },
   {
     "slug": "architecture-planning",
@@ -458,7 +478,8 @@ export const constructionServices: ConstructionService[] = [
     ],
     "intro": "Floor plans, elevations and the drawings a local body actually accepts. Plans are prepared against your plot's setbacks and the permitted coverage rather than drawn first and adjusted later.",
     "compliance": "Building permit drawings must be signed by a licensed engineer or architect registered with the local body. We will tell you which approvals your plot needs before any drawing is prepared.",
-    "image": "/og/design/architecture-planning.jpg"
+    "image": "/og/design/architecture-planning.jpg",
+    "nameMl": "ആർക്കിടെക്ചർ & കെട്ടിട പ്ലാനിംഗ്"
   },
   {
     "slug": "structural-drafting",
@@ -486,7 +507,8 @@ export const constructionServices: ConstructionService[] = [
     ],
     "intro": "Structural design and working drawings, with reinforcement detailing and quantities. The output is what a site engineer can build from and what a quantity surveyor can price.",
     "compliance": "Structural drawings are issued only under the seal of a qualified structural engineer. We will not supply unsigned structural designs for construction.",
-    "image": "/og/design/structural-drafting.jpg"
+    "image": "/og/design/structural-drafting.jpg",
+    "nameMl": "സ്ട്രക്ചറൽ എൻജിനീയറിംഗ് & ഡ്രാഫ്റ്റിംഗ്"
   },
   {
     "slug": "interior-design",
@@ -514,7 +536,8 @@ export const constructionServices: ConstructionService[] = [
       "Reception and corporate workspace design"
     ],
     "intro": "Interior design for homes, flats and commercial spaces, worked out as drawings and a material schedule before anything is ordered or cut.",
-    "image": "/og/design/interior-design.jpg"
+    "image": "/og/design/interior-design.jpg",
+    "nameMl": "ഇന്റീരിയർ ഡിസൈൻ"
   },
   {
     "slug": "interior-execution",
@@ -542,7 +565,8 @@ export const constructionServices: ConstructionService[] = [
       "Curtain and blind installation"
     ],
     "intro": "The build phase of an interior: ceilings, kitchens, wardrobes, panelling and flooring, sequenced so the trades are not waiting on each other at the end.",
-    "image": "/og/design/interior-execution.jpg"
+    "image": "/og/design/interior-execution.jpg",
+    "nameMl": "ഇന്റീരിയർ നിർവഹണവും ഇൻസ്റ്റലേഷനും"
   },
   {
     "slug": "interior-decoration",
@@ -570,7 +594,8 @@ export const constructionServices: ConstructionService[] = [
       "Marble and granite feature walls"
     ],
     "intro": "Styling a space that is already built: furniture arrangement, wall treatments, lighting and the accessories that decide how a room reads.",
-    "image": "/og/design/interior-decoration.jpg"
+    "image": "/og/design/interior-decoration.jpg",
+    "nameMl": "ഇന്റീരിയർ അലങ്കാരം"
   },
   {
     "slug": "theme-decoration",
@@ -593,7 +618,8 @@ export const constructionServices: ConstructionService[] = [
       "Hotel-style bedroom decoration"
     ],
     "intro": "A single design language carried through a whole home, chosen before buying rather than assembled room by room.",
-    "image": "/og/design/theme-decoration.jpg"
+    "image": "/og/design/theme-decoration.jpg",
+    "nameMl": "ലക്ഷ്വറി & തീം അലങ്കാരം"
   },
   {
     "slug": "exterior-decoration",
@@ -618,7 +644,8 @@ export const constructionServices: ConstructionService[] = [
       "Gate and compound wall decoration"
     ],
     "intro": "Facade, elevation and entrance work. In Kerala's climate the finish matters as much as the look: what survives monsoon and salt air is the first question.",
-    "image": "/og/design/exterior-decoration.jpg"
+    "image": "/og/design/exterior-decoration.jpg",
+    "nameMl": "എക്സ്റ്റീരിയർ അലങ്കാരം"
   },
   {
     "slug": "landscape-garden",
@@ -644,7 +671,8 @@ export const constructionServices: ConstructionService[] = [
       "Landscape maintenance"
     ],
     "intro": "Garden and outdoor design, planted for the local rainfall and soil rather than to a catalogue. Drainage is settled before anything is planted.",
-    "image": "/og/design/landscape-garden.jpg"
+    "image": "/og/design/landscape-garden.jpg",
+    "nameMl": "ലാൻഡ്സ്കേപ്പ് & ഗാർഡൻ ഡിസൈൻ"
   },
   {
     "slug": "outdoor-lifestyle",
@@ -666,7 +694,8 @@ export const constructionServices: ConstructionService[] = [
       "Outdoor furniture arrangement"
     ],
     "intro": "Outdoor living space: patios, decks, poolside and rooftop areas built to be used through the year, with shade and drainage planned for the monsoon.",
-    "image": "/og/design/outdoor-lifestyle.jpg"
+    "image": "/og/design/outdoor-lifestyle.jpg",
+    "nameMl": "ഔട്ട്ഡോർ ലൈഫ്സ്റ്റൈൽ & റിക്രിയേഷൻ"
   },
   {
     "slug": "event-decoration",
@@ -689,7 +718,8 @@ export const constructionServices: ConstructionService[] = [
       "Seasonal decoration"
     ],
     "intro": "Decoration for a date: housewarming, wedding, festival or a shop opening. Work is scheduled backwards from the event so the space is ready the evening before.",
-    "image": "/og/design/event-decoration.jpg"
+    "image": "/og/design/event-decoration.jpg",
+    "nameMl": "ഇവന്റ് & ഉത്സവ അലങ്കാരം"
   },
   {
     "slug": "decor-products",
@@ -713,7 +743,8 @@ export const constructionServices: ConstructionService[] = [
       "Nameplates and signage"
     ],
     "intro": "Supply and fitting of the pieces a finished space needs, sourced against the design rather than picked off a shelf and made to fit afterwards.",
-    "image": "/og/design/decor-products.jpg"
+    "image": "/og/design/decor-products.jpg",
+    "nameMl": "അലങ്കാര ഉൽപ്പന്നങ്ങളും ഇൻസ്റ്റലേഷനും"
   },
   {
     "slug": "property-consultancy",
@@ -737,7 +768,8 @@ export const constructionServices: ConstructionService[] = [
     ],
     "intro": "Survey, estimate and supervision for people managing their own build. Independent of the contractor, so the advice is not tied to who is doing the work.",
     "compliance": "Property valuation for a bank or a legal purpose must be carried out by a registered valuer. We will say plainly when a valuation needs one rather than issuing an informal figure.",
-    "image": "/og/design/property-consultancy.jpg"
+    "image": "/og/design/property-consultancy.jpg",
+    "nameMl": "പ്രോപ്പർട്ടി & പ്രോജക്ട് കൺസൾട്ടൻസി"
   }
 ];
 

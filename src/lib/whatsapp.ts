@@ -17,13 +17,23 @@ import { BUSINESS_WHATSAPP } from "@/lib/site";
 export interface WhatsAppEnquiry {
   /** The service or category, as shown on the page. */
   service?: string;
+  /**
+   * The same service in Malayalam. Without it the Malayalam sentence embeds an
+   * English name, which reads as half-translated.
+   */
+  serviceMl?: string;
   /** Town, district or area, when the page is location-specific. */
   place?: string;
   /** Page path, so we can tell which page produced the enquiry. */
   path?: string;
 }
 
-/** The Malayalam half of the prefilled message. */
+/**
+ * The Malayalam half of the prefilled message.
+ *
+ * Falls back to the English service name when no Malayalam one is supplied,
+ * which is still better than dropping the service from the sentence.
+ */
 function malayalamLine(service?: string, place?: string) {
   if (service && place) {
     return `എനിക്ക് ${place}-ൽ ${service} വേണം.`;
@@ -49,8 +59,8 @@ function englishLine(service?: string, place?: string) {
  * The message body, bilingual, with the source page appended so an enquiry can
  * be traced back to the page that produced it.
  */
-export function whatsappMessage({ service, place, path }: WhatsAppEnquiry = {}) {
-  const lines = [malayalamLine(service, place), englishLine(service, place)];
+export function whatsappMessage({ service, serviceMl, place, path }: WhatsAppEnquiry = {}) {
+  const lines = [malayalamLine(serviceMl ?? service, place), englishLine(service, place)];
 
   if (path && path !== "/") {
     lines.push("", `(ithihasam.in${path})`);

@@ -65,6 +65,7 @@ function Shell({
   partner,
   image,
   waService,
+  waServiceMl,
   waPlace,
   children,
 }: {
@@ -83,6 +84,8 @@ function Shell({
   image?: string;
   /** Service name put into the prefilled WhatsApp message. */
   waService?: string;
+  /** The same name in Malayalam, for that message's Malayalam half. */
+  waServiceMl?: string;
   /** Town or district put into the prefilled WhatsApp message. */
   waPlace?: string;
   children: React.ReactNode;
@@ -148,7 +151,7 @@ function Shell({
           )}
 
           <div className="mt-6">
-            <ContactCTAButtons size="lg" showLabels service={waService} place={waPlace} />
+            <ContactCTAButtons size="lg" showLabels service={waService} serviceMl={waServiceMl} place={waPlace} />
           </div>
         </div>
       </section>
@@ -348,6 +351,7 @@ export function ConstructionDetail() {
         partner={service.partner}
         image={cardFor(service)}
         waService={service.name}
+        waServiceMl={service.nameMl}
       >
         <ItemList service={service} />
         <DistrictGrid serviceSlug={service.slug} />
@@ -456,6 +460,7 @@ export function ConstructionServiceDistrict() {
         partner={service.partner}
         image={cardFor(service)}
         waService={service.name}
+        waServiceMl={service.nameMl}
         waPlace={town.name}
       >
         <ItemList service={service} />
@@ -531,6 +536,7 @@ export function ConstructionServiceDistrict() {
       partner={service.partner}
       image={cardFor(service)}
       waService={service.name}
+      waServiceMl={service.nameMl}
       waPlace={district.name}
     >
       <ItemList service={service} />

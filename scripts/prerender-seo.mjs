@@ -108,11 +108,14 @@ function clampMeta(value, limit, { keepSuffix = null } = {}) {
 function whatsappHref(route, phonePlain) {
   const service = route.serviceName;
   const place = route.areaName;
+  // The Malayalam sentence uses the Malayalam category name where one exists,
+  // so it does not read as half-translated. Falls back to the English name.
+  const serviceMl = route.serviceNameMl ?? service;
 
-  const malayalam = service && place
-    ? `എനിക്ക് ${place}-ൽ ${service} വേണം.`
-    : service
-      ? `എനിക്ക് ${service} സംബന്ധിച്ച് അന്വേഷിക്കണം.`
+  const malayalam = serviceMl && place
+    ? `എനിക്ക് ${place}-ൽ ${serviceMl} വേണം.`
+    : serviceMl
+      ? `എനിക്ക് ${serviceMl} സംബന്ധിച്ച് അന്വേഷിക്കണം.`
       : "എനിക്ക് ഇത്തിഹാസത്തിന്റെ സേവനങ്ങളെക്കുറിച്ച് അറിയണം.";
 
   const english = service && place

@@ -193,7 +193,12 @@ export default function ServiceDetail() {
       <BannerCarousel images={service.bannerImages} title={title} />
 
       <div className="relative z-10 -mt-5 flex flex-col items-center gap-4">
-        <ContactCTAButtons size="lg" showLabels service={getLocalizedText(service.title, "en")} />
+        <ContactCTAButtons
+          size="lg"
+          showLabels
+          service={getLocalizedText(service.title, "en")}
+          serviceMl={getLocalizedText(service.title, "ml")}
+        />
         <DistrictSelector slugPrefix={service.slug} serviceName={service.title.en} />
       </div>
 

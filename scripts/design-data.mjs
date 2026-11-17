@@ -17,6 +17,9 @@ export const designCategories = [
   {
     slug: "architecture-planning",
     name: "Architecture & Building Planning",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ആർക്കിടെക്ചർ & കെട്ടിട പ്ലാനിംഗ്",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Architecture & Planning",
@@ -51,6 +54,9 @@ export const designCategories = [
   {
     slug: "structural-drafting",
     name: "Structural Engineering & Drafting",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "സ്ട്രക്ചറൽ എൻജിനീയറിംഗ് & ഡ്രാഫ്റ്റിംഗ്",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Structural Drafting",
@@ -87,6 +93,9 @@ export const designCategories = [
   {
     slug: "interior-design",
     name: "Interior Design",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ഇന്റീരിയർ ഡിസൈൻ",
     kind: "interior",
     icon: "interior",
     image: "/og/design/interior-design.jpg",
@@ -117,6 +126,9 @@ export const designCategories = [
   {
     slug: "interior-execution",
     name: "Interior Execution & Installation",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ഇന്റീരിയർ നിർവഹണവും ഇൻസ്റ്റലേഷനും",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Interior Execution",
@@ -150,6 +162,9 @@ export const designCategories = [
   {
     slug: "interior-decoration",
     name: "Interior Decoration",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ഇന്റീരിയർ അലങ്കാരം",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Interior Decoration",
@@ -183,6 +198,9 @@ export const designCategories = [
   {
     slug: "theme-decoration",
     name: "Luxury & Theme-Based Decoration",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ലക്ഷ്വറി & തീം അലങ്കാരം",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Theme Decoration",
@@ -213,6 +231,9 @@ export const designCategories = [
   {
     slug: "exterior-decoration",
     name: "Exterior Decoration",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "എക്സ്റ്റീരിയർ അലങ്കാരം",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Exterior Decoration",
@@ -243,6 +264,9 @@ export const designCategories = [
   {
     slug: "landscape-garden",
     name: "Landscape & Garden Design",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ലാൻഡ്സ്കേപ്പ് & ഗാർഡൻ ഡിസൈൻ",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Landscape & Garden",
@@ -274,6 +298,9 @@ export const designCategories = [
   {
     slug: "outdoor-lifestyle",
     name: "Outdoor Lifestyle & Recreation",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ഔട്ട്ഡോർ ലൈഫ്സ്റ്റൈൽ & റിക്രിയേഷൻ",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Outdoor Lifestyle",
@@ -303,6 +330,9 @@ export const designCategories = [
   {
     slug: "event-decoration",
     name: "Event & Festive Decoration",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "ഇവന്റ് & ഉത്സവ അലങ്കാരം",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Event Decoration",
@@ -331,6 +361,9 @@ export const designCategories = [
   {
     slug: "decor-products",
     name: "Decor Products & Installation",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "അലങ്കാര ഉൽപ്പന്നങ്ങളും ഇൻസ്റ്റലേഷനും",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Decor Products",
@@ -362,6 +395,9 @@ export const designCategories = [
   {
     slug: "property-consultancy",
     name: "Property & Project Consultancy",
+    // Malayalam name, used in the prefilled WhatsApp message so the
+    // Malayalam sentence does not embed an English category name.
+    nameMl: "പ്രോപ്പർട്ടി & പ്രോജക്ട് കൺസൾട്ടൻസി",
     // Used in <title> only, so the tag stays under 60 characters with the
     // place name and brand suffix attached. The full name is used on the page.
     shortName: "Project Consultancy",
